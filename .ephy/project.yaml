@@ -1,18 +1,18 @@
 schema_version: 1
 
 project:
-  id: "ephy-repository-template"
+  id: "ephy-physical-ci"
   family: "ephy"
-  type: "template"
-  status: "active"
-  visibility: "private"
-  description: "Base repository template for the Ephy ecosystem"
+  type: "integration"
+  status: "design"
+  visibility: "public"
+  description: "Physical-device build，flash，test，and result-collection infrastructure for Ephy"
 
 relations:
   parent: "ephy"
-  depends_on: []
-  integrates_with: []
-  runs_on: []
+  depends_on: ["ephy-worker"]
+  integrates_with: ["ephy-runtime"]
+  runs_on: ["ephy-worker"]
 
 data_policy:
   classification: "internal"
