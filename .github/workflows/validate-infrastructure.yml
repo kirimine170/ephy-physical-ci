@@ -76,6 +76,6 @@ jobs:
             -m ansible.builtin.template \
             -a "src=roles/physical_ci_usb/templates/70-ephy-physical-ci-usb.rules.j2 \
                 dest=/tmp/70-ephy-physical-ci-usb.rules" \
-            -e @roles/physical_ci_usb/defaults/main.yml
+            -e @roles/physical_ci_usb/defaults/main.yml \
             -e physical_ci_group=root
           udevadm verify /tmp/70-ephy-physical-ci-usb.rules
