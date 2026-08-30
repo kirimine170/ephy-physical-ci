@@ -1,0 +1,27 @@
+---
+- name: Install the minimum Physical CI USB access rules
+  ansible.builtin.template:
+    src: 70-ephy-physical-ci-usb.rules.j2
+    dest: /etc/udev/rules.d/70-ephy-physical-ci-usb.rules
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload Physical CI udev rules
+    - Re-evaluate Physical CI serial devices
+
+- name: Install the one-shot USB baseline collector
+  ansible.builtin.copy:
+    src: capture-usb-baseline
+    dest: /usr/local/sbin/capture-usb-baseline
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Create the host-local USB baseline directory
+  ansible.builtin.file:
+    path: /var/local/physical-ci-baseline
+    state: directory
+    owner: root
+    group: "{{ physical_ci_group_gid }}"
+    mode: "2770"

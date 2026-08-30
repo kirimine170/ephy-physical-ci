@@ -1,0 +1,23 @@
+---
+- name: Keep the default inbound firewall policy restrictive
+  community.general.ufw:
+    direction: incoming
+    policy: deny
+
+- name: Keep normal outbound traffic allowed
+  community.general.ufw:
+    direction: outgoing
+    policy: allow
+
+- name: Allow SSH only from explicitly supplied local networks
+  community.general.ufw:
+    rule: allow
+    from_ip: "{{ item }}"
+    to_port: "22"
+    proto: tcp
+    comment: SSH from approved Physical CI LAN
+  loop: "{{ physical_ci_ssh_allowed_cidrs }}"
+
+- name: Enable UFW only after allow rules exist
+  community.general.ufw:
+    state: enabled

@@ -1,0 +1,11 @@
+---
+profile: production
+exclude_paths:
+  - .ansible/
+  - inventories/local/
+  - tests/fixtures/
+# Account names and the access group are an intentional contract shared by
+# multiple roles，so a role-specific prefix would duplicate the same setting．
+skip_list:
+  - "var-naming[no-role-prefix]"
+mock_roles: []

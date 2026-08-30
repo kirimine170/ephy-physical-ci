@@ -1,0 +1,21 @@
+---
+- name: Install the host-independent Physical CI base packages
+  ansible.builtin.apt:
+    name: "{{ physical_ci_base_packages }}"
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Set the Physical CI hostname
+  ansible.builtin.hostname:
+    name: "{{ physical_ci_hostname }}"
+
+- name: Set the Physical CI timezone
+  community.general.timezone:
+    name: "{{ physical_ci_timezone }}"
+
+- name: Keep system time synchronization enabled
+  ansible.builtin.systemd_service:
+    name: systemd-timesyncd.service
+    enabled: true
+    state: started

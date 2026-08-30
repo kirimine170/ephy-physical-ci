@@ -13,8 +13,14 @@ Private repository visibility is not a secret-management control．Do not store 
 - Master camera images．
 - Unprocessed LoRA training data．
 - Model weights．
+- Host IP and MAC addresses from a private laboratory network．
+- Full USB serial numbers and host-specific `/dev/serial/by-id` paths．
+- SSH public keys when they identify a real operator or deployment key．
+- Password hashes and Ansible become credentials．
 
 Use an approved secret manager for credentials and access-controlled data or artifact storage for large，sensitive，or operational data．Commit only synthetic or properly anonymized fixtures that are necessary for tests．Before committing，review staged changes and run the repository validation．
+
+Real Ansible inventory belongs in `inventories/local/` or an access-controlled external source．The local directory is ignored and the infrastructure validator rejects tracked files there．Encrypted values are still prohibited from this public repository because Git history remains a distribution channel．
 
 ## Metadata policy
 

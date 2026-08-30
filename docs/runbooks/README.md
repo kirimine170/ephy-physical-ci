@@ -1,0 +1,8 @@
+# Physical CI runbooks
+
+- [WSL2 controller](controller-wsl2.md)
+- [First apply](first-apply.md)
+- [Rollback](rollback.md)
+- [Legacy LXD membership](lxd-membership.md)
+
+Runbooks distinguish observed state，implemented automation，and future actions requiring approval．

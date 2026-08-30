@@ -1,0 +1,26 @@
+FROM python@sha256:0f5b26b9518d002b6173fd61daad821fa340635ebfec5bba471013f9ca114579
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    ANSIBLE_COLLECTIONS_PATH=/opt/ansible/collections
+
+RUN apt-get update \
+    && apt-get install --yes --no-install-recommends \
+        git \
+        openssh-client \
+        shellcheck \
+        systemd \
+        udev \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements-controller.txt /tmp/requirements-controller.txt
+COPY requirements.yml /tmp/requirements.yml
+
+RUN python -m pip install --no-cache-dir -r /tmp/requirements-controller.txt \
+    && ansible-galaxy collection install \
+        -r /tmp/requirements.yml \
+        -p /opt/ansible/collections
+
+WORKDIR /workspace
+ENTRYPOINT ["/bin/bash"]

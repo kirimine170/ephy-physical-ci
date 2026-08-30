@@ -1,0 +1,5 @@
+---
+- name: Reload SSH without terminating established sessions
+  ansible.builtin.systemd_service:
+    name: ssh.service
+    state: reloaded

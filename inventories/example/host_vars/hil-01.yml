@@ -1,0 +1,14 @@
+---
+# Safe examples only. Real public keys, password hashes, addresses, and USB serials
+# belong in inventories/local/ or another access-controlled external source.
+physical_ci_admin_authorized_keys: []
+physical_ci_operator_authorized_keys: []
+physical_ci_expected_devices: []
+
+physical_ci_admin_password_hash: null
+physical_ci_admin_sudo_nopasswd: false
+
+physical_ci_manage_ssh: false
+physical_ci_manage_firewall: false
+physical_ci_service_deploy: false
+physical_ci_toolchains_install: false

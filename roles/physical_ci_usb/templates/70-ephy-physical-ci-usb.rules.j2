@@ -1,0 +1,5 @@
+# Managed by Ansible. Built-in /dev/serial/by-id links remain the primary identity.
+# These rules grant only tty access; they do not create competing device symlinks.
+{% for device in physical_ci_usb_models %}
+SUBSYSTEM=="tty", KERNEL=="ttyACM*", ATTRS{idVendor}=="{{ device.vid }}", ATTRS{idProduct}=="{{ device.pid }}", GROUP="{{ physical_ci_group }}", MODE="0660"
+{% endfor %}

@@ -1,0 +1,19 @@
+---
+- name: Manage SSH only after independent administrator access is verified
+  hosts: physical_ci
+  become: true
+  gather_facts: false
+  serial: 1
+
+  pre_tasks:
+    - name: Require explicit SSH management approval
+      ansible.builtin.assert:
+        that:
+          - physical_ci_manage_ssh | default(false) | bool
+          - physical_ci_admin_authorized_keys | default([]) | length > 0
+        fail_msg: >-
+          Set physical_ci_manage_ssh=true only after hil-admin key login and sudo
+          have been verified in a separate session.
+
+  roles:
+    - role: physical_ci_ssh

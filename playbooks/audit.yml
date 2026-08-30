@@ -1,0 +1,37 @@
+---
+- name: Read-only Physical CI host audit
+  hosts: physical_ci
+  become: false
+  gather_facts: true
+  check_mode: false
+
+  tasks:
+    - name: Read USB devices
+      ansible.builtin.command: lsusb
+      register: physical_ci_audit_lsusb
+      changed_when: false
+
+    - name: Read stable serial-device links
+      ansible.builtin.find:
+        paths: /dev/serial/by-id
+        file_type: link
+        recurse: false
+      register: physical_ci_audit_by_id
+
+    - name: Verify expected stable links when local inventory declares them
+      ansible.builtin.stat:
+        path: "{{ item.by_id }}"
+      loop: "{{ physical_ci_expected_devices | default([]) }}"
+      loop_control:
+        label: "{{ item.logical_id }}"
+      register: physical_ci_audit_expected_links
+
+    - name: Require every declared device link to exist
+      ansible.builtin.assert:
+        that:
+          - item.stat.exists
+          - item.stat.islnk
+        fail_msg: "Expected stable USB link is missing: {{ item.item.logical_id }}"
+      loop: "{{ physical_ci_audit_expected_links.results }}"
+      loop_control:
+        label: "{{ item.item.logical_id }}"

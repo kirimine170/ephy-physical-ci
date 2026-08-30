@@ -1,0 +1,33 @@
+[Unit]
+Description=Ephy Physical CI agent
+After=network-online.target
+Wants=network-online.target
+ConditionFileIsExecutable={{ physical_ci_agent_command.split()[0] }}
+
+[Service]
+Type=simple
+User={{ physical_ci_agent_user }}
+Group={{ physical_ci_group }}
+WorkingDirectory=/var/lib/ephy-physical-ci
+ExecStart={{ physical_ci_agent_command }}
+Restart=on-failure
+RestartSec=5s
+UMask=0027
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/ephy-physical-ci /var/log/ephy-physical-ci /var/cache/ephy-physical-ci /srv/ephy-physical-ci
+RestrictNamespaces=true
+RestrictRealtime=true
+LockPersonality=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+
+[Install]
+WantedBy=multi-user.target

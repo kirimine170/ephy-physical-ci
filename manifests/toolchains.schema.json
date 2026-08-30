@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kirimine170/ephy-physical-ci/blob/main/manifests/toolchains.schema.json",
+  "title": "Physical CI toolchain lock manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "installation_enabled",
+    "components",
+    "board_profiles"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "installation_enabled": {
+      "type": "boolean"
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/component"
+      }
+    },
+    "board_profiles": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/boardProfile"
+      }
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+    },
+    "component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "source_url",
+        "sha256",
+        "platforms",
+        "install_subdir"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_url": {
+          "type": "string",
+          "pattern": "^https://"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "platforms": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["linux-amd64", "linux-arm64"]
+          }
+        },
+        "install_subdir": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9._/-]+$"
+        }
+      }
+    },
+    "boardProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "usb_ids", "components"],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "usb_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{4}:[a-f0-9]{4}$"
+          }
+        },
+        "components": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/identifier"
+          }
+        }
+      }
+    }
+  }
+}

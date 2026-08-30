@@ -1,0 +1,5 @@
+---
+# Bootstrap intentionally has the same safe scope as site.yml. It never changes
+# SSH, UFW, or the legacy installer-created account.
+- name: Bootstrap a Physical CI node without changing remote access
+  ansible.builtin.import_playbook: site.yml

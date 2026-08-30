@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "installation_enabled": false,
+  "components": [],
+  "board_profiles": [
+    {
+      "id": "xiao-espressif",
+      "usb_ids": ["303a:1001"],
+      "components": []
+    },
+    {
+      "id": "xiao-nrf52840-sense",
+      "usb_ids": ["2886:8045"],
+      "components": []
+    },
+    {
+      "id": "xiao-ra4m1",
+      "usb_ids": ["2886:0049"],
+      "components": []
+    }
+  ]
+}
