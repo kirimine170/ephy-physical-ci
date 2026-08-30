@@ -9,6 +9,12 @@
       - physical_ci_admin_user in ansible_facts.getent_passwd
     fail_msg: The administrator account must exist before SSH is managed.
 
+- name: Inspect the SSH hardening drop-in before changing it
+  ansible.builtin.stat:
+    path: /etc/ssh/sshd_config.d/10-physical-ci.conf
+  register: physical_ci_ssh_dropin_before
+  check_mode: false
+
 - name: Install and validate the SSH hardening drop-in with rollback backup
   block:
     - name: Install the SSH hardening drop-in
@@ -37,6 +43,14 @@
         mode: "0644"
       when: physical_ci_ssh_template.backup_file is defined
 
-    - name: Stop after restoring the previous SSH configuration
+    - name: Remove the new SSH drop-in when no previous file existed
+      ansible.builtin.file:
+        path: /etc/ssh/sshd_config.d/10-physical-ci.conf
+        state: absent
+      when: not physical_ci_ssh_dropin_before.stat.exists
+
+    - name: Stop after rolling back the invalid SSH configuration
       ansible.builtin.fail:
-        msg: SSH validation failed; the previous drop-in was restored.
+        msg: >-
+          SSH validation failed; the previous drop-in was restored or the new
+          drop-in was removed.

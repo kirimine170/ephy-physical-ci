@@ -10,6 +10,9 @@ import subprocess
 import sys
 from typing import Iterable
 
+from jsonschema import Draft202012Validator
+from jsonschema.exceptions import SchemaError
+
 
 ROOT = Path(__file__).resolve().parents[1]
 IDENTIFIER = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$")
@@ -113,10 +116,34 @@ def validate_udev_boundary() -> list[str]:
     return errors
 
 
-def validate_toolchain_manifest() -> list[str]:
-    path = ROOT / "manifests" / "toolchains.json"
+def validate_toolchain_manifest(
+    path: Path | None = None,
+    schema_path: Path | None = None,
+) -> list[str]:
+    path = path or ROOT / "manifests" / "toolchains.json"
+    schema_path = schema_path or ROOT / "manifests" / "toolchains.schema.json"
     data = json.loads(path.read_text(encoding="utf-8"))
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
     errors: list[str] = []
+
+    try:
+        Draft202012Validator.check_schema(schema)
+    except SchemaError as error:
+        return [f"invalid committed toolchain schema: {error.message}"]
+
+    validator = Draft202012Validator(schema)
+    schema_errors = sorted(
+        validator.iter_errors(data),
+        key=lambda error: tuple(str(part) for part in error.absolute_path),
+    )
+    for error in schema_errors:
+        location = "$"
+        if error.absolute_path:
+            location += "." + ".".join(str(part) for part in error.absolute_path)
+        errors.append(f"toolchain manifest schema violation at {location}: {error.message}")
+    if errors:
+        return errors
+
     if data.get("schema_version") != 1:
         errors.append("toolchain manifest schema_version must be 1")
     if data.get("installation_enabled") is not False:

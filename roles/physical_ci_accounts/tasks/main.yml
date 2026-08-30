@@ -18,6 +18,28 @@
         physical_ci_group_gid_lookup.stdout.split(':')[0] == physical_ci_group
     fail_msg: "GID {{ physical_ci_group_gid }} is already assigned to another group."
 
+- name: Read the declared Physical CI group name
+  ansible.builtin.command:
+    argv:
+      - getent
+      - group
+      - "{{ physical_ci_group }}"
+  register: physical_ci_group_name_lookup
+  changed_when: false
+  failed_when: physical_ci_group_name_lookup.rc not in [0, 2]
+  check_mode: false
+
+- name: Require the declared group name to use the reserved ID
+  ansible.builtin.assert:
+    that:
+      - >-
+        physical_ci_group_name_lookup.stdout | length == 0 or
+        physical_ci_group_name_lookup.stdout.split(':')[2] | int ==
+        physical_ci_group_gid | int
+    fail_msg: >-
+      Group {{ physical_ci_group }} already exists with a different GID;
+      refusing to renumber it.
+
 - name: Read the reserved Physical CI user IDs
   ansible.builtin.command:
     argv:
@@ -46,6 +68,39 @@
         item.stdout.split(':')[0] == item.item.name
     fail_msg: "UID {{ item.item.uid }} is already assigned to another account."
   loop: "{{ physical_ci_uid_lookups.results }}"
+  loop_control:
+    label: "{{ item.item.name }}={{ item.item.uid }}"
+
+- name: Read the declared Physical CI account names
+  ansible.builtin.command:
+    argv:
+      - getent
+      - passwd
+      - "{{ item.name }}"
+  loop:
+    - name: "{{ physical_ci_admin_user }}"
+      uid: "{{ physical_ci_admin_uid }}"
+    - name: "{{ physical_ci_operator_user }}"
+      uid: "{{ physical_ci_operator_uid }}"
+    - name: "{{ physical_ci_agent_user }}"
+      uid: "{{ physical_ci_agent_uid }}"
+  loop_control:
+    label: "{{ item.name }}={{ item.uid }}"
+  register: physical_ci_username_lookups
+  changed_when: false
+  failed_when: physical_ci_username_lookups.rc not in [0, 2]
+  check_mode: false
+
+- name: Require declared account names to use their reserved IDs
+  ansible.builtin.assert:
+    that:
+      - >-
+        item.stdout | length == 0 or
+        item.stdout.split(':')[2] | int == item.item.uid | int
+    fail_msg: >-
+      Account {{ item.item.name }} already exists with a different UID;
+      refusing to renumber or repurpose it.
+  loop: "{{ physical_ci_username_lookups.results }}"
   loop_control:
     label: "{{ item.item.name }}={{ item.item.uid }}"
 

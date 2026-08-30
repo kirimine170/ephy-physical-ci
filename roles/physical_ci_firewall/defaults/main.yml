@@ -1,2 +1,3 @@
 ---
 physical_ci_ssh_allowed_cidrs: []
+physical_ci_firewall_state_file: /etc/ephy-physical-ci/firewall-ssh-allowlist.json

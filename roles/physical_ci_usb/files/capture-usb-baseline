@@ -8,8 +8,19 @@ fi
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
 output_path="${1:-/var/local/physical-ci-baseline/usb-baseline-${timestamp}.txt}"
-mkdir -p "$(dirname "${output_path}")"
-exec > >(tee "${output_path}") 2>&1
+output_directory="$(dirname -- "${output_path}")"
+mkdir -p -- "${output_directory}"
+
+# The default directory is writable by hil-ci. Open the final path exactly once
+# with noclobber semantics so a pre-created file or symlink cannot be followed.
+umask 0077
+set -o noclobber
+if ! exec 3>"${output_path}"; then
+  printf 'Refusing to overwrite existing baseline path: %s\n' "${output_path}" >&2
+  exit 1
+fi
+set +o noclobber
+exec > >(tee /proc/self/fd/3) 2>&1
 
 value_from_file() {
   local path="$1"

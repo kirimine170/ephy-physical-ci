@@ -1,13 +1,37 @@
 ---
-- name: Keep the default inbound firewall policy restrictive
-  community.general.ufw:
-    direction: incoming
-    policy: deny
+- name: Require a non-empty and duplicate-free SSH allowlist
+  ansible.builtin.assert:
+    that:
+      - physical_ci_ssh_allowed_cidrs | length > 0
+      - >-
+        physical_ci_ssh_allowed_cidrs | unique | list | length ==
+        physical_ci_ssh_allowed_cidrs | length
+    fail_msg: The firewall role requires a non-empty, duplicate-free SSH CIDR allowlist.
 
-- name: Keep normal outbound traffic allowed
-  community.general.ufw:
-    direction: outgoing
-    policy: allow
+- name: Keep the root-owned firewall state directory available
+  ansible.builtin.file:
+    path: "{{ physical_ci_firewall_state_file | dirname }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0750"
+
+- name: Read the previously managed SSH allowlist
+  ansible.builtin.slurp:
+    src: "{{ physical_ci_firewall_state_file }}"
+  register: physical_ci_firewall_previous_state
+  failed_when: >-
+    physical_ci_firewall_previous_state.failed and
+    'file not found' not in physical_ci_firewall_previous_state.msg | lower
+
+- name: Decode the previously managed SSH allowlist
+  ansible.builtin.set_fact:
+    physical_ci_firewall_previous_cidrs: >-
+      {{
+        (physical_ci_firewall_previous_state.content | b64decode | from_json)
+        if physical_ci_firewall_previous_state.content is defined
+        else []
+      }}
 
 - name: Allow SSH only from explicitly supplied local networks
   community.general.ufw:
@@ -18,6 +42,36 @@
     comment: SSH from approved Physical CI LAN
   loop: "{{ physical_ci_ssh_allowed_cidrs }}"
 
+- name: Remove SSH rules dropped from the managed allowlist
+  community.general.ufw:
+    rule: allow
+    delete: true
+    from_ip: "{{ item }}"
+    to_port: "22"
+    proto: tcp
+    comment: SSH from approved Physical CI LAN
+  loop: >-
+    {{ physical_ci_firewall_previous_cidrs |
+       difference(physical_ci_ssh_allowed_cidrs) }}
+
+- name: Keep the default inbound firewall policy restrictive
+  community.general.ufw:
+    direction: incoming
+    policy: deny
+
+- name: Keep normal outbound traffic allowed
+  community.general.ufw:
+    direction: outgoing
+    policy: allow
+
 - name: Enable UFW only after allow rules exist
   community.general.ufw:
     state: enabled
+
+- name: Persist the successfully applied SSH allowlist
+  ansible.builtin.copy:
+    content: "{{ physical_ci_ssh_allowed_cidrs | sort | to_nice_json }}\n"
+    dest: "{{ physical_ci_firewall_state_file }}"
+    owner: root
+    group: root
+    mode: "0600"
