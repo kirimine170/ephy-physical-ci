@@ -18,7 +18,7 @@ python3 -m venv .controller-venv
 . .controller-venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -r requirements-controller.txt
-ansible-galaxy collection install -r requirements.yml -p .ansible/collections
+ansible-galaxy collection install -r requirements.yml
 ```
 
 Copy the required controller private key into `~/.ssh` inside WSL2 and set mode `0600`．Do not commit it or place it under the repository．Copy `inventories/example/` into `inventories/local/` and configure the real host only in the ignored copy．

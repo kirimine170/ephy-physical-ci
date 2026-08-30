@@ -29,7 +29,6 @@ jobs:
         run: >-
           ansible-galaxy collection install
           -r requirements.yml
-          -p .ansible/collections
 
       - name: Install host-format validators
         run: |

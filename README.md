@@ -51,7 +51,7 @@ python3 -m venv .controller-venv
 . .controller-venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -r requirements-controller.txt
-ansible-galaxy collection install -r requirements.yml -p .ansible/collections
+ansible-galaxy collection install -r requirements.yml
 cp inventories/example/hosts.yml inventories/local/hosts.yml
 cp -R inventories/example/host_vars inventories/local/
 ```
