@@ -66,6 +66,16 @@ ansible-playbook -i inventories/local/hosts.yml playbooks/site.yml \
 
 See the [WSL2 controller runbook](docs/runbooks/controller-wsl2.md) and [first-apply runbook](docs/runbooks/first-apply.md)．
 
+When only the JPEG and `MediaEnvelope` validation dependencies are approved，use the isolated package playbook:
+
+```bash
+scripts/setup-camera-validation-host inventories/local/hosts.yml check \
+  --limit hil-01 --ask-become-pass
+```
+
+See the [camera validation host package runbook](docs/runbooks/camera-validation-host.md) before changing `check` to
+`apply`．This path does not manage SSH，UFW，accounts，udev，hostname，directories，or services．
+
 ## Testing
 
 Document project-specific test commands here．Keep the repository metadata validation in the standard verification path:

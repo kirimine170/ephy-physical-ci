@@ -20,6 +20,11 @@ class InfrastructureValidationTests(unittest.TestCase):
     def test_initial_site_does_not_manage_remote_access(self) -> None:
         self.assertEqual(validate_infrastructure.validate_safe_playbook_boundary(), [])
 
+    def test_camera_validation_setup_is_package_only(self) -> None:
+        self.assertEqual(
+            validate_infrastructure.validate_camera_validation_package_boundary(), []
+        )
+
     def test_udev_preserves_builtin_stable_links(self) -> None:
         self.assertEqual(validate_infrastructure.validate_udev_boundary(), [])
 

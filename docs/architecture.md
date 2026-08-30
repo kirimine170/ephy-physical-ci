@@ -13,7 +13,7 @@ This document describes the stable responsibility boundaries of the Physical CI 
 - `inventories/sanitized/` records non-secret observed host capabilities．
 - `inventories/local/` is Git-ignored and holds addresses，keys，and full USB serials．
 - `playbooks/` separates non-disruptive configuration from SSH and firewall changes．
-- `roles/` owns accounts，directories，USB policy，and optional service deployment．
+- `roles/` owns accounts，directories，USB policy，camera validation packages，and optional service deployment．
 - `manifests/` defines the version and checksum boundary for future MCU tools．
 - `scripts/` contains repository and infrastructure validation．
 - `tests/` verifies safety boundaries without contacting a Physical CI host．
@@ -23,6 +23,10 @@ This document describes the stable responsibility boundaries of the Physical CI 
 Each Ephy repository owns a defined project responsibility．Cross-repository relationships must be explicit in `.ephy/project.yaml`，but downstream consumers are discovered centrally by the future `ephy` meta repository rather than copied into every repository．Git submodules are not an architecture model for Ephy relationships．
 
 The default `playbooks/site.yml` must not manage SSH，UFW，or the installer-created legacy account．Those operations have separate playbooks，explicit approval variables，and independent access verification requirements．The current service role carries a hardened unit template but does not install or enable it unless both deployment variables and a real agent command are supplied．
+
+`playbooks/camera-validation-packages.yml` is an independent package-only path．It exists so JPEG and
+`MediaEnvelope` validation dependencies can be installed without running the account，USB，directory，service，SSH，
+or firewall roles．
 
 USB access rules set only group ownership and mode for the known VID/PID pairs．They do not create alternate device symlinks．Job implementations must use `/dev/serial/by-id` from ignored local inventory and may use `/dev/serial/by-path` as a physical-port assertion．
 

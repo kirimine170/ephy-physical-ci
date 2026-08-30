@@ -1,0 +1,18 @@
+---
+- name: Configure camera validation packages without changing host access
+  hosts: physical_ci
+  become: true
+  gather_facts: true
+  serial: 1
+
+  pre_tasks:
+    - name: Require Ubuntu 24.04
+      ansible.builtin.assert:
+        that:
+          - ansible_facts.distribution == "Ubuntu"
+          - ansible_facts.distribution_version is version("24.04", ">=")
+          - ansible_facts.distribution_version is version("25.04", "<")
+        fail_msg: This playbook supports Ubuntu 24.04 LTS only.
+
+  roles:
+    - role: physical_ci_camera_validation

@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+usage() {
+  cat <<'EOF'
+Usage: scripts/setup-camera-validation-host INVENTORY check|apply [ansible-playbook options]
+
+Run from WSL2 or another Linux Ansible controller. The check mode is the
+default safety gate; apply performs only camera-validation package changes.
+
+Examples:
+  scripts/setup-camera-validation-host inventories/local/hosts.yml check --limit hil-01 --ask-become-pass
+  scripts/setup-camera-validation-host inventories/local/hosts.yml apply --limit hil-01 --ask-become-pass
+EOF
+}
+
+if [[ $# -lt 2 ]]; then
+  usage >&2
+  exit 2
+fi
+
+if [[ "$(uname -s)" != "Linux" ]]; then
+  echo "ERROR: use WSL2 or another Linux Ansible controller." >&2
+  exit 2
+fi
+
+inventory="$1"
+mode="$2"
+shift 2
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "${repo_root}"
+
+if [[ ! -f "${inventory}" ]]; then
+  echo "ERROR: inventory does not exist: ${inventory}" >&2
+  exit 2
+fi
+
+ansible_options=(--diff)
+case "${mode}" in
+  check)
+    ansible_options+=(--check)
+    ;;
+  apply)
+    ;;
+  *)
+    usage >&2
+    exit 2
+    ;;
+esac
+
+exec ansible-playbook \
+  -i "${inventory}" \
+  playbooks/camera-validation-packages.yml \
+  "${ansible_options[@]}" \
+  "$@"

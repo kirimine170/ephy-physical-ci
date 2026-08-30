@@ -96,6 +96,57 @@ def validate_safe_playbook_boundary() -> list[str]:
     return errors
 
 
+def validate_camera_validation_package_boundary() -> list[str]:
+    playbook_path = ROOT / "playbooks" / "camera-validation-packages.yml"
+    defaults_path = (
+        ROOT
+        / "roles"
+        / "physical_ci_camera_validation"
+        / "defaults"
+        / "main.yml"
+    )
+    tasks_path = (
+        ROOT
+        / "roles"
+        / "physical_ci_camera_validation"
+        / "tasks"
+        / "main.yml"
+    )
+    playbook = playbook_path.read_text(encoding="utf-8")
+    defaults = defaults_path.read_text(encoding="utf-8")
+    tasks = tasks_path.read_text(encoding="utf-8")
+    errors: list[str] = []
+
+    required_packages = {
+        "python3-jsonschema",
+        "python3-pil",
+        "python3-venv",
+    }
+    for package in required_packages:
+        if f"  - {package}\n" not in defaults:
+            errors.append(f"camera validation package list is missing {package}")
+
+    if "role: physical_ci_camera_validation" not in playbook:
+        errors.append("camera validation playbook must use its package-only role")
+    for forbidden in (
+        "physical_ci_accounts",
+        "physical_ci_base",
+        "physical_ci_directories",
+        "physical_ci_firewall",
+        "physical_ci_service",
+        "physical_ci_ssh",
+        "physical_ci_usb",
+    ):
+        if forbidden in playbook:
+            errors.append(
+                "camera validation playbook includes out-of-scope role "
+                f"{forbidden}"
+            )
+    if "ansible.builtin.apt:" not in tasks or "state: present" not in tasks:
+        errors.append("camera validation role must only declare present APT packages")
+    return errors
+
+
 def validate_udev_boundary() -> list[str]:
     path = (
         ROOT
@@ -201,6 +252,7 @@ def validate() -> list[str]:
     errors.extend(validate_sensitive_patterns(files))
     errors.extend(validate_sanitized_inventory())
     errors.extend(validate_safe_playbook_boundary())
+    errors.extend(validate_camera_validation_package_boundary())
     errors.extend(validate_udev_boundary())
     errors.extend(validate_toolchain_manifest())
     return errors

@@ -1,0 +1,7 @@
+---
+- name: Install camera validation host packages
+  ansible.builtin.apt:
+    name: "{{ physical_ci_camera_validation_packages }}"
+    state: present
+    update_cache: true
+    cache_valid_time: 3600

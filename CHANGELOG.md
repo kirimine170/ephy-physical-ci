@@ -12,3 +12,4 @@ All notable changes to this repository are documented in this file．
 - Least-privilege administrator，operator，agent，directory，USB，and optional service roles．
 - Sanitized host facts，local-inventory boundary，rollback，WSL2，first-apply，and LXD runbooks．
 - Disabled-by-default MCU toolchain lock manifest and infrastructure validation workflow．
+- Package-only camera validation setup for Ubuntu 24.04 Physical CI nodes．

@@ -57,7 +57,10 @@ jobs:
           done
 
       - name: Check shell scripts
-        run: shellcheck roles/physical_ci_usb/files/capture-usb-baseline
+        run: |
+          shellcheck \
+            roles/physical_ci_usb/files/capture-usb-baseline \
+            scripts/setup-camera-validation-host
 
       - name: Render and verify the optional systemd unit
         run: |
