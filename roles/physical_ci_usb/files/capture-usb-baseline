@@ -1,0 +1,136 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+if [[ ${EUID} -ne 0 ]]; then
+  echo "Run this command with sudo so that dmesg can be captured." >&2
+  exit 1
+fi
+
+timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
+output_path="${1:-/var/local/physical-ci-baseline/usb-baseline-${timestamp}.txt}"
+output_directory="$(dirname -- "${output_path}")"
+mkdir -p -- "${output_directory}"
+
+# The default directory is writable by hil-ci. Open the final path exactly once
+# with noclobber semantics so a pre-created file or symlink cannot be followed.
+umask 0077
+set -o noclobber
+if ! exec 3>"${output_path}"; then
+  printf 'Refusing to overwrite existing baseline path: %s\n' "${output_path}" >&2
+  exit 1
+fi
+set +o noclobber
+exec > >(tee /proc/self/fd/3) 2>&1
+
+value_from_file() {
+  local path="$1"
+  if [[ -r "${path}" ]]; then
+    tr -d '\n' < "${path}"
+  else
+    printf '%s' '-'
+  fi
+}
+
+property_from_text() {
+  local property="$1"
+  local properties="$2"
+  local value
+  value="$(sed -n "s/^${property}=//p" <<< "${properties}" | head -n 1)"
+  printf '%s' "${value:--}"
+}
+
+printf 'Physical CI USB baseline\n'
+printf 'captured_utc=%s\n' "$(date --utc --iso-8601=seconds)"
+printf 'hostname=%s\n' "$(hostname)"
+printf 'kernel=%s\n' "$(uname -r)"
+
+printf '\n=== NETWORK ===\n'
+ip -brief -4 address
+
+printf '\n=== TOOL VERSIONS ===\n'
+lsusb --version
+printf 'udevadm %s\n' "$(udevadm --version)"
+printf 'dmesg %s\n' "$(dmesg --version | head -n 1)"
+
+printf '\n=== LSUSB ===\n'
+lsusb
+
+printf '\n=== LSUSB TREE ===\n'
+lsusb -t
+
+printf '\n=== USB SYSFS INVENTORY (tab-separated) ===\n'
+printf 'physical_path\tvid\tpid\tserial\tmanufacturer\tproduct\tbusnum\tdevnum\tdriver\n'
+for sys_device in /sys/bus/usb/devices/*; do
+  [[ -f "${sys_device}/idVendor" && -f "${sys_device}/idProduct" ]] || continue
+  physical_path="$(basename "${sys_device}")"
+  driver='-'
+  if [[ -L "${sys_device}/driver" ]]; then
+    driver="$(basename "$(readlink -f "${sys_device}/driver")")"
+  fi
+  printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+    "${physical_path}" \
+    "$(value_from_file "${sys_device}/idVendor")" \
+    "$(value_from_file "${sys_device}/idProduct")" \
+    "$(value_from_file "${sys_device}/serial")" \
+    "$(value_from_file "${sys_device}/manufacturer")" \
+    "$(value_from_file "${sys_device}/product")" \
+    "$(value_from_file "${sys_device}/busnum")" \
+    "$(value_from_file "${sys_device}/devnum")" \
+    "${driver}"
+done
+
+printf '\n=== SERIAL SYMLINKS ===\n'
+for directory in /dev/serial/by-id /dev/serial/by-path; do
+  printf '%s\n' "${directory}"
+  if [[ -d "${directory}" ]]; then
+    find "${directory}" -maxdepth 1 -type l -printf '%f -> %l\n' | sort
+  else
+    printf '%s\n' '(not present)'
+  fi
+done
+
+printf '\n=== SERIAL DEVICE INVENTORY ===\n'
+printf 'devnode\tvid\tpid\tserial\tid_path\tdevpath\tby_id\tby_path\n'
+shopt -s nullglob
+serial_devices=(/dev/ttyACM* /dev/ttyUSB*)
+if ((${#serial_devices[@]} == 0)); then
+  printf '%s\n' '(no ttyACM or ttyUSB devices)'
+else
+  for devnode in "${serial_devices[@]}"; do
+    properties="$(udevadm info --query=property --name "${devnode}")"
+    by_id='-'
+    by_path='-'
+    for link in /dev/serial/by-id/*; do
+      if [[ "$(readlink -f "${link}")" == "$(readlink -f "${devnode}")" ]]; then
+        by_id="$(basename "${link}")"
+        break
+      fi
+    done
+    for link in /dev/serial/by-path/*; do
+      if [[ "$(readlink -f "${link}")" == "$(readlink -f "${devnode}")" ]]; then
+        by_path="$(basename "${link}")"
+        break
+      fi
+    done
+    printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+      "${devnode}" \
+      "$(property_from_text ID_VENDOR_ID "${properties}")" \
+      "$(property_from_text ID_MODEL_ID "${properties}")" \
+      "$(property_from_text ID_SERIAL_SHORT "${properties}")" \
+      "$(property_from_text ID_PATH "${properties}")" \
+      "$(udevadm info --query=path --name "${devnode}")" \
+      "${by_id}" \
+      "${by_path}"
+  done
+fi
+
+printf '\n=== UDEV PROPERTIES PER SERIAL DEVICE ===\n'
+for devnode in "${serial_devices[@]}"; do
+  printf '%s\n' "--- ${devnode} ---"
+  udevadm info --query=property --name "${devnode}" | sort
+done
+
+printf '\n=== RECENT USB/SERIAL KERNEL MESSAGES ===\n'
+dmesg --ctime | grep -iE 'usb|ttyACM|ttyUSB|cdc_acm|cp210|ch34|ftdi' | tail -n 200 || true
+
+printf '\noutput=%s\n' "${output_path}"

@@ -1,0 +1,56 @@
+---
+- name: Read the account database before SSH changes
+  ansible.builtin.getent:
+    database: passwd
+
+- name: Require the verified administrator account
+  ansible.builtin.assert:
+    that:
+      - physical_ci_admin_user in ansible_facts.getent_passwd
+    fail_msg: The administrator account must exist before SSH is managed.
+
+- name: Inspect the SSH hardening drop-in before changing it
+  ansible.builtin.stat:
+    path: /etc/ssh/sshd_config.d/10-physical-ci.conf
+  register: physical_ci_ssh_dropin_before
+  check_mode: false
+
+- name: Install and validate the SSH hardening drop-in with rollback backup
+  block:
+    - name: Install the SSH hardening drop-in
+      ansible.builtin.template:
+        src: 10-physical-ci.conf.j2
+        dest: /etc/ssh/sshd_config.d/10-physical-ci.conf
+        owner: root
+        group: root
+        mode: "0644"
+        backup: true
+      register: physical_ci_ssh_template
+      notify: Reload SSH without terminating established sessions
+
+    - name: Validate the complete SSH configuration
+      ansible.builtin.command: /usr/sbin/sshd -t
+      changed_when: false
+
+  rescue:
+    - name: Restore the SSH drop-in backup after validation failure
+      ansible.builtin.copy:
+        src: "{{ physical_ci_ssh_template.backup_file }}"
+        dest: /etc/ssh/sshd_config.d/10-physical-ci.conf
+        remote_src: true
+        owner: root
+        group: root
+        mode: "0644"
+      when: physical_ci_ssh_template.backup_file is defined
+
+    - name: Remove the new SSH drop-in when no previous file existed
+      ansible.builtin.file:
+        path: /etc/ssh/sshd_config.d/10-physical-ci.conf
+        state: absent
+      when: not physical_ci_ssh_dropin_before.stat.exists
+
+    - name: Stop after rolling back the invalid SSH configuration
+      ansible.builtin.fail:
+        msg: >-
+          SSH validation failed; the previous drop-in was restored or the new
+          drop-in was removed.

@@ -10,13 +10,17 @@ This repository is an Ephy `integration` project．Its status is `design` and it
 
 ## Goals
 
-- Describe the outcomes this repository owns．
-- Keep responsibilities aligned with its declared Ephy project type．
+- Reproduce an Ubuntu 24.04 Physical CI node through reviewable Ansible code．
+- Give administrators，operators，and future agents separate least-privilege identities．
+- Preserve stable USB identity through the kernel-provided `/dev/serial/by-id` links．
+- Provide a versioned boundary for future build，flash，test，and toolchain execution．
 
 ## Non-goals
 
 - Do not duplicate responsibilities owned by related repositories．
 - Do not maintain a downstream repository registry in this repository．
+- Do not ship a production scheduler or device daemon in the current design state．
+- Do not store host addresses，USB serial numbers，credentials，or private inventory in Git．
 
 ## Current status
 
@@ -24,7 +28,7 @@ The current implementation status is `design`．This label describes observed im
 
 ## Architecture
 
-The design coordinates build，flash，test，and result collection through the authorized `ephy-worker` boundary．No production device orchestration is implemented yet．See [the physical CI boundary](docs/physical-ci-boundary.md)．
+Ansible declares the host baseline，accounts，directories，minimal USB access，and an optional hardened systemd unit．Connection-sensitive SSH and firewall changes are isolated from the default playbook．No production device orchestration is implemented yet．See [Architecture](docs/architecture.md) and [the physical CI boundary](docs/physical-ci-boundary.md)．
 
 ## Repository relationships
 
@@ -40,14 +44,39 @@ Declare only the parent and direct relationships．Do not list downstream consum
 
 ## Getting started
 
-Add project-specific setup instructions here after selecting the implementation stack．
+Use an Ubuntu 24.04 WSL2 distribution or another Linux controller．Do not run Ansible natively on Windows．Prepare the pinned controller environment and an ignored local inventory:
+
+```bash
+python3 -m venv .controller-venv
+. .controller-venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements-controller.txt
+ansible-galaxy collection install -r requirements.yml
+cp inventories/example/hosts.yml inventories/local/hosts.yml
+cp -R inventories/example/host_vars inventories/local/
+```
+
+Run the read-only audit and the required preview before any real apply:
+
+```bash
+ansible-playbook -i inventories/local/hosts.yml playbooks/audit.yml
+ansible-playbook -i inventories/local/hosts.yml playbooks/site.yml \
+  --check --diff --ask-become-pass
+```
+
+See the [WSL2 controller runbook](docs/runbooks/controller-wsl2.md) and [first-apply runbook](docs/runbooks/first-apply.md)．
 
 ## Testing
 
 Document project-specific test commands here．Keep the repository metadata validation in the standard verification path:
 
 ```bash
-python3 scripts/validate_repository.py
+python3 -m unittest discover -s tests -v
+python3 scripts/validate_repository.py --check-sensitive-patterns
+python3 scripts/validate_infrastructure.py
+yamllint .
+ansible-lint
+ansible-playbook -i inventories/example/hosts.yml playbooks/site.yml --syntax-check
 ```
 
 ## Security and data handling
@@ -59,6 +88,9 @@ The data classification is `internal`．Do not commit secrets，unnecessary pers
 - [Architecture](docs/architecture.md)
 - [Repository relationships](docs/repository-relations.md)
 - [Security and data handling](docs/security-and-data.md)
+- [Inventory boundary](docs/inventory.md)
+- [Toolchain manifest](docs/toolchain-manifest.md)
+- [Operator runbooks](docs/runbooks/)
 - [Architecture Decision Records](docs/adr/README.md)
 
 ## License

@@ -1,0 +1,19 @@
+---
+- name: Manage the firewall only after SSH access is independently verified
+  hosts: physical_ci
+  become: true
+  gather_facts: false
+  serial: 1
+
+  pre_tasks:
+    - name: Require explicit firewall management approval and an allowlist
+      ansible.builtin.assert:
+        that:
+          - physical_ci_manage_firewall | default(false) | bool
+          - physical_ci_ssh_allowed_cidrs | default([]) | length > 0
+        fail_msg: >-
+          Set physical_ci_manage_firewall=true and provide a local CIDR allowlist
+          only after a rollback session is available.
+
+  roles:
+    - role: physical_ci_firewall

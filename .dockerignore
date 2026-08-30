@@ -1,0 +1,7 @@
+.git
+.ansible
+.controller-venv
+inventories/local
+local-data
+__pycache__
+*.pyc

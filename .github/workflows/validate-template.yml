@@ -19,8 +19,10 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Run unit tests
-        run: python -m unittest discover -s tests -v
+      - name: Run template unit tests
+        run: |
+          python -m unittest discover -s tests -p 'test_init_repository.py' -v
+          python -m unittest discover -s tests -p 'test_validate_repository.py' -v
 
       - name: Validate repository and scan template text
         run: python scripts/validate_repository.py --check-sensitive-patterns

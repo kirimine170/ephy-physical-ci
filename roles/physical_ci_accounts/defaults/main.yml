@@ -1,0 +1,14 @@
+---
+physical_ci_group: hil-ci
+physical_ci_group_gid: 980
+physical_ci_admin_user: hil-admin
+physical_ci_admin_uid: 2001
+physical_ci_operator_user: hil-operator
+physical_ci_operator_uid: 2002
+physical_ci_agent_user: hil-agent
+physical_ci_agent_uid: 980
+
+physical_ci_admin_authorized_keys: []
+physical_ci_operator_authorized_keys: []
+physical_ci_admin_password_hash: null
+physical_ci_admin_sudo_nopasswd: false

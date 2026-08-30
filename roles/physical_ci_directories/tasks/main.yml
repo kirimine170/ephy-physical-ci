@@ -1,0 +1,46 @@
+---
+- name: Create root-owned Physical CI configuration directories
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: root
+    group: "{{ physical_ci_group_gid }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - path: /etc/ephy-physical-ci
+      mode: "0750"
+    - path: /opt/ephy-physical-ci
+      mode: "0755"
+
+- name: Create agent-owned state directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ physical_ci_agent_uid }}"
+    group: "{{ physical_ci_group_gid }}"
+    mode: "0750"
+  loop:
+    - /var/lib/ephy-physical-ci
+    - /var/log/ephy-physical-ci
+    - /var/cache/ephy-physical-ci
+
+- name: Create setgid operator work and artifact directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ physical_ci_operator_uid }}"
+    group: "{{ physical_ci_group_gid }}"
+    mode: "2770"
+  loop:
+    - /srv/ephy-physical-ci
+    - /srv/ephy-physical-ci/workspaces
+    - /srv/ephy-physical-ci/artifacts
+
+- name: Install the volatile-directory declaration
+  ansible.builtin.template:
+    src: ephy-physical-ci-tmpfiles.conf.j2
+    dest: /etc/tmpfiles.d/ephy-physical-ci.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Create Physical CI volatile directories

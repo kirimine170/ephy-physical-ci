@@ -1,0 +1,27 @@
+---
+extends: default
+
+# These files belong to the repository-initialization change in PR #1.  Keep
+# this infrastructure PR from rewriting that independent change.
+ignore: |
+  .ephy/
+  .github/ISSUE_TEMPLATE/
+  .github/workflows/validate-template.yml
+
+rules:
+  braces:
+    max-spaces-inside: 1
+  comments:
+    min-spaces-from-content: 1
+  comments-indentation: false
+  document-start: enable
+  line-length:
+    max: 120
+  octal-values:
+    forbid-explicit-octal: true
+    forbid-implicit-octal: true
+  truthy:
+    allowed-values:
+      - "true"
+      - "false"
+    check-keys: false

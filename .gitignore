@@ -25,6 +25,12 @@ venv/
 *.pfx
 *.jks
 secrets/
+inventories/local/*
+!inventories/local/.gitignore
+!inventories/local/README.md
+.ansible/
+.controller-venv/
+*.retry
 
 # Local，sensitive，or large data
 local-data/

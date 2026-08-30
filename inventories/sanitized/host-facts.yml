@@ -1,0 +1,76 @@
+---
+schema_version: 1
+captured_utc: "2026-08-30T10:22:50Z"
+
+host_profile:
+  inventory_name: hil-01
+  os: Ubuntu Server 24.04 LTS
+  architecture: x86_64
+  network:
+    ipv4_assignment: dhcp
+    address: redacted
+    hardware_address: redacted
+  cloud_init: disabled
+
+current_access:
+  legacy_account: hil
+  legacy_account_preserved: true
+  root_password: locked
+  ssh_public_key_authentication: true
+  ssh_password_authentication: false
+  ssh_root_login: false
+  firewall_scope: lab_ipv4_subnet_only
+
+current_capabilities:
+  packages_present:
+    - git
+    - openssh-server
+    - python3
+    - python3-apt
+    - udev
+    - ufw
+    - usbutils
+  packages_not_present:
+    - ansible-core
+    - avrdude
+    - build-essential
+    - cmake
+    - ninja-build
+    - openocd
+  physical_ci_systemd_units: []
+  physical_ci_udev_rules: []
+
+usb_devices:
+  - logical_id: xiao-espressif-01
+    product: Espressif USB JTAG/serial debug unit
+    vid: "303a"
+    pid: "1001"
+    driver: cdc_acm
+    by_id_present: true
+    serial: redacted
+    physical_path: redacted
+    current_device_node: ttyACM0
+  - logical_id: xiao-nrf52840-sense-01
+    product: Seeed XIAO nRF52840 Sense
+    vid: "2886"
+    pid: "8045"
+    driver: cdc_acm
+    by_id_present: true
+    serial: redacted
+    physical_path: redacted
+    current_device_node: ttyACM1
+  - logical_id: xiao-ra4m1-01
+    product: Seeed XIAO RA4M1
+    vid: "2886"
+    pid: "0049"
+    driver: cdc_acm
+    by_id_present: true
+    serial: redacted
+    physical_path: redacted
+    current_device_node: ttyACM2
+
+lxd:
+  legacy_user_is_member: true
+  lxd_installed: false
+  instances_detected: false
+  installer_socket_active: true

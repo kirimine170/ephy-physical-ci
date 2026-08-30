@@ -1,0 +1,81 @@
+---
+name: Validate infrastructure
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-controller.txt
+
+      - name: Install pinned controller dependencies
+        run: python -m pip install -r requirements-controller.txt
+
+      - name: Install pinned Ansible collections
+        run: >-
+          ansible-galaxy collection install
+          -r requirements.yml
+
+      - name: Install host-format validators
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes shellcheck
+
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Validate repository and sensitive patterns
+        run: python scripts/validate_repository.py --check-sensitive-patterns
+
+      - name: Validate infrastructure boundaries
+        run: python scripts/validate_infrastructure.py
+
+      - name: Lint YAML
+        run: yamllint .
+
+      - name: Lint Ansible
+        run: ansible-lint
+
+      - name: Check every playbook syntax
+        run: |
+          for playbook in playbooks/*.yml; do
+            ansible-playbook -i inventories/example/hosts.yml "${playbook}" --syntax-check
+          done
+
+      - name: Check shell scripts
+        run: shellcheck roles/physical_ci_usb/files/capture-usb-baseline
+
+      - name: Render and verify the optional systemd unit
+        run: |
+          ansible localhost -i localhost, -c local \
+            -m ansible.builtin.template \
+            -a "src=roles/physical_ci_service/templates/ephy-physical-ci-agent.service.j2 \
+                dest=/tmp/ephy-physical-ci-agent.service" \
+            -e physical_ci_agent_command=/usr/bin/true \
+            -e physical_ci_agent_user=hil-agent \
+            -e physical_ci_group=hil-ci
+          systemd-analyze verify /tmp/ephy-physical-ci-agent.service
+
+      - name: Render and verify the udev rules
+        run: |
+          ansible localhost -i localhost, -c local \
+            -m ansible.builtin.template \
+            -a "src=roles/physical_ci_usb/templates/70-ephy-physical-ci-usb.rules.j2 \
+                dest=/tmp/70-ephy-physical-ci-usb.rules" \
+            -e @roles/physical_ci_usb/defaults/main.yml \
+            -e physical_ci_group=root
+          udevadm verify /tmp/70-ephy-physical-ci-usb.rules

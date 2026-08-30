@@ -1,0 +1,8 @@
+---
+- name: Reload Physical CI udev rules
+  ansible.builtin.command: udevadm control --reload-rules
+  changed_when: true
+
+- name: Re-evaluate Physical CI serial devices
+  ansible.builtin.command: udevadm trigger --subsystem-match=tty --action=change
+  changed_when: true
