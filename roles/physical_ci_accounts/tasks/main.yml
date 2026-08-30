@@ -49,13 +49,6 @@
   loop_control:
     label: "{{ item.item.name }}={{ item.item.uid }}"
 
-- name: Create the dedicated Physical CI access group
-  ansible.builtin.group:
-    name: "{{ physical_ci_group }}"
-    gid: "{{ physical_ci_group_gid }}"
-    system: true
-    state: present
-
 - name: Require production credentials before a real account apply
   ansible.builtin.assert:
     that:
@@ -66,6 +59,13 @@
       A real apply requires administrator and operator public keys plus either an
       externally supplied administrator password hash or explicit NOPASSWD approval.
   when: not ansible_check_mode
+
+- name: Create the dedicated Physical CI access group
+  ansible.builtin.group:
+    name: "{{ physical_ci_group }}"
+    gid: "{{ physical_ci_group_gid }}"
+    system: true
+    state: present
 
 - name: Create the administrator account without touching legacy users
   ansible.builtin.user:
