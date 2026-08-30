@@ -28,7 +28,8 @@ systemd-analyze verify /tmp/ephy-physical-ci-agent.service
 ansible localhost -i localhost, -c local \
   -m ansible.builtin.template \
   -a "src=roles/physical_ci_usb/templates/70-ephy-physical-ci-usb.rules.j2 dest=/tmp/70-ephy-physical-ci-usb.rules" \
-  -e @roles/physical_ci_usb/defaults/main.yml
+  -e @roles/physical_ci_usb/defaults/main.yml \
+  -e physical_ci_group=root
 if udevadm --help 2>&1 | grep -q 'verify'; then
   udevadm verify /tmp/70-ephy-physical-ci-usb.rules
 else
