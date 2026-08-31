@@ -15,7 +15,12 @@ for playbook in playbooks/*.yml; do
   ansible-playbook -i inventories/example/hosts.yml "${playbook}" --syntax-check
 done
 
-shellcheck roles/physical_ci_usb/files/capture-usb-baseline
+shellcheck \
+  roles/physical_ci_usb/files/capture-usb-baseline \
+  scripts/setup-camera-validation-host \
+  scripts/run-camera-reference
+python -c \
+  'compile(open("scripts/validate-camera-artifacts").read(), "validator", "exec")'
 
 ansible localhost -i localhost, -c local \
   -m ansible.builtin.template \

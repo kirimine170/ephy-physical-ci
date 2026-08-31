@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+usage() {
+  cat <<'EOF'
+Usage: run-camera-reference REFERENCE_ROOT build BUILD_PATH
+       run-camera-reference REFERENCE_ROOT flash SERIAL_DEVICE BUILD_PATH
+       run-camera-reference REFERENCE_ROOT capture SERIAL_DEVICE STAGING_ROOT
+
+REFERENCE_ROOT is an ephy-cam XIAO reference directory. Device firmware and
+protocol implementation remain owned by ephy-cam; this wrapper only invokes
+its declared build, flash, and one-shot capture entry points.
+EOF
+}
+
+if [[ "$(uname -s)" != "Linux" ]]; then
+  echo "ERROR: use hil-01, WSL2, or another Linux host." >&2
+  exit 2
+fi
+if [[ $# -lt 2 ]]; then
+  usage >&2
+  exit 2
+fi
+
+reference_root="$(realpath "$1")"
+mode="$2"
+shift 2
+build_flash="${reference_root}/scripts/build-flash.sh"
+capture_host="${reference_root}/host/ephy_cam_reference.py"
+
+case "${mode}" in
+  build)
+    if [[ $# -ne 1 || ! -x "${build_flash}" ]]; then
+      usage >&2
+      exit 2
+    fi
+    exec "${build_flash}" build "$1"
+    ;;
+  flash)
+    if [[ $# -ne 2 || ! -x "${build_flash}" ]]; then
+      usage >&2
+      exit 2
+    fi
+    exec "${build_flash}" flash "$1" "$2"
+    ;;
+  capture)
+    if [[ $# -ne 2 || ! -f "${capture_host}" ]]; then
+      usage >&2
+      exit 2
+    fi
+    exec python3 "${capture_host}" capture "$1" "$2"
+    ;;
+  *)
+    usage >&2
+    exit 2
+    ;;
+esac

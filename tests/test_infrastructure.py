@@ -20,11 +20,27 @@ class InfrastructureValidationTests(unittest.TestCase):
     def test_initial_site_does_not_manage_remote_access(self) -> None:
         self.assertEqual(validate_infrastructure.validate_safe_playbook_boundary(), [])
 
+    def test_camera_validation_setup_is_package_only(self) -> None:
+        self.assertEqual(
+            validate_infrastructure.validate_camera_validation_package_boundary(), []
+        )
+
+    def test_camera_reference_boundary_contains_no_device_implementation(self) -> None:
+        self.assertEqual(validate_infrastructure.validate_camera_reference_boundary(), [])
+
     def test_udev_preserves_builtin_stable_links(self) -> None:
         self.assertEqual(validate_infrastructure.validate_udev_boundary(), [])
 
     def test_toolchain_manifest_is_valid_and_disabled(self) -> None:
         self.assertEqual(validate_infrastructure.validate_toolchain_manifest(), [])
+
+    def test_espressif_profile_names_the_physical_board(self) -> None:
+        manifest = json.loads(
+            (ROOT / "manifests" / "toolchains.json").read_text(encoding="utf-8")
+        )
+        profile_ids = {profile["id"] for profile in manifest["board_profiles"]}
+        self.assertIn("xiao-esp32s3-sense", profile_ids)
+        self.assertNotIn("xiao-espressif", profile_ids)
 
     def test_toolchain_manifest_is_checked_against_committed_schema(self) -> None:
         manifest = {

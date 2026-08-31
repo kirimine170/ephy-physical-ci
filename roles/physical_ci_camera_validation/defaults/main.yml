@@ -1,0 +1,6 @@
+---
+physical_ci_camera_validation_packages:
+  - python3-jsonschema
+  - python3-pil
+  - python3-serial
+  - python3-venv
