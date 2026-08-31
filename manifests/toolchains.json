@@ -4,7 +4,7 @@
   "components": [],
   "board_profiles": [
     {
-      "id": "xiao-espressif",
+      "id": "xiao-esp32s3-sense",
       "usb_ids": ["303a:1001"],
       "components": []
     },

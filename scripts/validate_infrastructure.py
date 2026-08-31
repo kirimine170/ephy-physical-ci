@@ -120,6 +120,7 @@ def validate_camera_validation_package_boundary() -> list[str]:
     required_packages = {
         "python3-jsonschema",
         "python3-pil",
+        "python3-serial",
         "python3-venv",
     }
     for package in required_packages:
@@ -144,6 +145,34 @@ def validate_camera_validation_package_boundary() -> list[str]:
             )
     if "ansible.builtin.apt:" not in tasks or "state: present" not in tasks:
         errors.append("camera validation role must only declare present APT packages")
+    return errors
+
+
+def validate_camera_reference_boundary(files: list[Path] | None = None) -> list[str]:
+    files = files or repository_files()
+    errors: list[str] = []
+    implementation_suffixes = {".ino", ".c", ".cc", ".cpp"}
+    for path in files:
+        if path.suffix.lower() in implementation_suffixes:
+            errors.append(
+                "Physical CI must not own camera device implementation: "
+                f"{path.relative_to(ROOT)}"
+            )
+
+    runner = (ROOT / "scripts" / "run-camera-reference").read_text(
+        encoding="utf-8"
+    )
+    for forbidden in (
+        "OV3660",
+        "303a:1001",
+        "/dev/serial/by-id/usb-",
+        "192.168.",
+    ):
+        if forbidden in runner:
+            errors.append(f"camera reference runner contains device detail {forbidden}")
+    for required in ("REFERENCE_ROOT", "build", "flash", "capture"):
+        if required not in runner:
+            errors.append(f"camera reference runner is missing {required}")
     return errors
 
 
@@ -253,6 +282,7 @@ def validate() -> list[str]:
     errors.extend(validate_sanitized_inventory())
     errors.extend(validate_safe_playbook_boundary())
     errors.extend(validate_camera_validation_package_boundary())
+    errors.extend(validate_camera_reference_boundary(files))
     errors.extend(validate_udev_boundary())
     errors.extend(validate_toolchain_manifest())
     return errors

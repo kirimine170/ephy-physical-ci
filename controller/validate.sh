@@ -17,7 +17,10 @@ done
 
 shellcheck \
   roles/physical_ci_usb/files/capture-usb-baseline \
-  scripts/setup-camera-validation-host
+  scripts/setup-camera-validation-host \
+  scripts/run-camera-reference
+python -c \
+  'compile(open("scripts/validate-camera-artifacts").read(), "validator", "exec")'
 
 ansible localhost -i localhost, -c local \
   -m ansible.builtin.template \

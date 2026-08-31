@@ -1,54 +1,67 @@
-# Camera validation host packages
+# Camera validation host
 
 ## Scope
 
-This runbook installs only the Ubuntu packages used to validate camera output on a Physical CI node．It does not
-manage SSH，UFW，users，groups，udev rules，hostname，timezone，directories，or systemd services．Use it when the full
-`playbooks/site.yml` apply is not approved．
+This runbook installs only Ubuntu packages used by camera reference validation:
 
-The package set is declared in
-`roles/physical_ci_camera_validation/defaults/main.yml`:
+- `python3-pil` for JPEG decode and dimensions．
+- `python3-jsonschema` for capture-contract validation．
+- `python3-serial` for USB CDC transport．
+- `python3-venv` for future isolated application tooling．
 
-- `python3-pil` provides JPEG decoding and dimension inspection．
-- `python3-jsonschema` validates generated `MediaEnvelope` documents．
-- `python3-venv` provides an isolated Python environment boundary for future repository-owned tools．
-
-Package revisions follow the security-updated Ubuntu 24.04 archives．Application-level Python dependencies that
-require byte-for-byte version locking belong in the owning application repository，not in this host role．
+It does not manage SSH，UFW，accounts，groups，udev，hostname，directories，or
+systemd services．Ubuntu package revisions follow the security-updated 24.04
+archive．Application toolchains remain pinned by their owning repository．
 
 ## Controller setup
 
-Use Ubuntu 24.04 under WSL2 or another Linux controller and prepare it as described in
-[the WSL2 controller runbook](controller-wsl2.md)．Keep real host addresses，SSH keys，and privilege credentials in
-ignored local inventory or outside the repository．
+Use Ubuntu 24.04 under WSL2 or another Linux controller．Keep host addresses，
+SSH keys，privilege credentials，and complete USB paths in ignored local
+inventory or outside the repository．
 
-## Preview
+## Check and apply
 
-Run the wrapper in `check` mode first:
+Run check mode first and review every planned package change:
 
 ```bash
 scripts/setup-camera-validation-host inventories/local/hosts.yml check \
   --limit hil-01 --ask-become-pass
 ```
 
-The expected writes are limited to APT cache metadata and packages from
-`physical_ci_camera_validation_packages`，including their Ubuntu-managed dependencies．Review the complete
-`--check --diff` result before applying．
-
-## Apply and verify
-
-After approval，run:
+Only after approval，apply the package-only playbook:
 
 ```bash
 scripts/setup-camera-validation-host inventories/local/hosts.yml apply \
   --limit hil-01 --ask-become-pass
 ```
 
-Verify the installed package state and imports without capturing an image:
+Verify the packages without capturing an image:
 
 ```bash
-dpkg-query -W python3-pil python3-jsonschema python3-venv
-python3 -c 'from PIL import Image; import jsonschema; print(Image.__version__, jsonschema.__version__)'
+dpkg-query -W python3-pil python3-jsonschema python3-serial python3-venv
+python3 -c 'from PIL import Image; import jsonschema, serial; print("ok")'
 ```
 
-Store host-specific command output outside Git if it contains network or hardware identifiers．
+## Invoke an ephy-cam reference
+
+Clone `ephy-cam` separately and pass its reference directory explicitly．Do not
+copy firmware into this repository．Use the stable device path from ignored
+local inventory．
+
+```bash
+scripts/run-camera-reference /path/to/ephy-cam/reference/xiao-esp32s3-sense \
+  build /tmp/ephy-cam-build
+scripts/run-camera-reference /path/to/ephy-cam/reference/xiao-esp32s3-sense \
+  flash /dev/serial/by-id/LOCAL_DEVICE /tmp/ephy-cam-build
+scripts/run-camera-reference /path/to/ephy-cam/reference/xiao-esp32s3-sense \
+  capture /dev/serial/by-id/LOCAL_DEVICE /var/tmp/ephy-cam-staging
+```
+
+Validate the generated capture independently:
+
+```bash
+scripts/validate-camera-artifacts CAPTURE_DIRECTORY /path/to/ephy-cam \
+  --source-id xiao-esp32s3-sense-01 --width 2048 --height 1536
+```
+
+The staging root must remain outside every Git checkout．

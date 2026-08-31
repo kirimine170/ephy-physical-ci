@@ -1,0 +1,111 @@
+#!/usr/bin/env python3
+"""Validate staged camera artifacts without knowing the device protocol."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import sys
+from typing import Any
+
+from jsonschema import Draft202012Validator
+from PIL import Image
+
+
+def load_json(path: Path) -> dict[str, Any]:
+    document = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(document, dict):
+        raise ValueError(f"{path} must contain a JSON object")
+    return document
+
+
+def validate(args: argparse.Namespace) -> list[str]:
+    errors: list[str] = []
+    capture_dir = args.capture_dir.resolve()
+    image_path = capture_dir / "capture.jpg"
+    envelope_path = capture_dir / "media-envelope.json"
+    source_path = capture_dir / "capture-source.json"
+    validation_path = capture_dir / "validation.json"
+    for path in (image_path, envelope_path, source_path, validation_path):
+        if not path.is_file():
+            errors.append(f"missing artifact: {path.name}")
+    if errors:
+        return errors
+
+    image_bytes = image_path.read_bytes()
+    digest = hashlib.sha256(image_bytes).hexdigest()
+    if not image_bytes.startswith(b"\xff\xd8") or not image_bytes.endswith(b"\xff\xd9"):
+        errors.append("capture.jpg has invalid JPEG magic")
+    try:
+        with Image.open(image_path) as image:
+            image.verify()
+        with Image.open(image_path) as image:
+            image.load()
+            if image.format != "JPEG":
+                errors.append(f"capture.jpg decodes as {image.format}, not JPEG")
+            if image.size != (args.width, args.height):
+                errors.append(
+                    f"capture.jpg dimensions are {image.size}, expected "
+                    f"{(args.width, args.height)}"
+                )
+    except Exception as exc:
+        errors.append(f"capture.jpg cannot be decoded: {exc}")
+
+    try:
+        envelope = load_json(envelope_path)
+        source = load_json(source_path)
+        recorded = load_json(validation_path)
+        envelope_schema = load_json(args.schema_root / "schemas" / "media-envelope.schema.json")
+        source_schema = load_json(args.schema_root / "schemas" / "capture-source.schema.json")
+        for error in Draft202012Validator(envelope_schema).iter_errors(envelope):
+            errors.append(f"MediaEnvelope schema: {error.message}")
+        for error in Draft202012Validator(source_schema).iter_errors(source):
+            errors.append(f"CaptureSource schema: {error.message}")
+        expected_values = {
+            "source_id": args.source_id,
+            "media_type": args.media_type,
+            "sha256": digest,
+            "size_bytes": len(image_bytes),
+        }
+        for key, expected in expected_values.items():
+            if envelope.get(key) != expected:
+                errors.append(
+                    f"MediaEnvelope {key} is {envelope.get(key)!r}, expected {expected!r}"
+                )
+        if source.get("source_id") != args.source_id:
+            errors.append("CaptureSource source_id differs from the expected device")
+        if recorded.get("sha256") != digest or recorded.get("size_bytes") != len(image_bytes):
+            errors.append("validation.json differs from capture.jpg")
+        if recorded.get("width") != args.width or recorded.get("height") != args.height:
+            errors.append("validation.json dimensions differ from the expected dimensions")
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        errors.append(f"artifact metadata is invalid: {exc}")
+    return errors
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("capture_dir", type=Path)
+    parser.add_argument("schema_root", type=Path)
+    parser.add_argument("--source-id", required=True)
+    parser.add_argument("--media-type", default="image/jpeg")
+    parser.add_argument("--width", type=int, required=True)
+    parser.add_argument("--height", type=int, required=True)
+    return parser
+
+
+def main() -> int:
+    args = build_parser().parse_args()
+    errors = validate(args)
+    if errors:
+        for error in errors:
+            print(f"ERROR: {error}", file=sys.stderr)
+        return 1
+    print(f"Camera artifacts are valid: {args.capture_dir.resolve()}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -60,7 +60,10 @@ jobs:
         run: |
           shellcheck \
             roles/physical_ci_usb/files/capture-usb-baseline \
-            scripts/setup-camera-validation-host
+            scripts/setup-camera-validation-host \
+            scripts/run-camera-reference
+          python -c \
+            'compile(open("scripts/validate-camera-artifacts").read(), "validator", "exec")'
 
       - name: Render and verify the optional systemd unit
         run: |

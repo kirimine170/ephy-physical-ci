@@ -2,7 +2,7 @@
 physical_ci_group: hil-ci
 physical_ci_group_gid: 980
 physical_ci_usb_models:
-  - logical_model: xiao-espressif
+  - logical_model: xiao-esp32s3-sense
     vid: "303a"
     pid: "1001"
   - logical_model: xiao-nrf52840-sense
