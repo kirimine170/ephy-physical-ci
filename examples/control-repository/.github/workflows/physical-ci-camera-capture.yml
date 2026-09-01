@@ -14,6 +14,12 @@ on:
         required: true
         default: main
         type: string
+      retrieve_image:
+        description: >-
+          Create a short-lived private artifact for operator review
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -54,6 +60,7 @@ jobs:
             ${{ runner.temp }}/ephy-camera-${{ github.run_id }}-${{
             github.run_attempt }}
           SERIAL_DEVICE: ${{ secrets.PHYSICAL_CI_SERIAL_DEVICE }}
+          RETRIEVE_IMAGE: ${{ inputs.retrieve_image }}
         run: |
           set -Eeuo pipefail
           if [[ -z "${SERIAL_DEVICE}" ]]; then
@@ -62,7 +69,10 @@ jobs:
           fi
           case "${SERIAL_DEVICE}" in
             /dev/serial/by-id/*) ;;
-            *) echo "The serial device must use /dev/serial/by-id" >&2; exit 2 ;;
+            *)
+              echo "The serial device must use /dev/serial/by-id" >&2
+              exit 2
+              ;;
           esac
           if [[ ! -L "${SERIAL_DEVICE}" ]]; then
             echo "The configured camera device is unavailable" >&2
@@ -74,23 +84,74 @@ jobs:
             "${GITHUB_WORKSPACE}/ephy-cam/reference/xiao-esp32s3-sense" \
             capture "${SERIAL_DEVICE}" "${JOB_ROOT}/staging" \
             >"${JOB_ROOT}/capture-result.json"
-          capture_dir="$(python3 -c \
-            'import json,sys; print(json.load(open(sys.argv[1]))["capture_dir"])' \
-            "${JOB_ROOT}/capture-result.json")"
+          capture_dir="$(
+            python3 - "${JOB_ROOT}/capture-result.json" <<'PY'
+          import json
+          import sys
+
+          with open(sys.argv[1], encoding="utf-8") as handle:
+              print(json.load(handle)["capture_dir"])
+          PY
+          )"
           case "${capture_dir}" in
             "${JOB_ROOT}/staging/"*) ;;
-            *) echo "Capture escaped the isolated staging directory" >&2; exit 2 ;;
+            *)
+              echo "Capture escaped the isolated staging directory" >&2
+              exit 2
+              ;;
           esac
 
           ephy-physical-ci/scripts/validate-camera-artifacts \
             "${capture_dir}" "${GITHUB_WORKSPACE}/ephy-cam" \
             --source-id xiao-esp32s3-sense-01 \
             --width 2048 --height 1536
-          python3 -c \
-            'import json,sys; d=json.load(open(sys.argv[1])); print(
-            "Camera capture validated: "
-            f"{d[\"width\"]}x{d[\"height\"]}，{d[\"size_bytes\"]} bytes")' \
-            "${capture_dir}/validation.json" >>"${GITHUB_STEP_SUMMARY}"
+          python3 - \
+            "${capture_dir}/validation.json" \
+            "${GITHUB_STEP_SUMMARY}" <<'PY'
+          import json
+          import sys
+
+          with open(sys.argv[1], encoding="utf-8") as handle:
+              validation = json.load(handle)
+          summary = (
+              "Camera capture validated: "
+              f"{validation['width']}x{validation['height']}，"
+              f"{validation['size_bytes']} bytes\n"
+          )
+          with open(sys.argv[2], "a", encoding="utf-8") as handle:
+              handle.write(summary)
+          PY
+
+          if [[ "${RETRIEVE_IMAGE}" == "true" ]]; then
+            mapfile -d '' images < <(
+              find "${capture_dir}" -maxdepth 1 -type f \
+                \( -iname '*.jpg' -o -iname '*.jpeg' \) -print0
+            )
+            if [[ "${#images[@]}" -ne 1 ]]; then
+              echo "Expected exactly one validated JPEG for retrieval" >&2
+              exit 2
+            fi
+            mkdir -p "${JOB_ROOT}/export"
+            install -m 0600 "${images[0]}" "${JOB_ROOT}/export/capture.jpg"
+            install -m 0600 "${capture_dir}/validation.json" \
+              "${JOB_ROOT}/export/validation.json"
+          fi
+
+      - name: Upload the requested image for private operator retrieval
+        if: ${{ inputs.retrieve_image }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        env:
+          ARTIFACT_ROOT: >-
+            ${{ runner.temp }}/ephy-camera-${{ github.run_id }}-${{
+            github.run_attempt }}/export
+        with:
+          name: ephy-camera-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ env.ARTIFACT_ROOT }}/capture.jpg
+            ${{ env.ARTIFACT_ROOT }}/validation.json
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
 
       - name: Remove the captured image and isolated job state
         if: always()

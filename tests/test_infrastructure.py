@@ -34,7 +34,7 @@ class InfrastructureValidationTests(unittest.TestCase):
     def test_network_mtu_is_explicit_and_outside_the_safe_baseline(self) -> None:
         self.assertEqual(validate_infrastructure.validate_network_mtu_boundary(), [])
 
-    def test_camera_ci_is_manual_private_and_does_not_publish_media(self) -> None:
+    def test_camera_ci_exports_media_only_on_explicit_private_request(self) -> None:
         workflow = (
             ROOT
             / "examples"
@@ -46,7 +46,11 @@ class InfrastructureValidationTests(unittest.TestCase):
         self.assertIn("workflow_dispatch:", workflow)
         self.assertIn("secrets.PHYSICAL_CI_SERIAL_DEVICE", workflow)
         self.assertIn("validate-camera-artifacts", workflow)
-        self.assertNotIn("actions/upload-artifact", workflow)
+        self.assertIn("retrieve_image:", workflow)
+        self.assertIn("default: false", workflow)
+        self.assertIn("if: ${{ inputs.retrieve_image }}", workflow)
+        self.assertRegex(workflow, r"actions/upload-artifact@[a-f0-9]{40}")
+        self.assertIn("retention-days: 1", workflow)
         self.assertNotIn("run-camera-reference flash", workflow)
 
     def test_udev_preserves_builtin_stable_links(self) -> None:

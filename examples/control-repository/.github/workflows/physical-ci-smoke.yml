@@ -48,7 +48,7 @@ jobs:
           export ANSIBLE_LOCAL_TEMP="${JOB_ROOT}/ansible-local"
           export ANSIBLE_COLLECTIONS_PATH="${JOB_ROOT}/ansible-collections"
           python -m pip install -r requirements-controller.txt
-          controller/validate.sh
+          bash controller/validate.sh
 
       - name: Remove isolated job state
         if: always()

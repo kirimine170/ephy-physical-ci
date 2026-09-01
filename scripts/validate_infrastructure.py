@@ -293,6 +293,10 @@ def validate_remote_ci_boundary() -> list[str]:
         "secrets.PHYSICAL_CI_SERIAL_DEVICE",
         "/dev/serial/by-id/",
         "validate-camera-artifacts",
+        "retrieve_image:",
+        "default: false",
+        "if: ${{ inputs.retrieve_image }}",
+        "retention-days: 1",
         "if: always()",
         "Refusing unsafe cleanup path",
     )
@@ -311,7 +315,12 @@ def validate_remote_ci_boundary() -> list[str]:
         len(checkout) != 40 for checkout in camera_checkout_matches
     ):
         errors.append("camera CI workflow must pin both checkout actions")
-    for forbidden in ("actions/upload-artifact", "run-camera-reference flash"):
+    artifact_matches = re.findall(
+        r"uses: actions/upload-artifact@([a-f0-9]+)", camera_workflow
+    )
+    if len(artifact_matches) != 1 or len(artifact_matches[0]) != 40:
+        errors.append("camera CI workflow must pin one private retrieval action")
+    for forbidden in ("run-camera-reference flash",):
         if forbidden in camera_workflow:
             errors.append(f"camera CI workflow must not contain {forbidden}")
 
