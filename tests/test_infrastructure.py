@@ -28,6 +28,24 @@ class InfrastructureValidationTests(unittest.TestCase):
     def test_camera_reference_boundary_contains_no_device_implementation(self) -> None:
         self.assertEqual(validate_infrastructure.validate_camera_reference_boundary(), [])
 
+    def test_remote_ci_is_outbound_private_and_not_an_ephy_worker_job(self) -> None:
+        self.assertEqual(validate_infrastructure.validate_remote_ci_boundary(), [])
+
+    def test_camera_ci_is_manual_private_and_does_not_publish_media(self) -> None:
+        workflow = (
+            ROOT
+            / "examples"
+            / "control-repository"
+            / ".github"
+            / "workflows"
+            / "physical-ci-camera-capture.yml"
+        ).read_text(encoding="utf-8")
+        self.assertIn("workflow_dispatch:", workflow)
+        self.assertIn("secrets.PHYSICAL_CI_SERIAL_DEVICE", workflow)
+        self.assertIn("validate-camera-artifacts", workflow)
+        self.assertNotIn("actions/upload-artifact", workflow)
+        self.assertNotIn("run-camera-reference flash", workflow)
+
     def test_udev_preserves_builtin_stable_links(self) -> None:
         self.assertEqual(validate_infrastructure.validate_udev_boundary(), [])
 

@@ -12,3 +12,10 @@ physical_ci_manage_ssh: false
 physical_ci_manage_firewall: false
 physical_ci_service_deploy: false
 physical_ci_toolchains_install: false
+
+# Remote CI remains disabled until this host is registered to a dedicated
+# private control repository with a short-lived token supplied outside Git．
+physical_ci_github_runner_install: false
+physical_ci_github_runner_enabled: false
+physical_ci_github_runner_control_repository_private: false
+physical_ci_github_runner_repository_url: ""

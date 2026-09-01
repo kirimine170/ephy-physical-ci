@@ -4,9 +4,13 @@ extends: default
 # These files belong to the repository-initialization change in PR #1.  Keep
 # this infrastructure PR from rewriting that independent change.
 ignore: |
+  .ansible/
+  .controller-venv/
   .ephy/
   .github/ISSUE_TEMPLATE/
   .github/workflows/validate-template.yml
+  .venv/
+  venv/
 
 rules:
   braces:

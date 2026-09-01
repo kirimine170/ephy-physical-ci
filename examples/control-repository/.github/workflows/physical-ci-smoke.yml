@@ -1,0 +1,68 @@
+---
+name: Physical CI smoke test
+
+on:
+  workflow_dispatch:
+    inputs:
+      infrastructure_revision:
+        description: ephy-physical-ci branch，tag，or commit to validate
+        required: true
+        default: main
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: physical-ci-hil-01
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    if: ${{ github.event.repository.private == true }}
+    runs-on:
+      - self-hosted
+      - linux
+      - ephy-physical-ci
+      - hil-01
+    timeout-minutes: 30
+    steps:
+      - name: Check out the requested infrastructure revision
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          repository: kirimine170/ephy-physical-ci
+          ref: ${{ inputs.infrastructure_revision }}
+          persist-credentials: false
+
+      - name: Run repository build and validation
+        env:
+          JOB_ROOT: >-
+            ${{ runner.temp }}/ephy-physical-ci-${{ github.run_id }}-${{
+            github.run_attempt }}
+        run: |
+          set -Eeuo pipefail
+          python3 -m venv "${JOB_ROOT}/controller-venv"
+          . "${JOB_ROOT}/controller-venv/bin/activate"
+          export PIP_CACHE_DIR="${JOB_ROOT}/pip-cache"
+          export ANSIBLE_HOME="${JOB_ROOT}/ansible-home"
+          export ANSIBLE_LOCAL_TEMP="${JOB_ROOT}/ansible-local"
+          export ANSIBLE_COLLECTIONS_PATH="${JOB_ROOT}/ansible-collections"
+          python -m pip install -r requirements-controller.txt
+          controller/validate.sh
+
+      - name: Remove isolated job state
+        if: always()
+        env:
+          JOB_ROOT: >-
+            ${{ runner.temp }}/ephy-physical-ci-${{ github.run_id }}-${{
+            github.run_attempt }}
+        run: |
+          set -Eeuo pipefail
+          case "${JOB_ROOT}" in
+            "${RUNNER_TEMP}/ephy-physical-ci-"*) ;;
+            *) echo "Refusing unsafe cleanup path" >&2; exit 2 ;;
+          esac
+          if [[ -d "${JOB_ROOT}" ]]; then
+            find "${JOB_ROOT}" -mindepth 1 -delete
+            rmdir "${JOB_ROOT}"
+          fi

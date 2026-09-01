@@ -1,0 +1,30 @@
+---
+physical_ci_github_runner_install: false
+physical_ci_github_runner_enabled: false
+physical_ci_github_runner_control_repository_private: false
+physical_ci_github_runner_repository_url: ""
+physical_ci_github_runner_registration_token: >-
+  {{ lookup('ansible.builtin.env', 'EPHY_GITHUB_RUNNER_TOKEN') }}
+
+physical_ci_github_runner_name: "{{ inventory_hostname }}"
+physical_ci_github_runner_labels:
+  - ephy-physical-ci
+  - "{{ inventory_hostname }}"
+physical_ci_github_runner_root: /var/lib/ephy-physical-ci/actions-runner
+physical_ci_github_runner_work_directory: _work
+physical_ci_github_runner_packages:
+  - ca-certificates
+  - curl
+  - git
+  - shellcheck
+
+# This is an integrity-pinned bootstrap package．The runner subsequently applies
+# GitHub's required security updates through its built-in update mechanism．
+physical_ci_github_runner_bootstrap_version: 2.337.0
+physical_ci_github_runner_archives:
+  x86_64:
+    platform_architecture: x64
+    sha256: 70920811a4f8ad4328818682bca5c6469c1c942fab52448868071d0063816613
+  aarch64:
+    platform_architecture: arm64
+    sha256: 9b1dc70626422526e3c94767cf024896beb15da5342a3f4819bf2feac13e0393

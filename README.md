@@ -29,33 +29,37 @@ its intended visibility is `public`．Repository relationships are declared in
 ## Current status
 
 The repository defines a reproducible host baseline，a package-only camera
-validation playbook，generic reference-command wrappers，and staged artifact
-validation．Production job orchestration is not implemented．
+validation playbook，generic reference-command wrappers，staged artifact
+validation，and a disabled-by-default outbound GitHub Actions runner．The runner
+must use a dedicated private control repository．Production hardware-job
+orchestration is not implemented．
 
 ## Architecture
 
 Ansible declares the host baseline，accounts，directories，minimal USB access，
-and an optional hardened systemd unit．Connection-sensitive SSH and firewall
-changes are isolated from the default playbook．Camera firmware，pins，sensor
-settings，and USB framing remain in `ephy-cam`．See
+an optional hardened systemd unit，and an explicit outbound remote-CI
+playbook．Connection-sensitive SSH and firewall changes are isolated from the
+default playbook．Remote Physical CI jobs execute directly on the host and do
+not pass through `ephy-worker`．Camera firmware，pins，sensor settings，and USB
+framing remain in `ephy-cam`．See
 [Architecture](docs/architecture.md) and
 [the Physical CI boundary](docs/physical-ci-boundary.md)．
 
 ## Repository relationships
 
 - Parent project: `ephy`
-- Direct dependency: `ephy-worker`
+- Direct dependencies: None．
 - Integration peer: `ephy-runtime`
-- Runtime platform: `ephy-worker`
+- Runtime platforms: None．
 
 Do not use Git submodules as an ecosystem relationship model．See
 [docs/repository-relations.md](docs/repository-relations.md)．
 
 ## Getting started
 
-Use Ubuntu 24.04 under WSL2 or another Linux controller．Do not run Ansible
-natively on Windows．Prepare an ignored local inventory，then run the read-only
-audit and check mode before any apply:
+Use macOS，Ubuntu 24.04 under WSL2，or another Linux controller．Do not run
+Ansible natively on Windows．Prepare an ignored local inventory，then run the
+read-only audit and check mode before any apply:
 
 ```bash
 python3 -m venv .controller-venv
@@ -73,6 +77,12 @@ For camera validation packages only，use
 `scripts/setup-camera-validation-host`．This path does not manage SSH，UFW，
 accounts，udev，hostname，directories，or services．See the
 [camera validation runbook](docs/runbooks/camera-validation-host.md)．
+
+For remote build and test dispatch across networks，use the explicit
+`playbooks/github-actions-runner.yml` path and a dedicated private GitHub
+control repository．It opens no inbound runner port and does not involve
+`ephy-worker`．See the
+[remote CI runbook](docs/runbooks/remote-github-actions.md)．
 
 ## Testing
 

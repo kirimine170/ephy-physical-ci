@@ -3,7 +3,7 @@
 ## Current state
 
 This repository defines how Ephy prepares a Physical CI host and invokes
-reviewed device-reference entry points through `ephy-worker`．It contains no
+reviewed device-reference entry points directly on that host．It contains no
 camera driver，board-specific firmware，or production scheduler．
 
 ## Responsibilities
@@ -25,6 +25,8 @@ and contract documents，so it does not need camera pins or sensor knowledge．
 
 ## Boundaries
 
-`ephy-worker` owns authorized remote execution．`ephy-runtime` is an integration
-peer that may submit or interpret future jobs．This repository never receives
-`ephy-private` and stores no camera master images．
+Remote Physical CI execution does not pass through `ephy-worker`．A dedicated
+Physical CI control plane authorizes and dispatches jobs directly to this host．
+`ephy-runtime` is an integration peer that may submit or interpret future jobs．
+This repository never receives `ephy-private` and stores no camera master
+images．

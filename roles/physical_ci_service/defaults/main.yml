@@ -4,3 +4,4 @@ physical_ci_agent_user: hil-agent
 physical_ci_agent_command: ""
 physical_ci_service_deploy: false
 physical_ci_service_enabled: false
+physical_ci_service_manage_state: true

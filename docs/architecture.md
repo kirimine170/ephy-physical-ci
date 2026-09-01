@@ -15,7 +15,7 @@ infrastructure．
 - `playbooks/` separates non-disruptive configuration from SSH and firewall
   changes．
 - `roles/` owns accounts，directories，USB policy，validation packages，and the
-  optional service boundary．
+  optional service and outbound runner boundaries．
 - `manifests/` defines the version/checksum boundary for future MCU tools．
 - `scripts/` owns generic invocation and validation，not device firmware．
 - `tests/` verifies safety boundaries without contacting a host．
@@ -32,6 +32,11 @@ are supplied．
 for JPEG，schema，and serial-transport dependencies．It excludes every account，
 USB，directory，service，SSH，and firewall role．
 
+`playbooks/github-actions-runner.yml` is a separate opt-in remote-control path．
+It registers only to a confirmed private control repository and initiates
+outbound HTTPS from the host．It is not included by `site.yml` and does not route
+work through `ephy-worker`．
+
 ## Device boundary
 
 USB rules set only group ownership and mode for known VID/PID pairs．They do not
@@ -44,6 +49,8 @@ and independently validates its staged output．
 
 ## Implementation state and proposals
 
-Ansible host configuration，generic reference invocation，and artifact
-validation are implemented．A production scheduler，device daemon，automatic
-capture，and toolchain installer remain proposals．
+Ansible host configuration，generic reference invocation，artifact validation，
+and the disabled-by-default outbound runner installation are implemented．The
+private control repository and real host registration remain operator-managed
+state．A production hardware-job workflow，device daemon，automatic capture，and
+toolchain installer remain proposals．

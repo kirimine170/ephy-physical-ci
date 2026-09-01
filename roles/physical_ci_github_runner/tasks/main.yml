@@ -1,0 +1,179 @@
+---
+- name: Configure the outbound GitHub Actions runner
+  when: physical_ci_github_runner_install | bool
+  block:
+    - name: Validate the GitHub Actions runner boundary
+      ansible.builtin.assert:
+        that:
+          - physical_ci_github_runner_control_repository_private | bool
+          - >-
+            physical_ci_github_runner_repository_url is
+            match('^https://github\\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+/?$')
+          - ansible_architecture in physical_ci_github_runner_archives
+          - physical_ci_github_runner_labels | length > 0
+          - physical_ci_github_runner_work_directory is
+            match('^[A-Za-z0-9._-]+$')
+        fail_msg: >-
+          Remote CI requires a confirmed private GitHub control repository，a
+          supported host architecture，and safe runner labels and paths．
+
+    - name: Validate every custom runner label
+      ansible.builtin.assert:
+        that:
+          - item is match('^[A-Za-z0-9._-]+$')
+        fail_msg: "Unsafe GitHub Actions runner label: {{ item }}"
+      loop: "{{ physical_ci_github_runner_labels }}"
+      loop_control:
+        label: "{{ item }}"
+
+    - name: Require the pre-provisioned agent account
+      ansible.builtin.getent:
+        database: passwd
+        key: "{{ physical_ci_agent_user }}"
+        fail_key: true
+
+    - name: Select the integrity-pinned runner archive
+      ansible.builtin.set_fact:
+        physical_ci_github_runner_archive: >-
+          {{ physical_ci_github_runner_archives[ansible_architecture] }}
+
+    - name: Install remote CI host tools
+      ansible.builtin.apt:
+        name: "{{ physical_ci_github_runner_packages }}"
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Create the runner cache and installation directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ physical_ci_agent_user }}"
+        group: "{{ physical_ci_group }}"
+        mode: "0750"
+      loop:
+        - /var/cache/ephy-physical-ci
+        - "{{ physical_ci_github_runner_root }}"
+        - >-
+          {{ physical_ci_github_runner_root }}/{{
+             physical_ci_github_runner_work_directory }}
+
+    - name: Download the integrity-pinned runner bootstrap package
+      ansible.builtin.get_url:
+        url: >-
+          https://github.com/actions/runner/releases/download/v{{
+          physical_ci_github_runner_bootstrap_version }}/actions-runner-linux-{{
+          physical_ci_github_runner_archive.platform_architecture }}-{{
+          physical_ci_github_runner_bootstrap_version }}.tar.gz
+        dest: >-
+          /var/cache/ephy-physical-ci/actions-runner-linux-{{
+          physical_ci_github_runner_archive.platform_architecture }}-{{
+          physical_ci_github_runner_bootstrap_version }}.tar.gz
+        checksum: "sha256:{{ physical_ci_github_runner_archive.sha256 }}"
+        owner: root
+        group: "{{ physical_ci_group }}"
+        mode: "0640"
+
+    - name: Extract the runner bootstrap package once
+      ansible.builtin.unarchive:
+        src: >-
+          /var/cache/ephy-physical-ci/actions-runner-linux-{{
+          physical_ci_github_runner_archive.platform_architecture }}-{{
+          physical_ci_github_runner_bootstrap_version }}.tar.gz
+        dest: "{{ physical_ci_github_runner_root }}"
+        remote_src: true
+        owner: "{{ physical_ci_agent_user }}"
+        group: "{{ physical_ci_group }}"
+        creates: "{{ physical_ci_github_runner_root }}/bin/Runner.Listener"
+      when: not ansible_check_mode
+
+    - name: Install runner operating-system dependencies once
+      ansible.builtin.command:
+        argv:
+          - "{{ physical_ci_github_runner_root }}/bin/installdependencies.sh"
+        creates: >-
+          {{ physical_ci_github_runner_root }}/.ephy-dependencies-{{
+          physical_ci_github_runner_bootstrap_version }}
+      environment:
+        DEBIAN_FRONTEND: noninteractive
+      when: not ansible_check_mode
+
+    - name: Record the installed runner dependency set
+      ansible.builtin.file:
+        path: >-
+          {{ physical_ci_github_runner_root }}/.ephy-dependencies-{{
+          physical_ci_github_runner_bootstrap_version }}
+        state: touch
+        owner: root
+        group: "{{ physical_ci_group }}"
+        mode: "0644"
+        modification_time: preserve
+        access_time: preserve
+      when: not ansible_check_mode
+
+    - name: Detect an existing runner registration
+      ansible.builtin.stat:
+        path: "{{ physical_ci_github_runner_root }}/.runner"
+      register: physical_ci_github_runner_registration
+
+    - name: Require a short-lived token for first registration
+      ansible.builtin.assert:
+        that:
+          - physical_ci_github_runner_registration_token | length > 0
+        fail_msg: >-
+          Export EPHY_GITHUB_RUNNER_TOKEN on the Ansible controller for the
+          first registration only．
+      no_log: true
+      when:
+        - not ansible_check_mode
+        - not physical_ci_github_runner_registration.stat.exists
+
+    - name: Register the runner with the private control repository
+      ansible.builtin.command:
+        argv:
+          - ./config.sh
+          - --unattended
+          - --replace
+          - --url
+          - "{{ physical_ci_github_runner_repository_url }}"
+          - --token
+          - "{{ physical_ci_github_runner_registration_token }}"
+          - --name
+          - "{{ physical_ci_github_runner_name }}"
+          - --work
+          - "{{ physical_ci_github_runner_work_directory }}"
+          - --labels
+          - "{{ physical_ci_github_runner_labels | join(',') }}"
+        chdir: "{{ physical_ci_github_runner_root }}"
+        creates: "{{ physical_ci_github_runner_root }}/.runner"
+      become: true
+      become_user: "{{ physical_ci_agent_user }}"
+      no_log: true
+      when:
+        - not ansible_check_mode
+        - not physical_ci_github_runner_registration.stat.exists
+
+    - name: Find runner credential files
+      ansible.builtin.find:
+        paths: "{{ physical_ci_github_runner_root }}"
+        patterns:
+          - .credentials
+          - .credentials_rsaparams
+        file_type: file
+        recurse: false
+        hidden: true
+      register: physical_ci_github_runner_credentials
+      no_log: true
+      when: not ansible_check_mode
+
+    - name: Restrict runner credential files to the agent account
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        owner: "{{ physical_ci_agent_user }}"
+        group: "{{ physical_ci_group }}"
+        mode: "0600"
+      loop: "{{ physical_ci_github_runner_credentials.files | default([]) }}"
+      loop_control:
+        label: redacted-runner-credential
+      no_log: true
+      when: not ansible_check_mode

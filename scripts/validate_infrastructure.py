@@ -18,6 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 IDENTIFIER = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$")
 USB_ID = re.compile(r"^[a-f0-9]{4}:[a-f0-9]{4}$")
 SHA256 = re.compile(r"^[a-f0-9]{64}$")
+GITHUB_RUNNER_VERSION = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+$")
 
 SENSITIVE_PATTERNS = (
     re.compile(r"-----BEGIN [A-Z0-9 ]*PRIVATE KEY-----"),
@@ -176,6 +177,148 @@ def validate_camera_reference_boundary(files: list[Path] | None = None) -> list[
     return errors
 
 
+def validate_remote_ci_boundary() -> list[str]:
+    defaults_path = (
+        ROOT
+        / "roles"
+        / "physical_ci_github_runner"
+        / "defaults"
+        / "main.yml"
+    )
+    tasks_path = (
+        ROOT
+        / "roles"
+        / "physical_ci_github_runner"
+        / "tasks"
+        / "main.yml"
+    )
+    playbook_path = ROOT / "playbooks" / "github-actions-runner.yml"
+    site_path = ROOT / "playbooks" / "site.yml"
+    workflow_path = (
+        ROOT
+        / "examples"
+        / "control-repository"
+        / ".github"
+        / "workflows"
+        / "physical-ci-smoke.yml"
+    )
+    camera_workflow_path = (
+        ROOT
+        / "examples"
+        / "control-repository"
+        / ".github"
+        / "workflows"
+        / "physical-ci-camera-capture.yml"
+    )
+    defaults = defaults_path.read_text(encoding="utf-8")
+    tasks = tasks_path.read_text(encoding="utf-8")
+    playbook = playbook_path.read_text(encoding="utf-8")
+    site = site_path.read_text(encoding="utf-8")
+    workflow = workflow_path.read_text(encoding="utf-8")
+    camera_workflow = camera_workflow_path.read_text(encoding="utf-8")
+    errors: list[str] = []
+
+    required_defaults = (
+        "physical_ci_github_runner_install: false",
+        "physical_ci_github_runner_enabled: false",
+        "physical_ci_github_runner_control_repository_private: false",
+        "lookup('ansible.builtin.env', 'EPHY_GITHUB_RUNNER_TOKEN')",
+    )
+    for required in required_defaults:
+        if required not in defaults:
+            errors.append(f"GitHub runner defaults are missing {required}")
+
+    version_match = re.search(
+        r"physical_ci_github_runner_bootstrap_version:\s*([^\s]+)", defaults
+    )
+    if not version_match or not GITHUB_RUNNER_VERSION.fullmatch(
+        version_match.group(1)
+    ):
+        errors.append("GitHub runner bootstrap version must be exact")
+
+    checksum_matches = re.findall(r"^\s+sha256:\s*([a-f0-9]+)$", defaults, re.MULTILINE)
+    if len(checksum_matches) != 2 or any(
+        not SHA256.fullmatch(checksum) for checksum in checksum_matches
+    ):
+        errors.append("GitHub runner must pin valid x86_64 and aarch64 checksums")
+
+    if "physical_ci_github_runner_control_repository_private | bool" not in tasks:
+        errors.append("GitHub runner must require a confirmed private control repository")
+    if "checksum: \"sha256:{{ physical_ci_github_runner_archive.sha256 }}\"" not in tasks:
+        errors.append("GitHub runner download must verify its pinned checksum")
+    if tasks.count("no_log: true") < 3:
+        errors.append("GitHub runner registration and credentials must suppress logs")
+    if "role: physical_ci_github_runner" not in playbook:
+        errors.append("the explicit GitHub runner playbook must use its runner role")
+    if "physical_ci_github_runner" in site:
+        errors.append("site.yml must not implicitly install a remote control plane")
+
+    required_workflow_guards = (
+        "workflow_dispatch:",
+        "github.event.repository.private == true",
+        "cancel-in-progress: false",
+        "- self-hosted",
+        "- ephy-physical-ci",
+        "- hil-01",
+        "if: always()",
+        "Refusing unsafe cleanup path",
+    )
+    for required in required_workflow_guards:
+        if required not in workflow:
+            errors.append(f"remote CI workflow is missing safety guard {required}")
+    for unsafe_trigger in ("push", "pull_request", "pull_request_target"):
+        if re.search(rf"^\s{{2}}{unsafe_trigger}:\s*$", workflow, re.MULTILINE):
+            errors.append(f"remote CI workflow must not use {unsafe_trigger}")
+    checkout_match = re.search(r"uses: actions/checkout@([a-f0-9]+)", workflow)
+    if not checkout_match or len(checkout_match.group(1)) != 40:
+        errors.append("remote CI workflow must pin actions/checkout to a commit")
+
+    required_camera_guards = (
+        "workflow_dispatch:",
+        "github.event.repository.private == true",
+        "cancel-in-progress: false",
+        "- self-hosted",
+        "- ephy-physical-ci",
+        "- hil-01",
+        "secrets.PHYSICAL_CI_SERIAL_DEVICE",
+        "/dev/serial/by-id/",
+        "validate-camera-artifacts",
+        "if: always()",
+        "Refusing unsafe cleanup path",
+    )
+    for required in required_camera_guards:
+        if required not in camera_workflow:
+            errors.append(f"camera CI workflow is missing safety guard {required}")
+    for unsafe_trigger in ("push", "pull_request", "pull_request_target"):
+        if re.search(
+            rf"^\s{{2}}{unsafe_trigger}:\s*$", camera_workflow, re.MULTILINE
+        ):
+            errors.append(f"camera CI workflow must not use {unsafe_trigger}")
+    camera_checkout_matches = re.findall(
+        r"uses: actions/checkout@([a-f0-9]+)", camera_workflow
+    )
+    if len(camera_checkout_matches) != 2 or any(
+        len(checkout) != 40 for checkout in camera_checkout_matches
+    ):
+        errors.append("camera CI workflow must pin both checkout actions")
+    for forbidden in ("actions/upload-artifact", "run-camera-reference flash"):
+        if forbidden in camera_workflow:
+            errors.append(f"camera CI workflow must not contain {forbidden}")
+
+    project = (ROOT / ".ephy" / "project.yaml").read_text(encoding="utf-8")
+    boundary = (ROOT / "docs" / "physical-ci-boundary.md").read_text(
+        encoding="utf-8"
+    )
+    if 'depends_on: ["ephy-worker"]' in project or 'runs_on: ["ephy-worker"]' in project:
+        errors.append("Physical CI must not declare an ephy-worker dependency")
+    if (
+        "entry points through `ephy-worker`" in boundary
+        or "`ephy-worker` owns authorized remote execution" in boundary
+    ):
+        errors.append("Physical CI must not route remote jobs through ephy-worker")
+    return errors
+
+
 def validate_udev_boundary() -> list[str]:
     path = (
         ROOT
@@ -283,6 +426,7 @@ def validate() -> list[str]:
     errors.extend(validate_safe_playbook_boundary())
     errors.extend(validate_camera_validation_package_boundary())
     errors.extend(validate_camera_reference_boundary(files))
+    errors.extend(validate_remote_ci_boundary())
     errors.extend(validate_udev_boundary())
     errors.extend(validate_toolchain_manifest())
     return errors

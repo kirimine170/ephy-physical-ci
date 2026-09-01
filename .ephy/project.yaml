@@ -10,9 +10,9 @@ project:
 
 relations:
   parent: "ephy"
-  depends_on: ["ephy-worker"]
+  depends_on: []
   integrates_with: ["ephy-runtime"]
-  runs_on: ["ephy-worker"]
+  runs_on: []
 
 data_policy:
   classification: "internal"

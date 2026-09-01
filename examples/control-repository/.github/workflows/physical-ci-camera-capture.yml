@@ -1,0 +1,110 @@
+---
+name: Physical CI camera capture
+
+on:
+  workflow_dispatch:
+    inputs:
+      infrastructure_revision:
+        description: Reviewed ephy-physical-ci branch，tag，or commit
+        required: true
+        default: main
+        type: string
+      camera_revision:
+        description: Reviewed ephy-cam branch，tag，or commit
+        required: true
+        default: main
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: physical-ci-hil-01
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    if: ${{ github.event.repository.private == true }}
+    runs-on:
+      - self-hosted
+      - linux
+      - ephy-physical-ci
+      - hil-01
+    timeout-minutes: 15
+    steps:
+      - name: Check out the requested infrastructure revision
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          repository: kirimine170/ephy-physical-ci
+          ref: ${{ inputs.infrastructure_revision }}
+          path: ephy-physical-ci
+          persist-credentials: false
+
+      - name: Check out the requested camera revision
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          repository: kirimine170/ephy-cam
+          ref: ${{ inputs.camera_revision }}
+          path: ephy-cam
+          persist-credentials: false
+
+      - name: Capture and validate one QXGA JPEG
+        env:
+          JOB_ROOT: >-
+            ${{ runner.temp }}/ephy-camera-${{ github.run_id }}-${{
+            github.run_attempt }}
+          SERIAL_DEVICE: ${{ secrets.PHYSICAL_CI_SERIAL_DEVICE }}
+        run: |
+          set -Eeuo pipefail
+          if [[ -z "${SERIAL_DEVICE}" ]]; then
+            echo "PHYSICAL_CI_SERIAL_DEVICE is not configured" >&2
+            exit 2
+          fi
+          case "${SERIAL_DEVICE}" in
+            /dev/serial/by-id/*) ;;
+            *) echo "The serial device must use /dev/serial/by-id" >&2; exit 2 ;;
+          esac
+          if [[ ! -L "${SERIAL_DEVICE}" ]]; then
+            echo "The configured camera device is unavailable" >&2
+            exit 1
+          fi
+
+          mkdir -p "${JOB_ROOT}/staging"
+          ephy-physical-ci/scripts/run-camera-reference \
+            "${GITHUB_WORKSPACE}/ephy-cam/reference/xiao-esp32s3-sense" \
+            capture "${SERIAL_DEVICE}" "${JOB_ROOT}/staging" \
+            >"${JOB_ROOT}/capture-result.json"
+          capture_dir="$(python3 -c \
+            'import json,sys; print(json.load(open(sys.argv[1]))["capture_dir"])' \
+            "${JOB_ROOT}/capture-result.json")"
+          case "${capture_dir}" in
+            "${JOB_ROOT}/staging/"*) ;;
+            *) echo "Capture escaped the isolated staging directory" >&2; exit 2 ;;
+          esac
+
+          ephy-physical-ci/scripts/validate-camera-artifacts \
+            "${capture_dir}" "${GITHUB_WORKSPACE}/ephy-cam" \
+            --source-id xiao-esp32s3-sense-01 \
+            --width 2048 --height 1536
+          python3 -c \
+            'import json,sys; d=json.load(open(sys.argv[1])); print(
+            "Camera capture validated: "
+            f"{d[\"width\"]}x{d[\"height\"]}，{d[\"size_bytes\"]} bytes")' \
+            "${capture_dir}/validation.json" >>"${GITHUB_STEP_SUMMARY}"
+
+      - name: Remove the captured image and isolated job state
+        if: always()
+        env:
+          JOB_ROOT: >-
+            ${{ runner.temp }}/ephy-camera-${{ github.run_id }}-${{
+            github.run_attempt }}
+        run: |
+          set -Eeuo pipefail
+          case "${JOB_ROOT}" in
+            "${RUNNER_TEMP}/ephy-camera-"*) ;;
+            *) echo "Refusing unsafe cleanup path" >&2; exit 2 ;;
+          esac
+          if [[ -d "${JOB_ROOT}" ]]; then
+            find "${JOB_ROOT}" -mindepth 1 -delete
+            rmdir "${JOB_ROOT}"
+          fi

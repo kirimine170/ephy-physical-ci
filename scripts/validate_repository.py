@@ -96,6 +96,18 @@ ALLOWED_CODE_PLACEHOLDERS = {
     )
 }
 
+GENERATED_DIRECTORY_NAMES = {
+    ".ansible",
+    ".controller-venv",
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".venv",
+    "__pycache__",
+    "venv",
+}
+
 SENSITIVE_PATTERNS = {
     "AWS access key": re.compile(r"\b(?:AKIA|ASIA)[0-9A-Z]{16}\b"),
     "GitHub token": re.compile(r"\bgh[pousr]_[A-Za-z0-9]{36,}\b"),
@@ -278,12 +290,12 @@ def validate_metadata(path: Path) -> list[str]:
 
 
 def iter_text_files(root: Path) -> Iterable[tuple[str, str]]:
-    """Yield small UTF-8 text files while excluding VCS and generated caches."""
+    """Yield small UTF-8 source files while excluding ignored generated trees."""
     for path in sorted(root.rglob("*")):
         if not path.is_file():
             continue
         relative = path.relative_to(root)
-        if any(part in {".git", "__pycache__", ".pytest_cache"} for part in relative.parts):
+        if any(part in GENERATED_DIRECTORY_NAMES for part in relative.parts):
             continue
         try:
             content = path.read_bytes()

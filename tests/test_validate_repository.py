@@ -23,7 +23,15 @@ class ValidateRepositoryTests(unittest.TestCase):
         shutil.copytree(
             REPOSITORY_ROOT,
             self.repository,
-            ignore=shutil.ignore_patterns(".git", "__pycache__", "*.pyc"),
+            ignore=shutil.ignore_patterns(
+                ".ansible",
+                ".controller-venv",
+                ".git",
+                ".venv",
+                "__pycache__",
+                "*.pyc",
+                "venv",
+            ),
         )
 
     def tearDown(self) -> None:
@@ -138,6 +146,14 @@ class ValidateRepositoryTests(unittest.TestCase):
         result = self.run_validator("--check-sensitive-patterns")
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("AWS access key", result.stderr)
+
+    def test_ignored_dependency_directories_are_not_scanned(self) -> None:
+        for directory in (".ansible", ".controller-venv", ".venv", "venv"):
+            dependency_path = self.repository / directory / "dependency.py"
+            dependency_path.parent.mkdir(parents=True)
+            dependency_path.write_text("sk-" + ("A" * 24) + "\n", encoding="utf-8")
+        result = self.run_validator("--check-sensitive-patterns")
+        self.assertEqual(result.returncode, 0, result.stderr)
 
 
 if __name__ == "__main__":

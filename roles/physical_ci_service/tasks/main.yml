@@ -29,4 +29,6 @@
     name: ephy-physical-ci-agent.service
     enabled: "{{ physical_ci_service_enabled | bool }}"
     state: "{{ 'started' if physical_ci_service_enabled | bool else 'stopped' }}"
-  when: physical_ci_service_deploy | bool
+  when:
+    - physical_ci_service_deploy | bool
+    - physical_ci_service_manage_state | bool
