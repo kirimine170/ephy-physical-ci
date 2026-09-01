@@ -1,6 +1,7 @@
 ---
 physical_ci_group: hil-ci
 physical_ci_group_gid: 980
+physical_ci_agent_user: hil-agent
 physical_ci_usb_models:
   - logical_model: xiao-esp32s3-sense
     vid: "303a"

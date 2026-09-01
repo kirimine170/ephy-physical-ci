@@ -378,6 +378,7 @@ def validate_network_mtu_boundary() -> list[str]:
 
 
 def validate_udev_boundary() -> list[str]:
+    defaults_path = ROOT / "roles" / "physical_ci_usb" / "defaults" / "main.yml"
     template_path = (
         ROOT
         / "roles"
@@ -386,6 +387,7 @@ def validate_udev_boundary() -> list[str]:
         / "70-ephy-physical-ci-usb.rules.j2"
     )
     playbook_path = ROOT / "playbooks" / "usb-access.yml"
+    defaults = defaults_path.read_text(encoding="utf-8")
     text = template_path.read_text(encoding="utf-8")
     playbook = playbook_path.read_text(encoding="utf-8")
     errors: list[str] = []
@@ -396,6 +398,8 @@ def validate_udev_boundary() -> list[str]:
     for required in ('SUBSYSTEM=="tty"', 'GROUP="{{ physical_ci_group }}"'):
         if required not in text:
             errors.append(f"udev template is missing {required}")
+    if "physical_ci_agent_user: hil-agent" not in defaults:
+        errors.append("USB role must define its pre-provisioned agent account")
     if "role: physical_ci_usb" not in playbook:
         errors.append("the explicit USB access playbook must use its USB role")
     for forbidden in (
