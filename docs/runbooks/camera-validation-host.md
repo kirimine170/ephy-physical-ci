@@ -13,6 +13,20 @@ It does not manage SSH，UFW，accounts，groups，udev，hostname，directories
 systemd services．Ubuntu package revisions follow the security-updated 24.04
 archive．Application toolchains remain pinned by their owning repository．
 
+USB device permissions remain a separate responsibility．After the Physical CI
+accounts exist，review and apply only the dedicated USB access playbook when the
+agent cannot open a supported serial device:
+
+```bash
+ansible-playbook -i inventories/local/hosts.yml playbooks/usb-access.yml \
+  --check --diff --ask-become-pass --limit hil-01
+ansible-playbook -i inventories/local/hosts.yml playbooks/usb-access.yml \
+  --diff --ask-become-pass --limit hil-01
+```
+
+This installs the scoped tty udev rules and re-evaluates tty devices．It does not
+change SSH，UFW，the GitHub runner，network MTU，or firmware．
+
 ## Controller setup
 
 Use Ubuntu 24.04 under WSL2 or another Linux controller．Keep host addresses，

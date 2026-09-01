@@ -1,0 +1,30 @@
+---
+- name: Configure Physical CI USB access without changing remote access
+  hosts: physical_ci
+  become: true
+  gather_facts: true
+  serial: 1
+
+  pre_tasks:
+    - name: Require Ubuntu 24.04
+      ansible.builtin.assert:
+        that:
+          - ansible_facts.distribution == "Ubuntu"
+          - ansible_facts.distribution_version is version("24.04", ">=")
+          - ansible_facts.distribution_version is version("25.04", "<")
+        fail_msg: This playbook supports Ubuntu 24.04 LTS only.
+
+    - name: Require the pre-provisioned Physical CI group
+      ansible.builtin.getent:
+        database: group
+        key: "{{ physical_ci_group }}"
+        fail_key: true
+
+    - name: Require the pre-provisioned agent account
+      ansible.builtin.getent:
+        database: passwd
+        key: "{{ physical_ci_agent_user }}"
+        fail_key: true
+
+  roles:
+    - role: physical_ci_usb

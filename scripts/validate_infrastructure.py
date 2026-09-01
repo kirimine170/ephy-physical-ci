@@ -378,14 +378,16 @@ def validate_network_mtu_boundary() -> list[str]:
 
 
 def validate_udev_boundary() -> list[str]:
-    path = (
+    template_path = (
         ROOT
         / "roles"
         / "physical_ci_usb"
         / "templates"
         / "70-ephy-physical-ci-usb.rules.j2"
     )
-    text = path.read_text(encoding="utf-8")
+    playbook_path = ROOT / "playbooks" / "usb-access.yml"
+    text = template_path.read_text(encoding="utf-8")
+    playbook = playbook_path.read_text(encoding="utf-8")
     errors: list[str] = []
     if "SYMLINK+=" in text:
         errors.append("custom udev symlinks must not compete with /dev/serial/by-id")
@@ -394,6 +396,17 @@ def validate_udev_boundary() -> list[str]:
     for required in ('SUBSYSTEM=="tty"', 'GROUP="{{ physical_ci_group }}"'):
         if required not in text:
             errors.append(f"udev template is missing {required}")
+    if "role: physical_ci_usb" not in playbook:
+        errors.append("the explicit USB access playbook must use its USB role")
+    for forbidden in (
+        "physical_ci_firewall",
+        "physical_ci_github_runner",
+        "physical_ci_network_mtu",
+        "physical_ci_service",
+        "physical_ci_ssh",
+    ):
+        if forbidden in playbook:
+            errors.append(f"USB access playbook includes out-of-scope role {forbidden}")
     return errors
 
 
