@@ -3,6 +3,7 @@ physical_ci_github_runner_install: false
 physical_ci_github_runner_enabled: false
 physical_ci_github_runner_control_repository_private: false
 physical_ci_github_runner_repository_url: ""
+physical_ci_github_runner_disable_ipv6: false
 physical_ci_github_runner_registration_token: >-
   {{ lookup('ansible.builtin.env', 'EPHY_GITHUB_RUNNER_TOKEN') }}
 

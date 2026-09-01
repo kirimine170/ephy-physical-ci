@@ -19,7 +19,9 @@
     - role: physical_ci_service
       vars:
         physical_ci_agent_command: >-
-          {{ physical_ci_github_runner_root }}/runsvc.sh
+          {{ (physical_ci_github_runner_disable_ipv6 | bool) |
+             ternary('/usr/bin/env DOTNET_SYSTEM_NET_DISABLEIPV6=1 ', '') }}{{
+             physical_ci_github_runner_root }}/runsvc.sh
         physical_ci_service_deploy: >-
           {{ physical_ci_github_runner_install | bool }}
         physical_ci_service_enabled: >-

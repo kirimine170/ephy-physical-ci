@@ -51,6 +51,18 @@ physical_ci_github_runner_repository_url: >-
   https://github.com/YOUR_ACCOUNT/ephy-physical-ci-control
 ```
 
+If IPv4 GitHub connectivity succeeds but the runner diagnostic log repeatedly
+times out in `GetConnect` with `SocketException` while the host has no usable
+IPv6 route，set the following host-local override:
+
+```yaml
+physical_ci_github_runner_disable_ipv6: true
+```
+
+This sets `.NET`'s `DOTNET_SYSTEM_NET_DISABLEIPV6=1` for runner registration and
+the runner service only．It does not change the host network configuration．Keep
+the default `false` when IPv6 works．
+
 Do not store the registration token in YAML．Preview the host changes first:
 
 ```zsh

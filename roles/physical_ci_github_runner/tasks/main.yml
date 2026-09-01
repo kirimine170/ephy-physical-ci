@@ -13,6 +13,7 @@
           - physical_ci_github_runner_labels | length > 0
           - physical_ci_github_runner_work_directory is
             match('^[A-Za-z0-9._-]+$')
+          - physical_ci_github_runner_disable_ipv6 is boolean
         fail_msg: >-
           Remote CI requires a confirmed private GitHub control repository，a
           supported host architecture，and safe runner labels and paths．
@@ -148,6 +149,9 @@
         creates: "{{ physical_ci_github_runner_root }}/.runner"
       become: true
       become_user: "{{ physical_ci_agent_user }}"
+      environment:
+        DOTNET_SYSTEM_NET_DISABLEIPV6: >-
+          {{ physical_ci_github_runner_disable_ipv6 | ternary('1', '0') }}
       no_log: true
       when:
         - not ansible_check_mode

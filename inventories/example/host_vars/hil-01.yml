@@ -19,3 +19,6 @@ physical_ci_github_runner_install: false
 physical_ci_github_runner_enabled: false
 physical_ci_github_runner_control_repository_private: false
 physical_ci_github_runner_repository_url: ""
+# Enable only when the host has no usable IPv6 route and the .NET runner times
+# out before registration despite successful IPv4 GitHub connectivity.
+physical_ci_github_runner_disable_ipv6: false
