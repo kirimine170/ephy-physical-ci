@@ -51,6 +51,34 @@ physical_ci_github_runner_repository_url: >-
   https://github.com/YOUR_ACCOUNT/ephy-physical-ci-control
 ```
 
+If the GitHub registration-token exchange succeeds but an authenticated
+Actions tenant `ConnectionData` request times out before receiving any bytes，
+test a smaller interface MTU reversibly before changing persistent networking．
+When that comparison proves MTU 1400 is required，keep the network responsibility
+outside the runner role and opt into the dedicated playbook:
+
+```yaml
+physical_ci_network_mtu_manage: true
+physical_ci_network_mtu_interface: enp1s0
+physical_ci_network_mtu: 1400
+```
+
+Preview and apply this separately，while recovery access to the host is
+available:
+
+```zsh
+ansible-playbook -i inventories/local/hosts.yml \
+  playbooks/network-mtu.yml \
+  --check --diff --ask-become-pass --limit hil-01
+ansible-playbook -i inventories/local/hosts.yml \
+  playbooks/network-mtu.yml \
+  --diff --ask-become-pass --limit hil-01
+```
+
+The role writes an isolated Netplan fragment，validates the merged configuration，
+and then applies it．It is disabled by default and is intentionally excluded from
+`site.yml` because an MTU change can affect the administrative connection．
+
 If IPv4 GitHub connectivity succeeds but the runner diagnostic log repeatedly
 times out in `GetConnect` with `SocketException` while the host has no usable
 IPv6 route，set the following host-local override:

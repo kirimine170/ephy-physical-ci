@@ -13,6 +13,12 @@ physical_ci_manage_firewall: false
 physical_ci_service_deploy: false
 physical_ci_toolchains_install: false
 
+# Network MTU changes are disruptive and remain outside site.yml．Enable only
+# after a reversible test proves the host's default route needs a smaller MTU．
+physical_ci_network_mtu_manage: false
+physical_ci_network_mtu_interface: ""
+physical_ci_network_mtu: 1400
+
 # Remote CI remains disabled until this host is registered to a dedicated
 # private control repository with a short-lived token supplied outside Git．
 physical_ci_github_runner_install: false

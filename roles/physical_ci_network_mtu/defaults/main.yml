@@ -1,0 +1,4 @@
+---
+physical_ci_network_mtu_manage: false
+physical_ci_network_mtu_interface: ""
+physical_ci_network_mtu: 1400

@@ -1,0 +1,18 @@
+---
+- name: Validate the Physical CI Netplan configuration
+  ansible.builtin.command:
+    argv:
+      - /usr/sbin/netplan
+      - generate
+  changed_when: false
+  when: not ansible_check_mode
+  listen: Validate and apply the Physical CI network MTU
+
+- name: Apply the Physical CI network MTU
+  ansible.builtin.command:
+    argv:
+      - /usr/sbin/netplan
+      - apply
+  changed_when: true
+  when: not ansible_check_mode
+  listen: Validate and apply the Physical CI network MTU

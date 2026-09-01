@@ -31,6 +31,9 @@ class InfrastructureValidationTests(unittest.TestCase):
     def test_remote_ci_is_outbound_private_and_not_an_ephy_worker_job(self) -> None:
         self.assertEqual(validate_infrastructure.validate_remote_ci_boundary(), [])
 
+    def test_network_mtu_is_explicit_and_outside_the_safe_baseline(self) -> None:
+        self.assertEqual(validate_infrastructure.validate_network_mtu_boundary(), [])
+
     def test_camera_ci_is_manual_private_and_does_not_publish_media(self) -> None:
         workflow = (
             ROOT

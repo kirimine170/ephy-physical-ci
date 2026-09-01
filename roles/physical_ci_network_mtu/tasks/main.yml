@@ -1,0 +1,41 @@
+---
+- name: Configure an explicit Physical CI network MTU
+  when: physical_ci_network_mtu_manage | bool
+  block:
+    - name: Validate the Physical CI network MTU boundary
+      ansible.builtin.assert:
+        that:
+          - physical_ci_network_mtu_manage is boolean
+          - physical_ci_network_mtu_interface is
+            match('^[A-Za-z0-9][A-Za-z0-9_.:-]*$')
+          - physical_ci_network_mtu is integer
+          - physical_ci_network_mtu | int >= 1280
+          - physical_ci_network_mtu | int <= 9000
+          - >-
+            ansible_default_ipv4.interface | default('') ==
+            physical_ci_network_mtu_interface
+        fail_msg: >-
+          MTU management requires the current default IPv4 interface，an MTU
+          between 1280 and 9000，and an explicit opt-in．
+
+    - name: Confirm the configured network interface exists
+      ansible.builtin.stat:
+        path: "/sys/class/net/{{ physical_ci_network_mtu_interface }}"
+      register: physical_ci_network_mtu_interface_state
+
+    - name: Require the configured network interface
+      ansible.builtin.assert:
+        that:
+          - physical_ci_network_mtu_interface_state.stat.exists
+        fail_msg: >-
+          The configured Physical CI network MTU interface does not exist．
+
+    - name: Install the isolated Physical CI Netplan MTU fragment
+      ansible.builtin.template:
+        src: 90-ephy-physical-ci-mtu.yaml.j2
+        dest: /etc/netplan/90-ephy-physical-ci-mtu.yaml
+        owner: root
+        group: root
+        mode: "0600"
+        backup: true
+      notify: Validate and apply the Physical CI network MTU

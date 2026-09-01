@@ -319,6 +319,54 @@ def validate_remote_ci_boundary() -> list[str]:
     return errors
 
 
+def validate_network_mtu_boundary() -> list[str]:
+    defaults_path = (
+        ROOT / "roles" / "physical_ci_network_mtu" / "defaults" / "main.yml"
+    )
+    tasks_path = ROOT / "roles" / "physical_ci_network_mtu" / "tasks" / "main.yml"
+    handlers_path = (
+        ROOT / "roles" / "physical_ci_network_mtu" / "handlers" / "main.yml"
+    )
+    template_path = (
+        ROOT
+        / "roles"
+        / "physical_ci_network_mtu"
+        / "templates"
+        / "90-ephy-physical-ci-mtu.yaml.j2"
+    )
+    playbook_path = ROOT / "playbooks" / "network-mtu.yml"
+    site_path = ROOT / "playbooks" / "site.yml"
+
+    defaults = defaults_path.read_text(encoding="utf-8")
+    tasks = tasks_path.read_text(encoding="utf-8")
+    handlers = handlers_path.read_text(encoding="utf-8")
+    template = template_path.read_text(encoding="utf-8")
+    playbook = playbook_path.read_text(encoding="utf-8")
+    site = site_path.read_text(encoding="utf-8")
+    errors: list[str] = []
+
+    if "physical_ci_network_mtu_manage: false" not in defaults:
+        errors.append("network MTU management must be disabled by default")
+    if "ansible_default_ipv4.interface" not in tasks:
+        errors.append("network MTU role must require the default IPv4 interface")
+    if "physical_ci_network_mtu | int >= 1280" not in tasks:
+        errors.append("network MTU role must preserve the IPv6 minimum MTU")
+    if "role: physical_ci_network_mtu" not in playbook:
+        errors.append("the explicit network MTU playbook must use its role")
+    if "physical_ci_network_mtu" in site:
+        errors.append("site.yml must not implicitly change the host network MTU")
+    for required in ("netplan", "generate", "apply"):
+        if required not in handlers:
+            errors.append(f"network MTU handlers are missing {required}")
+    for required in (
+        "physical_ci_network_mtu_interface",
+        "physical_ci_network_mtu",
+    ):
+        if required not in template:
+            errors.append(f"network MTU template is missing {required}")
+    return errors
+
+
 def validate_udev_boundary() -> list[str]:
     path = (
         ROOT
@@ -427,6 +475,7 @@ def validate() -> list[str]:
     errors.extend(validate_camera_validation_package_boundary())
     errors.extend(validate_camera_reference_boundary(files))
     errors.extend(validate_remote_ci_boundary())
+    errors.extend(validate_network_mtu_boundary())
     errors.extend(validate_udev_boundary())
     errors.extend(validate_toolchain_manifest())
     return errors
