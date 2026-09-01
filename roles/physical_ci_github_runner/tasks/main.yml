@@ -88,6 +88,23 @@
         creates: "{{ physical_ci_github_runner_root }}/bin/Runner.Listener"
       when: not ansible_check_mode
 
+    - name: Verify the runner service entry point
+      ansible.builtin.stat:
+        path: "{{ physical_ci_github_runner_root }}/run.sh"
+      register: physical_ci_github_runner_entry_point
+      when: not ansible_check_mode
+
+    - name: Require an executable runner service entry point
+      ansible.builtin.assert:
+        that:
+          - physical_ci_github_runner_entry_point.stat.exists
+          - physical_ci_github_runner_entry_point.stat.isreg
+          - physical_ci_github_runner_entry_point.stat.executable
+        fail_msg: >-
+          The integrity-pinned GitHub runner package did not provide an
+          executable run.sh entry point．
+      when: not ansible_check_mode
+
     - name: Install runner operating-system dependencies once
       ansible.builtin.command:
         argv:

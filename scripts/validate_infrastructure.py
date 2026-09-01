@@ -250,6 +250,12 @@ def validate_remote_ci_boundary() -> list[str]:
         errors.append("GitHub runner registration and credentials must suppress logs")
     if "role: physical_ci_github_runner" not in playbook:
         errors.append("the explicit GitHub runner playbook must use its runner role")
+    if "physical_ci_github_runner_root }}/run.sh" not in playbook:
+        errors.append("the GitHub runner service must use the packaged run.sh entry point")
+    if "physical_ci_github_runner_root }}/runsvc.sh" in playbook:
+        errors.append("the GitHub runner service must not assume svc.sh created runsvc.sh")
+    if 'path: "{{ physical_ci_github_runner_root }}/run.sh"' not in tasks:
+        errors.append("the GitHub runner role must verify its service entry point")
     if "physical_ci_github_runner" in site:
         errors.append("site.yml must not implicitly install a remote control plane")
 
