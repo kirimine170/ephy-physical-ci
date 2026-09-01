@@ -15,6 +15,7 @@
         fail_msg: This playbook supports Ubuntu 24.04 LTS only.
 
   roles:
+    - role: physical_ci_directories
     - role: physical_ci_github_runner
     - role: physical_ci_service
       vars:

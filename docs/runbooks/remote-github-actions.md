@@ -173,7 +173,9 @@ sudo journalctl -u ephy-physical-ci-agent.service --since today
 The unit starts the runner package's `run.sh` entry point directly．It does not
 use `runsvc.sh`，because that wrapper is created only by GitHub's separate
 `svc.sh install` flow，which this Ansible-managed systemd unit intentionally
-does not invoke．
+does not invoke．The runner playbook also applies `physical_ci_directories`
+before installing the unit，so every path named by systemd's `ReadWritePaths`
+exists even when this optional playbook is applied independently．
 
 Removing or replacing a registration is an explicit operational action because
 it changes GitHub and host credentials．Use GitHub's removal token and the

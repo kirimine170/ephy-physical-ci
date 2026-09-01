@@ -250,6 +250,10 @@ def validate_remote_ci_boundary() -> list[str]:
         errors.append("GitHub runner registration and credentials must suppress logs")
     if "role: physical_ci_github_runner" not in playbook:
         errors.append("the explicit GitHub runner playbook must use its runner role")
+    directories_role = playbook.find("role: physical_ci_directories")
+    runner_role = playbook.find("role: physical_ci_github_runner")
+    if directories_role < 0 or directories_role > runner_role:
+        errors.append("the GitHub runner playbook must provision service directories first")
     if "physical_ci_github_runner_root }}/run.sh" not in playbook:
         errors.append("the GitHub runner service must use the packaged run.sh entry point")
     if "physical_ci_github_runner_root }}/runsvc.sh" in playbook:
