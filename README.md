@@ -96,6 +96,7 @@ raw training data，or model weights．See
 
 ## Documentation
 
+- [XIAO first-fit holders and tray](hardware/xiao-first-fit-v0.1/README.md)
 - [Architecture](docs/architecture.md)
 - [Physical CI boundary](docs/physical-ci-boundary.md)
 - [Inventory boundary](docs/inventory.md)

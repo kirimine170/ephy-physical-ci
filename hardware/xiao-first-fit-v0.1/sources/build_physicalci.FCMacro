@@ -1,0 +1,188 @@
+# -*- coding: utf-8 -*-
+"""PhysicalCI XIAO first-fit v0.1. Run in FreeCAD 1.0 GUI or its Python environment.
+Original parametric CSG, all dimensions mm. Native primitives + expressions persist in FCStd.
+Edit the Parameters object's Data properties and Recompute. No add-on required.
+This is a protective tabletop cradle, not a latched/transport or certified electrical enclosure.
+"""
+import os, json, math
+import FreeCAD as App, Part, MeshPart
+Gui = None
+if App.GuiUp:
+    import FreeCADGui as Gui
+ROOT = os.path.abspath(globals().get('OUTPUT_ROOT') or os.environ.get('PHYSICALCI_OUTPUT_ROOT') or os.path.join(os.path.dirname(__file__), '..', 'build'))
+for d in ['freecad','stl','step','reports','renders']:os.makedirs(os.path.join(ROOT,d),exist_ok=True)
+REPORT={}; FINAL={}
+
+def param_doc(name, values):
+    d=App.newDocument(name)
+    p=d.addObject('App::FeaturePython','Parameters');p.Label='Parameters (mm) - edit Data, then Recompute'
+    for key,(val,desc) in values.items():
+        p.addProperty('App::PropertyFloat',key,'Dimensions',desc);setattr(p,key,val)
+    return d,p
+
+def e(v):return str(v) if isinstance(v,(int,float)) else v
+
+def bind(o,prop,value):
+    if isinstance(value,(int,float)):setattr(o,prop,value)
+    else:o.setExpression(prop,value)
+
+def box(d,name,w,l,h,cx=0,cy=0,z=0):
+    o=d.addObject('Part::Box',name)
+    for prop,v in [('Length',w),('Width',l),('Height',h)]:bind(o,prop,v)
+    for prop,v in [('x',f'({e(cx)})-({e(w)})/2'),('y',f'({e(cy)})-({e(l)})/2'),('z',e(z))]:o.setExpression('Placement.Base.'+prop,v)
+    return o
+
+def cyl(d,name,r,h,cx,cy,z):
+    o=d.addObject('Part::Cylinder',name);bind(o,'Radius',r);bind(o,'Height',h)
+    for prop,v in [('x',cx),('y',cy),('z',z)]:o.setExpression('Placement.Base.'+prop,e(v))
+    return o
+
+def fuse(d,name,parts):
+    o=d.addObject('Part::MultiFuse',name);o.Shapes=parts;o.Refine=True;return o
+
+def cut(d,name,a,b):
+    o=d.addObject('Part::Cut',name);o.Base=a;o.Tool=b;o.Refine=True;return o
+
+def rr(d,name,w,l,h,r,cx=0,cy=0,z=0):
+    q=[box(d,name+'X',f'({e(w)})-2*({e(r)})',l,h,cx,cy,z),box(d,name+'Y',w,f'({e(l)})-2*({e(r)})',h,cx,cy,z)]
+    for ix in [-1,1]:
+      for iy in [-1,1]:
+        q.append(cyl(d,name+'Corner',r,h,f'({e(cx)})+{ix}*(({e(w)})/2-({e(r)}))',f'({e(cy)})+{iy}*(({e(l)})/2-({e(r)}))',z))
+    return fuse(d,name,q)
+
+def hide_except(d,objs):
+    if Gui is None:
+        return
+    for o in d.Objects:
+      if hasattr(o,'ViewObject'):o.ViewObject.Visibility=False
+    for o,col in objs:
+      o.ViewObject.Visibility=True;o.ViewObject.ShapeColor=col;o.ViewObject.LineColor=(.13,.16,.20);o.ViewObject.DisplayMode='Flat Lines'
+
+def export_shape(shape,name):
+    assert shape.isValid() and len(shape.Solids)==1 and shape.Volume>0,name
+    shape.exportStep(os.path.join(ROOT,'step',name+'.step'))
+    mesh=MeshPart.meshFromShape(Shape=shape,LinearDeflection=.025,AngularDeflection=.12,Relative=False)
+    mesh.write(os.path.join(ROOT,'stl',name+'.stl'))
+    b=shape.BoundBox
+    REPORT[name]={'valid_BRep':shape.isValid(),'solids':len(shape.Solids),'closed':shape.isClosed(),'volume_mm3':shape.Volume,'bbox_mm':[b.XLength,b.YLength,b.ZLength],'z_min_mm':b.ZMin,'facets':mesh.CountFacets,'mesh_solid':mesh.isSolid()}
+
+common={
+ 'BoardW':(17.8,'Nominal official PCB width, actual board unmeasured'),
+ 'BoardL':(21.0,'Nominal official PCB length'),
+ 'XYClearance':(.50,'Per-side board cavity clearance, provisional'),
+ 'Wall':(1.6,'Minimum nominal straight wall, two nominal 0.8 mm lines'),
+ 'FootSize':(36.0,'Common square removable-holder footprint'),
+ 'Floor':(2.4,'Solid insulating floor and common foot thickness'),
+ 'UnderGap':(3.2,'Floor to PCB underside at insulating support rails'),
+ 'SupportWidth':(1.6,'Side rail width; verify no underside component contact'),
+ 'SupportLength':(15.0,'Longitudinal rail span centered on board'),
+ 'USBWidth':(14.6,'Open-ended USB/overmold access, real cable fit unmeasured'),
+ 'CollarGap':(.35,'Per-side slip-cover clearance; no snap or latch'),
+ 'CollarOverlap':(3.2,'Overlap down outer walls'),
+ 'CollarTop':(1.6,'Open-top rim thickness'),
+ 'AntennaEscape':(8.0,'ESP rear-top antenna lead notch width, no strain clamp')}
+
+for slug,title,thick,guard,col in [
+ ('nrf52840_sense','XIAO nRF52840 Sense - print two sets',1.25,8.8,(.13,.55,.66)),
+ ('ra4m1','XIAO RA4M1',1.6,9.2,(.88,.52,.18)),
+ ('esp32s3_sense','XIAO ESP32S3 Sense - open camera clearance',1.25,9.6,(.44,.39,.72))]:
+    vals=dict(common);vals.update({'PCBThickness':(thick,'Reference only; verify revision'),'GuardHeight':(guard,'Base guard height; camera remains outside/open')})
+    d,p=param_doc('PhysicalCI_'+slug,vals);d.Label=title+' | prototype v0.1'
+    P='Parameters.';W=P+'BoardW+2*'+P+'XYClearance';L=P+'BoardL+2*'+P+'XYClearance';OW='('+W+')+2*'+P+'Wall';OL='('+L+')+2*'+P+'Wall'
+    foot=rr(d,'CommonFoot',P+'FootSize',P+'FootSize',P+'Floor',3)
+    outer=rr(d,'GuardOutside',OW,OL,P+'GuardHeight',P+'Wall')
+    void=box(d,'BoardCavity',W,L,P+'GuardHeight+2',z=P+'Floor')
+    cup=cut(d,'GuardWalls',outer,void)
+    usb=box(d,'USBOpenCut',P+'USBWidth',8,P+'GuardHeight+5',cy='-('+OL+')/2',z=P+'Floor')
+    cup=cut(d,'GuardUSB',cup,usb)
+    supports=[]
+    for sign in [-1,1]:
+      supports.append(box(d,'InsulatingEdgeSupport',P+'SupportWidth',P+'SupportLength',P+'UnderGap',cx=f'{sign}*(('+W+')/2-'+P+'SupportWidth/2)',z=P+'Floor'))
+    base=fuse(d,'PRINT_Base',[foot,cup]+supports);base.Label=slug+' BASE - print flat'
+    # Open-top removable side collar. Shoulder seats on guard wall, never on PCB/camera.
+    CW='('+OW+')+2*'+P+'CollarGap+2*'+P+'Wall';CL='('+OL+')+2*'+P+'CollarGap+2*'+P+'Wall'
+    CB=P+'GuardHeight-'+P+'CollarOverlap';CH=P+'CollarOverlap+'+P+'CollarTop'
+    co=rr(d,'CollarOuter',CW,CL,CH,P+'Wall*2+'+P+'CollarGap',z=CB)
+    ci=rr(d,'CollarSlipPocket','('+OW+')+2*'+P+'CollarGap','('+OL+')+2*'+P+'CollarGap',P+'CollarOverlap+0.02',P+'Wall+'+P+'CollarGap',z='('+CB+')-0.02')
+    collar=cut(d,'CollarShoulder',co,ci)
+    topvoid=box(d,'OpenTop',W,L,CH+'+2',z='('+CB+')-1')
+    collar=cut(d,'CollarWindow',collar,topvoid)
+    front=box(d,'CollarUSBOpening',P+'USBWidth',10,CH+'+2',cy='-('+CL+')/2',z='('+CB+')-1')
+    collar=cut(d,'PRINT_Collar',collar,front)
+    if slug=='esp32s3_sense':
+      ant=box(d,'AntennaExit',P+'AntennaEscape',6,P+'CollarTop+1',cy='('+CL+')/2',z=P+'GuardHeight-0.5')
+      collar=cut(d,'PRINT_Collar_Antenna',collar,ant)
+    collar.Label=slug+' OPEN COLLAR - not a retention latch'
+    d.recompute()
+    # Pure reference board envelope; no invented component fit and not exported for printing.
+    ref=box(d,'REFERENCE_PCB_Envelope',P+'BoardW',P+'BoardL',P+'PCBThickness',z=P+'Floor+'+P+'UnderGap');ref.Label='REFERENCE only - nominal PCB envelope'
+    d.recompute()
+    hide_except(d,[(base,col),(collar,tuple(min(1.0,c+.15) for c in col)),(ref,(.18,.40,.27))])
+    if Gui is not None: ref.ViewObject.Transparency=45
+    export_shape(base.Shape,slug+'_base')
+    cs=collar.Shape.copy();cs.rotate(App.Vector(0,0,0),App.Vector(1,0,0),180);cs.translate(App.Vector(0,0,-cs.BoundBox.ZMin));export_shape(cs,slug+'_collar_PRINT_FLIPPED')
+    # BRep assembly is already in assembled coordinates. No mesh-to-STEP conversion.
+    Part.Compound([base.Shape,collar.Shape]).exportStep(os.path.join(ROOT,'step',slug+'_ASSEMBLY_NOT_FOR_PRINT.step'))
+    clash=base.Shape.common(collar.Shape).Volume
+    REPORT[slug+'_assembly']={'base_collar_intersection_mm3':clash,'pcb_reference_intersection_mm3':base.Shape.common(ref.Shape).Volume,'collar_reference_intersection_mm3':collar.Shape.common(ref.Shape).Volume,'retention':'gravity fit; no latch; keep upright; do not carry by USB'}
+    FINAL[slug]=(d,base,collar,ref,col)
+    if Gui is not None:
+        Gui.activeDocument().activeView().viewAxonometric();Gui.activeDocument().activeView().fitAll()
+    d.recompute();d.saveAs(os.path.join(ROOT,'freecad',slug+'.FCStd'))
+    App.Console.PrintMessage('Built and exported '+slug+'\n')
+    if Gui is not None: Gui.updateGui()
+
+# Four-slot flat tray. New custom interface; NOT Gridfinity-compatible.
+vals={
+ 'FootSize':(36,'Matching holder outside footprint'), 'PocketGap':(.4,'Per-side gravity-pocket clearance'),
+ 'Pitch':(40.8,'Holder center pitch'), 'Floor':(2.4,'Tray solid floor'), 'Wall':(2.4,'Pocket wall thickness'),
+ 'RimHeight':(2.8,'Pocket locating rim above floor, no latch'), 'FrontApron':(11.2,'Extra USB-side length for cable straps'),
+ 'TieSlotW':(3.2,'Slot narrow dimension, fit tie or soft strap'), 'TieSlotL':(6.4,'Slot long dimension')}
+d,p=param_doc('PhysicalCI_Tray4',vals);d.Label='PhysicalCI four-XIAO flat tray | prototype v0.1';P='Parameters.'
+# 4*40.8 + 2.4 = 165.6 mm wide. 52.8 mm deep.
+TW=P+'Pitch*4+'+P+'Wall';TL=P+'FootSize+2*'+P+'PocketGap+2*'+P+'Wall+'+P+'FrontApron';CY='-'+P+'FrontApron/2'
+plate=rr(d,'TrayPlate',TW,TL,P+'Floor',3,cy=CY)
+parts=[plate]
+for i in range(4):
+    x=f'({i}-1.5)*'+P+'Pitch';S=P+'FootSize+2*'+P+'PocketGap'
+    r=rr(d,'SocketOutside',S+'+2*'+P+'Wall',S+'+2*'+P+'Wall',P+'RimHeight',3.8,cx=x,z=P+'Floor')
+    v=rr(d,'SocketCavity',S,S,P+'RimHeight+2',3.4,cx=x,z=P+'Floor-0.02')
+    r=cut(d,'SocketWalls',r,v)
+    # Open central USB-side section: easy front lift and no cable obstruction.
+    gap=box(d,'SocketFrontAccess',26,7,P+'RimHeight+2',cx=x,cy='-('+S+')/2',z=P+'Floor-0.02')
+    parts.append(cut(d,'SocketWithCableExit',r,gap))
+t=fuse(d,'TrayBeforeTieSlots',parts)
+for i in range(4):
+    for sign in [-1,1]:
+      x=f'({i}-1.5)*'+P+'Pitch'+f'+({sign}*6)'
+      slot=box(d,'CableStrapSlot',P+'TieSlotW',P+'TieSlotL',P+'Floor+2',cx=x,cy=-25,z=-1)
+      t=cut(d,'TrayTieCut',t,slot)
+t.Label='PRINT four-slot TRAY - flat face down'
+d.recompute();hide_except(d,[(t,(.28,.33,.41))]);export_shape(t.Shape,'tray_four_xiao');FINAL['tray']=(d,t)
+if Gui is not None:
+    Gui.activeDocument().activeView().viewAxonometric();Gui.activeDocument().activeView().fitAll()
+d.saveAs(os.path.join(ROOT,'freecad','tray_four_xiao.FCStd'))
+
+# Small single-slot interface coupon, to avoid full tray reprint if dimensional fit differs.
+cd,cp=param_doc('PhysicalCI_InterfaceCoupon',{'FootSize':(36,'Common foot'),'PocketGap':(.4,'Per-side fit'),'Floor':(2.4,'Coupon floor')})
+co=rr(cd,'Outside',41.6,41.6,5.2,3.8)
+ci=rr(cd,'Pocket','Parameters.FootSize+2*Parameters.PocketGap','Parameters.FootSize+2*Parameters.PocketGap',5,3.4,z='Parameters.Floor')
+coupon=cut(cd,'PRINT_Coupon',co,ci);cd.recompute();hide_except(cd,[(coupon,(.48,.55,.63))]);export_shape(coupon.Shape,'OPTIONAL_single_slot_fit_coupon');cd.saveAs(os.path.join(ROOT,'freecad','OPTIONAL_fit_coupon.FCStd'))
+
+# Review assembly contains original geometry and nominal PCB boxes only.
+# Third-party reference board geometry is deliberately not imported or redistributed.
+a=App.newDocument('PhysicalCI_Review');a.Label='PhysicalCI v0.1 | nominal PCB envelopes only, fit unverified'
+for slug,name,x in [('esp32s3_sense','ESP32S3_Sense',-61.2),('nrf52840_sense','nRF_Sense_01',-20.4),('nrf52840_sense','nRF_Sense_02',20.4),('ra4m1','RA4M1',61.2)]:
+    sd,base,collar,ref,col=FINAL[slug]
+    for source,suffix,color in [(base,'Base',col),(collar,'Collar',tuple(min(1.0,c+.15) for c in col)),(ref,'PCB_REFERENCE',(.13,.39,.25))]:
+      o=a.addObject('Part::Feature',name+'_'+suffix);shape=source.Shape.copy();shape.translate(App.Vector(x,0,2.4));o.Shape=shape
+      if Gui is not None:
+        o.ViewObject.ShapeColor=color;o.ViewObject.LineColor=(.14,.17,.22)
+tr=a.addObject('Part::Feature','Tray');tr.Shape=t.Shape.copy()
+if Gui is not None: tr.ViewObject.ShapeColor=(.28,.33,.41)
+a.recompute()
+if Gui is not None:
+    Gui.activeDocument().activeView().viewAxonometric();Gui.activeDocument().activeView().fitAll();Gui.updateGui()
+a.saveAs(os.path.join(ROOT,'freecad','00_REVIEW_assembly.FCStd'))
+with open(os.path.join(ROOT,'reports','freecad_validation.json'),'w',encoding='utf-8') as f:json.dump(REPORT,f,indent=2)
+print('PHYSICALCI_BUILD_COMPLETE: native parametric FreeCAD + analytic STEP + oriented STL, no printer or device control')

@@ -1,0 +1,48 @@
+{
+  "units": "mm",
+  "board_nominal": [
+    17.8,
+    21.0
+  ],
+  "board_clearance_per_side": 0.5,
+  "wall": 1.6,
+  "floor": 2.4,
+  "underboard_gap": 3.2,
+  "edge_support": [
+    1.6,
+    15.0
+  ],
+  "usb_opening_width": 14.6,
+  "holder_interface": {
+    "foot": [
+      36,
+      36,
+      2.4
+    ],
+    "foot_corner_radius": 3,
+    "pocket": [
+      36.8,
+      36.8
+    ],
+    "clearance_per_side": 0.4,
+    "pitch": 40.8,
+    "retention": "gravity only, no latch"
+  },
+  "tray": [
+    165.6,
+    52.8,
+    5.2
+  ],
+  "print_counts": {
+    "esp32s3_sense_base": 1,
+    "esp32s3_sense_collar_PRINT_FLIPPED": 1,
+    "nrf52840_sense_base": 2,
+    "nrf52840_sense_collar_PRINT_FLIPPED": 2,
+    "ra4m1_base": 1,
+    "ra4m1_collar_PRINT_FLIPPED": 1,
+    "tray_four_xiao": 1,
+    "OPTIONAL_single_slot_fit_coupon": 0
+  },
+  "physical_fit_verified": false,
+  "powered_thermal_test": false
+}

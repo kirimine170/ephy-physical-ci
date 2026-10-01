@@ -1,0 +1,4 @@
+# Local rebuilds and external manufacturer references must not be committed.
+build/
+reference-downloads/
+*.FCBak
