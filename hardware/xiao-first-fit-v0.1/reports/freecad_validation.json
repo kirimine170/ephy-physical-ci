@@ -1,0 +1,132 @@
+{
+  "nrf52840_sense_base": {
+    "valid_BRep": true,
+    "solids": 1,
+    "closed": true,
+    "volume_mm3": 3983.010255353955,
+    "bbox_mm": [
+      36.0,
+      36.0,
+      8.800000000000002
+    ],
+    "z_min_mm": 0.0,
+    "facets": 956,
+    "mesh_solid": true
+  },
+  "nrf52840_sense_collar_PRINT_FLIPPED": {
+    "valid_BRep": true,
+    "solids": 1,
+    "closed": true,
+    "volume_mm3": 875.4143233920728,
+    "bbox_mm": [
+      25.9,
+      29.1,
+      4.800000000000007
+    ],
+    "z_min_mm": -1.7763568394002505e-15,
+    "facets": 932,
+    "mesh_solid": true
+  },
+  "nrf52840_sense_assembly": {
+    "base_collar_intersection_mm3": 0.0,
+    "pcb_reference_intersection_mm3": 0.0,
+    "collar_reference_intersection_mm3": 0.0,
+    "retention": "gravity fit; no latch; keep upright; do not carry by USB"
+  },
+  "ra4m1_base": {
+    "valid_BRep": true,
+    "solids": 1,
+    "closed": true,
+    "volume_mm3": 4029.1072462312304,
+    "bbox_mm": [
+      36.0,
+      36.0,
+      9.200000000000003
+    ],
+    "z_min_mm": 0.0,
+    "facets": 956,
+    "mesh_solid": true
+  },
+  "ra4m1_collar_PRINT_FLIPPED": {
+    "valid_BRep": true,
+    "solids": 1,
+    "closed": true,
+    "volume_mm3": 875.4143233920734,
+    "bbox_mm": [
+      25.9,
+      29.1,
+      4.800000000000005
+    ],
+    "z_min_mm": -1.7763568394002505e-15,
+    "facets": 932,
+    "mesh_solid": true
+  },
+  "ra4m1_assembly": {
+    "base_collar_intersection_mm3": 0.0,
+    "pcb_reference_intersection_mm3": 0.0,
+    "collar_reference_intersection_mm3": 0.0,
+    "retention": "gravity fit; no latch; keep upright; do not carry by USB"
+  },
+  "esp32s3_sense_base": {
+    "valid_BRep": true,
+    "solids": 1,
+    "closed": true,
+    "volume_mm3": 4075.2042371085063,
+    "bbox_mm": [
+      36.0,
+      36.0,
+      9.600000000000001
+    ],
+    "z_min_mm": 0.0,
+    "facets": 956,
+    "mesh_solid": true
+  },
+  "esp32s3_sense_collar_PRINT_FLIPPED": {
+    "valid_BRep": true,
+    "solids": 1,
+    "closed": true,
+    "volume_mm3": 830.6143233920723,
+    "bbox_mm": [
+      25.9,
+      29.1,
+      4.800000000000005
+    ],
+    "z_min_mm": 0.0,
+    "facets": 960,
+    "mesh_solid": true
+  },
+  "esp32s3_sense_assembly": {
+    "base_collar_intersection_mm3": 0.0,
+    "pcb_reference_intersection_mm3": 0.0,
+    "collar_reference_intersection_mm3": 0.0,
+    "retention": "gravity fit; no latch; keep upright; do not carry by USB"
+  },
+  "tray_four_xiao": {
+    "valid_BRep": true,
+    "solids": 1,
+    "closed": true,
+    "volume_mm3": 23817.436355010523,
+    "bbox_mm": [
+      165.6,
+      52.8,
+      5.199999999999999
+    ],
+    "z_min_mm": 0.0,
+    "facets": 3844,
+    "mesh_solid": true
+  },
+  "OPTIONAL_single_slot_fit_coupon": {
+    "valid_BRep": true,
+    "solids": 1,
+    "closed": true,
+    "volume_mm3": 5170.368838161359,
+    "bbox_mm": [
+      41.6,
+      41.6,
+      5.2
+    ],
+    "z_min_mm": 0.0,
+    "facets": 892,
+    "mesh_solid": true
+  }
+}

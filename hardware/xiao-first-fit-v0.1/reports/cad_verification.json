@@ -1,0 +1,119 @@
+{
+  "freecad_version": [
+    "1",
+    "0",
+    "0"
+  ],
+  "step_roundtrip": {
+    "OPTIONAL_single_slot_fit_coupon.step": {
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 5170.368838161356,
+      "surface_types": [
+        "Cylinder",
+        "Plane"
+      ]
+    },
+    "esp32s3_sense_ASSEMBLY_NOT_FOR_PRINT.step": {
+      "valid": true,
+      "solids": 2,
+      "volume_mm3": 4905.818560500579,
+      "surface_types": [
+        "Cylinder",
+        "Plane"
+      ]
+    },
+    "esp32s3_sense_base.step": {
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 4075.2042371085067,
+      "surface_types": [
+        "Cylinder",
+        "Plane"
+      ]
+    },
+    "esp32s3_sense_collar_PRINT_FLIPPED.step": {
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 830.614323392073,
+      "surface_types": [
+        "Cylinder",
+        "Plane"
+      ]
+    },
+    "nrf52840_sense_ASSEMBLY_NOT_FOR_PRINT.step": {
+      "valid": true,
+      "solids": 2,
+      "volume_mm3": 4858.424578746031,
+      "surface_types": [
+        "Cylinder",
+        "Plane"
+      ]
+    },
+    "nrf52840_sense_base.step": {
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 3983.010255353955,
+      "surface_types": [
+        "Cylinder",
+        "Plane"
+      ]
+    },
+    "nrf52840_sense_collar_PRINT_FLIPPED.step": {
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 875.414323392073,
+      "surface_types": [
+        "Cylinder",
+        "Plane"
+      ]
+    },
+    "ra4m1_ASSEMBLY_NOT_FOR_PRINT.step": {
+      "valid": true,
+      "solids": 2,
+      "volume_mm3": 4904.521569623306,
+      "surface_types": [
+        "Cylinder",
+        "Plane"
+      ]
+    },
+    "ra4m1_base.step": {
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 4029.1072462312304,
+      "surface_types": [
+        "Cylinder",
+        "Plane"
+      ]
+    },
+    "ra4m1_collar_PRINT_FLIPPED.step": {
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 875.414323392073,
+      "surface_types": [
+        "Cylinder",
+        "Plane"
+      ]
+    },
+    "tray_four_xiao.step": {
+      "valid": true,
+      "solids": 1,
+      "volume_mm3": 23817.436355010646,
+      "surface_types": [
+        "Cylinder",
+        "Plane"
+      ]
+    }
+  },
+  "parametric_edit": {
+    "parameter": "XYClearance",
+    "original_mm": 0.5,
+    "test_mm": 0.65,
+    "original_volume_mm3": 3983.0102553539546,
+    "modified_volume_mm3": 3995.2982553539555,
+    "restored_volume_mm3": 3983.010255353955,
+    "step_volume_delta_mm3": 4.547473508864641e-13
+  },
+  "physical_fit_verified": false,
+  "powered_thermal_test": false
+}

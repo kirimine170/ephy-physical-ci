@@ -1,0 +1,41 @@
+{
+  "reviewed_on": "2026-10-01",
+  "redistribution_status": "Not determined; third-party geometry excluded",
+  "original_geometry": "Holder, collar, 36 mm foot, tray and fit coupon; no official housing geometry adapted",
+  "optional_reference_downloads": [
+    {
+      "local_download_name": "esp.zip",
+      "url": "https://files.seeedstudio.com/wiki/SeeedStudio-XIAO-ESP32S3/res/seeed-studio-xiao-esp32s3-sense-3d_model.zip",
+      "sha256": "773c16cb7518a3a18df926979f24c7e224f19309aad69962ec8a54454e288c59",
+      "size_bytes": 8832441,
+      "note": "2023 OV2640-era reference; actual camera/heatsink unknown"
+    },
+    {
+      "local_download_name": "nrf.zip",
+      "url": "https://files.seeedstudio.com/wiki/XIAO-BLE/seeed-studio-xiao-nrf52840-3d-model.zip",
+      "sha256": "0ee799787103e54f382a784abd425e841401934356d4e083308cb0f083bf63a8",
+      "size_bytes": 8849412,
+      "note": "v15 model name; not proof of hardware revision"
+    },
+    {
+      "local_download_name": "nrf_dxf.zip",
+      "url": "https://files.seeedstudio.com/wiki/XIAO-BLE/XIAO-nRF52840-Sense-DXF.zip",
+      "sha256": "8256aaf528892e372d36548ede665ba9f589a268d5a3171f1e2322ae934f011d",
+      "size_bytes": 268827,
+      "note": "Official top/bottom mechanical reference"
+    },
+    {
+      "local_download_name": "ra4.zip",
+      "url": "https://files.seeedstudio.com/wiki/XIAO-R4AM1/res/202003977_XIAO%20RA4M1%20v1.01_SCH%26PCB_260114.zip",
+      "sha256": "d5fec307414545437735f30b07a5d5157a9a9471e568df2d128722b2ec09f73a",
+      "size_bytes": 1513928,
+      "note": "RA4M1 v1.01 PCB source"
+    }
+  ],
+  "download_instructions": "Download only if needed for private comparison, into ignored reference-downloads/. Verify SHA-256 with sha256sum. The public build does not use these files. Do not commit downloaded data or documents embedding it without reviewing the applicable license.",
+  "official_board_pages": [
+    "https://wiki.seeedstudio.com/xiao_esp32s3_getting_started/",
+    "https://wiki.seeedstudio.com/XIAO_BLE/",
+    "https://wiki.seeedstudio.com/getting_started_xiao_ra4m1/"
+  ]
+}

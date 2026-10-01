@@ -1,0 +1,138 @@
+{
+  "OPTIONAL_single_slot_fit_coupon.stl": {
+    "triangles": 892,
+    "vertices_welded_1e5_mm": 448,
+    "boundary_edges": 0,
+    "nonmanifold_edges": 0,
+    "inconsistent_oriented_edges": 0,
+    "zero_area_triangles": 0,
+    "connected_components": 1,
+    "signed_volume_mm3": 5170.292780325785,
+    "bbox_mm": [
+      41.6,
+      41.6,
+      5.2
+    ],
+    "z_min_mm": 0.0,
+    "watertight": true
+  },
+  "esp32s3_sense_base.stl": {
+    "triangles": 956,
+    "vertices_welded_1e5_mm": 480,
+    "boundary_edges": 0,
+    "nonmanifold_edges": 0,
+    "inconsistent_oriented_edges": 0,
+    "zero_area_triangles": 0,
+    "connected_components": 1,
+    "signed_volume_mm3": 4075.133583312366,
+    "bbox_mm": [
+      36.0,
+      36.0,
+      9.6
+    ],
+    "z_min_mm": 0.0,
+    "watertight": true
+  },
+  "esp32s3_sense_collar_PRINT_FLIPPED.stl": {
+    "triangles": 960,
+    "vertices_welded_1e5_mm": 480,
+    "boundary_edges": 0,
+    "nonmanifold_edges": 0,
+    "inconsistent_oriented_edges": 0,
+    "zero_area_triangles": 0,
+    "connected_components": 1,
+    "signed_volume_mm3": 830.528685937366,
+    "bbox_mm": [
+      25.9,
+      29.1,
+      4.8
+    ],
+    "z_min_mm": 0.0,
+    "watertight": true
+  },
+  "nrf52840_sense_base.stl": {
+    "triangles": 956,
+    "vertices_welded_1e5_mm": 480,
+    "boundary_edges": 0,
+    "nonmanifold_edges": 0,
+    "inconsistent_oriented_edges": 0,
+    "zero_area_triangles": 0,
+    "connected_components": 1,
+    "signed_volume_mm3": 3982.943188506734,
+    "bbox_mm": [
+      36.0,
+      36.0,
+      8.8
+    ],
+    "z_min_mm": 0.0,
+    "watertight": true
+  },
+  "nrf52840_sense_collar_PRINT_FLIPPED.stl": {
+    "triangles": 932,
+    "vertices_welded_1e5_mm": 468,
+    "boundary_edges": 0,
+    "nonmanifold_edges": 0,
+    "inconsistent_oriented_edges": 0,
+    "zero_area_triangles": 0,
+    "connected_components": 1,
+    "signed_volume_mm3": 875.3286865095721,
+    "bbox_mm": [
+      25.9,
+      29.1,
+      4.8
+    ],
+    "z_min_mm": -0.0,
+    "watertight": true
+  },
+  "ra4m1_base.stl": {
+    "triangles": 956,
+    "vertices_welded_1e5_mm": 480,
+    "boundary_edges": 0,
+    "nonmanifold_edges": 0,
+    "inconsistent_oriented_edges": 0,
+    "zero_area_triangles": 0,
+    "connected_components": 1,
+    "signed_volume_mm3": 4029.0383309598037,
+    "bbox_mm": [
+      36.0,
+      36.0,
+      9.2
+    ],
+    "z_min_mm": 0.0,
+    "watertight": true
+  },
+  "ra4m1_collar_PRINT_FLIPPED.stl": {
+    "triangles": 932,
+    "vertices_welded_1e5_mm": 468,
+    "boundary_edges": 0,
+    "nonmanifold_edges": 0,
+    "inconsistent_oriented_edges": 0,
+    "zero_area_triangles": 0,
+    "connected_components": 1,
+    "signed_volume_mm3": 875.3286865095721,
+    "bbox_mm": [
+      25.9,
+      29.1,
+      4.8
+    ],
+    "z_min_mm": -0.0,
+    "watertight": true
+  },
+  "tray_four_xiao.stl": {
+    "triangles": 3844,
+    "vertices_welded_1e5_mm": 1908,
+    "boundary_edges": 0,
+    "nonmanifold_edges": 0,
+    "inconsistent_oriented_edges": 0,
+    "zero_area_triangles": 0,
+    "connected_components": 1,
+    "signed_volume_mm3": 23817.404271214305,
+    "bbox_mm": [
+      165.6,
+      52.8,
+      5.2
+    ],
+    "z_min_mm": 0.0,
+    "watertight": true
+  }
+}

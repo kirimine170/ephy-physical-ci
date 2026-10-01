@@ -1,0 +1,183 @@
+{
+  "version": "0.1",
+  "units": "mm",
+  "physical_fit_verified": false,
+  "powered_thermal_test": false,
+  "files": [
+    {
+      "path": ".gitignore",
+      "size_bytes": 113,
+      "sha256": "7586c426f39769504dafe4213ae618c30f9536c0f59e5a982eb84287d2adddc5"
+    },
+    {
+      "path": "PARAMETERS.json",
+      "size_bytes": 886,
+      "sha256": "3af67432c0f03d42377169d907352813f65f90cff6852d2166b31b103e5aaabc"
+    },
+    {
+      "path": "README.md",
+      "size_bytes": 7976,
+      "sha256": "d511edcbca57ebaeebb0c66130ec3f96396e3c21dd40cd027918d1d897b45f90"
+    },
+    {
+      "path": "SOURCES.json",
+      "size_bytes": 2086,
+      "sha256": "2b8b2de20738b9352b9bb6fe6a36c99cd1e84241161c53fabf81e05a4e459dc3"
+    },
+    {
+      "path": "freecad/00_REVIEW_assembly.FCStd",
+      "size_bytes": 103395,
+      "sha256": "65e183dc47a48037ab8d4e6f45f81d5fd560f3546654a99fa28c79ef818ad464"
+    },
+    {
+      "path": "freecad/OPTIONAL_fit_coupon.FCStd",
+      "size_bytes": 30800,
+      "sha256": "2831ba0e6cc391077c4c01e9a06e376430581eb44a18087ce196af2b1a8d0310"
+    },
+    {
+      "path": "freecad/esp32s3_sense.FCStd",
+      "size_bytes": 122682,
+      "sha256": "f9b49aad4c3a09bbac93dc6d680daca396a79f71618680987b5cca660d5ce70e"
+    },
+    {
+      "path": "freecad/nrf52840_sense.FCStd",
+      "size_bytes": 108583,
+      "sha256": "a6ee112e7363fafab6ef782161ad92d3d6f1162316fea87a088ce319c9978956"
+    },
+    {
+      "path": "freecad/ra4m1.FCStd",
+      "size_bytes": 111396,
+      "sha256": "4a3a8f03b20bc8dc79a0108924c6b85684bf98c00f31ff9f49aa40bdf271ef7d"
+    },
+    {
+      "path": "freecad/tray_four_xiao.FCStd",
+      "size_bytes": 426731,
+      "sha256": "1e433fd6696b97f24dfa6bb4253d81d4cb6e35349729c1992d3c71570cb7d7cb"
+    },
+    {
+      "path": "reports/cad_verification.json",
+      "size_bytes": 2604,
+      "sha256": "1083600dcc4faa6e292d63000b572f5b2cf82fd0c1bb7b7fe104450711e3dcc9"
+    },
+    {
+      "path": "reports/freecad_validation.json",
+      "size_bytes": 2904,
+      "sha256": "260d10712f86e79b1987fb0959c41031458667c8950688fc22161393e439246e"
+    },
+    {
+      "path": "reports/mesh_validation.json",
+      "size_bytes": 3172,
+      "sha256": "ae0678184fda7c1dcb470ab1869135561e94bb939e1fbdf1b5c3f249f6f83e66"
+    },
+    {
+      "path": "sources/build_physicalci.FCMacro",
+      "size_bytes": 11985,
+      "sha256": "d9574614abf9bd3c3c46a9aac88a1cea54d1ba00839a99c31f4536fc787c7b23"
+    },
+    {
+      "path": "sources/validate_meshes.py",
+      "size_bytes": 3932,
+      "sha256": "2282ec0b093e651ff0428c441b9747ecf25606ef5f4d32cd9c6e21afb2cfa36a"
+    },
+    {
+      "path": "sources/verify_cad.py",
+      "size_bytes": 2322,
+      "sha256": "4dbb52252ec2408785bdd2e2c97501f487010281803884116b127fcda3ce4407"
+    },
+    {
+      "path": "step/OPTIONAL_single_slot_fit_coupon.step",
+      "size_bytes": 22919,
+      "sha256": "77ffc9bb9dbcd6234c904d90052468c618d7215953538116c2551592b43d6368"
+    },
+    {
+      "path": "step/esp32s3_sense_ASSEMBLY_NOT_FOR_PRINT.step",
+      "size_bytes": 84976,
+      "sha256": "0ca806fac1d0a04164d44bacb0aefd41ddbe92061bb825e0cacefabee686ff12"
+    },
+    {
+      "path": "step/esp32s3_sense_base.step",
+      "size_bytes": 42425,
+      "sha256": "0cb28263a05326e7fbf637947270214070f725d296f4c9cc4983fad87949f531"
+    },
+    {
+      "path": "step/esp32s3_sense_collar_PRINT_FLIPPED.step",
+      "size_bytes": 44352,
+      "sha256": "cba97a92a5d2e2a67d15f1913e8b838fcecdfee66a8149f18b2baa23a65947db"
+    },
+    {
+      "path": "step/nrf52840_sense_ASSEMBLY_NOT_FOR_PRINT.step",
+      "size_bytes": 77832,
+      "sha256": "dd003475bb7886c10bc63488a33e1b8a8c863df6190ff4b594d2f22563c1f4f7"
+    },
+    {
+      "path": "step/nrf52840_sense_base.step",
+      "size_bytes": 42425,
+      "sha256": "55d4d94308808a114c329079c7609d9016b7e23d976a65580cc72067112c3616"
+    },
+    {
+      "path": "step/nrf52840_sense_collar_PRINT_FLIPPED.step",
+      "size_bytes": 36979,
+      "sha256": "55b240e747a12a440055c0842251f11580944057a66b9238675e050880528073"
+    },
+    {
+      "path": "step/ra4m1_ASSEMBLY_NOT_FOR_PRINT.step",
+      "size_bytes": 77761,
+      "sha256": "c723993b664acaf40f58ad25295efc3053fa63fd5ca74dec3da6699f1f579a11"
+    },
+    {
+      "path": "step/ra4m1_base.step",
+      "size_bytes": 42425,
+      "sha256": "0171efc2c7bb5f02b8bac862339bcf4e31cf40fd85620e7f8fc1542c1f21fe23"
+    },
+    {
+      "path": "step/ra4m1_collar_PRINT_FLIPPED.step",
+      "size_bytes": 36965,
+      "sha256": "ddbd2c7b5e31fd6ddf372f100f1a41775172452bfd4464cfbcc23a54e4c0fae8"
+    },
+    {
+      "path": "step/tray_four_xiao.step",
+      "size_bytes": 153240,
+      "sha256": "79d3c41a14c3de27c8c071390d4f7b58d396d6b70c96412d032c77b095c2f4c5"
+    },
+    {
+      "path": "stl/OPTIONAL_single_slot_fit_coupon.stl",
+      "size_bytes": 44684,
+      "sha256": "ee1f04ee5a6768e50da3a4313ce6f236d27e93557cda7168c82c30800c08de5b"
+    },
+    {
+      "path": "stl/esp32s3_sense_base.stl",
+      "size_bytes": 47884,
+      "sha256": "62c47ff8ffa0ea27e034aba96d73ed1904ce96cba8bb6497fc8f8a644156f41c"
+    },
+    {
+      "path": "stl/esp32s3_sense_collar_PRINT_FLIPPED.stl",
+      "size_bytes": 48084,
+      "sha256": "c793bc67df09723c41fc008d705b2229f797e28207fbfe39438e2475da513f2c"
+    },
+    {
+      "path": "stl/nrf52840_sense_base.stl",
+      "size_bytes": 47884,
+      "sha256": "e07fc5848338ff79d19305d076935c899cca249082907284bd7971f587cfb02f"
+    },
+    {
+      "path": "stl/nrf52840_sense_collar_PRINT_FLIPPED.stl",
+      "size_bytes": 46684,
+      "sha256": "709a09dd4cd9fad89486e86e19733d2ccc7cb57de6220bedeaeb13a5dbb3ed97"
+    },
+    {
+      "path": "stl/ra4m1_base.stl",
+      "size_bytes": 47884,
+      "sha256": "b4f04628c7a758d2b85c047c2092df7ad45b4c09348c175bc3921824389221d7"
+    },
+    {
+      "path": "stl/ra4m1_collar_PRINT_FLIPPED.stl",
+      "size_bytes": 46684,
+      "sha256": "e61c5bcb9aca5dd343b830c71a216b1e1664108df22666e59e5ced1818e6c45f"
+    },
+    {
+      "path": "stl/tray_four_xiao.stl",
+      "size_bytes": 192284,
+      "sha256": "3422e1b9384ef9adcfa8169bce67e634c654171f2c974a21c968d7b6ec7501f7"
+    }
+  ]
+}
