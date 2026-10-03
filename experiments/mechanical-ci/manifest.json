@@ -1,0 +1,110 @@
+{
+  "schema_version": "mechanical-experiment-index/1",
+  "status": "research_prototypes_not_integrated",
+  "license_status": "not_selected",
+  "artifact_hash_algorithm": "sha256",
+  "experiments": [
+    {
+      "id": "escape-search",
+      "input_scope": "original_synthetic_fixture",
+      "input_source": "escape-search/build_fixtures.py",
+      "entrypoint": "escape-search/experiment.py",
+      "records": [
+        "escape-search/results/open.json",
+        "escape-search/results/closed.json"
+      ],
+      "execution": "pass",
+      "scope": "Finite connected mesh search and selected discrete BRep path replay only",
+      "physical_retention": "unknown",
+      "material_calibration": "not_applicable_rigid_geometry"
+    },
+    {
+      "id": "frame-compliance",
+      "input_scope": "original_synthetic_fixture",
+      "input_source": "frame-compliance/run_experiment.py",
+      "entrypoint": "frame-compliance/run_experiment.py",
+      "records": [
+        "frame-compliance/compact_summary.json"
+      ],
+      "execution": "pass",
+      "scope": "Small-load linear synthetic FEM; free-gauge versus artificial rear-clamp comparison",
+      "physical_retention": "unknown",
+      "material_calibration": "unknown"
+    }
+  ],
+  "integration": {
+    "FAR": "not_implemented",
+    "ephy_worker": "not_implemented",
+    "Karte": "not_implemented"
+  },
+  "artifacts": [
+    {
+      "path": "README.md",
+      "sha256": "6208f50637d1296002650a14a5f6e48ecdeaecc77c0376653a3d47abe452e630"
+    },
+    {
+      "path": "lessons.md",
+      "sha256": "3d10208470b9df9148946d0488cda52a74f5b639e1c5f71db1b1796e267b4593"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "5620d9359b40dd8946f577edc73533006fd7ebe6b289b85570dcfeb893ecb089"
+    },
+    {
+      "path": "escape-search/README.md",
+      "sha256": "69dc7a2de84e0fe7a758b5f5f44a34178ea859e550e4f982ecd7ed0c194d5074"
+    },
+    {
+      "path": "escape-search/build_fixtures.py",
+      "sha256": "6139fc6c96cf0f1f438542a818af317b026a9fbf32333802184992cf390f620d"
+    },
+    {
+      "path": "escape-search/experiment.py",
+      "sha256": "02b25060dee01d946d30ec142a96a2415ebdc0b0bb916a1a2436014b097a925c"
+    },
+    {
+      "path": "escape-search/requirements.txt",
+      "sha256": "304cae42fdd24ed11db9f8411f38157517bc0e0c69c3837626677b2306c5433a"
+    },
+    {
+      "path": "escape-search/results/open.json",
+      "sha256": "66c8dd72df2d9cf6b6f0c05c0fba43b8f228b1b2233825c6bde9742f58e9db39"
+    },
+    {
+      "path": "escape-search/results/closed.json",
+      "sha256": "4bab169c6e705f63ee8cb8c9fe6bd01e7275fd28cd5556db50e7e3cc6a2fdbe2"
+    },
+    {
+      "path": "escape-search/tests/test_experiment.py",
+      "sha256": "9cae32f79d705f72eb71d6e57b106cc666ef51762729baddd4ead9addb51ed6d"
+    },
+    {
+      "path": "frame-compliance/.gitignore",
+      "sha256": "18d3bc4f623aaf3cc8a774526ff29746d556c83cc38c774ca34f2b479c944175"
+    },
+    {
+      "path": "frame-compliance/README.md",
+      "sha256": "3f51552183787ad1c5c89e500caa73768ab6df2ed470226e432357813bf059c3"
+    },
+    {
+      "path": "frame-compliance/compact_summary.json",
+      "sha256": "93411f3bd2c81fcbff569eb213994a4329bb371f549dd1d2818c5911c903ee9d"
+    },
+    {
+      "path": "frame-compliance/requirements.txt",
+      "sha256": "1327aa81986849d8acb0353e851773a64b3124e6f7985075cb47a4276f3e0efe"
+    },
+    {
+      "path": "frame-compliance/run_experiment.py",
+      "sha256": "8ea22796e1b80c8ab89ee893d3f038eeb2f7af9b14f8f909c0cdbf21cfd1f689"
+    },
+    {
+      "path": "frame-compliance/tests/test_experiment.py",
+      "sha256": "74d75ba646d4fce55bba3c8ee08f52cf2943284bd3ec9a1437f27dd26d916e3e"
+    },
+    {
+      "path": "tests/test_manifest.py",
+      "sha256": "8f05060f323b72ba7f5129cbf383f3f2ed05991f7f4c67b820de4215b36338cd"
+    }
+  ]
+}

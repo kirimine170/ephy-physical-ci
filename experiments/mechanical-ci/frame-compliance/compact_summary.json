@@ -1,0 +1,261 @@
+{
+  "schema_version": 1,
+  "fixture": "independently_dimensioned_synthetic_U_frame",
+  "units": {
+    "length": "mm",
+    "force": "N",
+    "modulus": "MPa"
+  },
+  "dimensions": {
+    "width_mm": 42.0,
+    "length_mm": 58.0,
+    "rail_width_mm": 3.2,
+    "thickness_mm": 4.5
+  },
+  "tool_versions": {
+    "gmsh": "4.13.1",
+    "calculix": "2.23"
+  },
+  "python_version": "3.12.14",
+  "generator_sha256": "8ea22796e1b80c8ab89ee893d3f038eeb2f7af9b14f8f909c0cdbf21cfd1f689",
+  "material": {
+    "calibrated": false,
+    "model": "synthetic_isotropic_linear_elastic",
+    "E_MPa": 1500.0,
+    "poisson_ratio": 0.3
+  },
+  "load": {
+    "each_side_N": 0.005,
+    "sum_force_magnitudes_N": 0.01,
+    "direction": "opposite outward X shear traction on y=0 end faces",
+    "normalization": "total right-minus-left gap per N applied to EACH side"
+  },
+  "boundary_conditions": {
+    "free_gauge": "Six 3-2-1 DOFs remove rigid-body motion; individual reactions checked near zero.",
+    "rear_clamp": "All XYZ DOFs with y >= length - rail_width are fixed; artificial stiff support."
+  },
+  "convergence": {
+    "free_gauge": {
+      "gap_compliance_mm_per_N_each_side": [
+        12.734065,
+        12.69851289153731,
+        12.816286707899213
+      ],
+      "relative_change_last_two_meshes": 0.0091893868361507,
+      "limit": 0.02,
+      "passed": true
+    },
+    "rear_clamp": {
+      "gap_compliance_mm_per_N_each_side": [
+        5.967921646666667,
+        5.959372801875393,
+        5.973608294167239
+      ],
+      "relative_change_last_two_meshes": 0.002383064237028326,
+      "limit": 0.02,
+      "passed": true
+    }
+  },
+  "E_halved_compliance_ratio": 1.9999999499213974,
+  "free_to_clamped_compliance_ratio": 2.1454849526061683,
+  "validation_scope": {
+    "synthetic_geometry_and_element_checks": "pass",
+    "synthetic_force_moment_equilibrium": "pass",
+    "free_gauge_individual_reactions": "pass",
+    "synthetic_mesh_refinement": "pass",
+    "synthetic_modulus_scaling": "pass",
+    "physical_material_calibration": "unknown",
+    "physical_contact_and_friction": "unknown",
+    "physical_retention_or_failure_load": "unknown"
+  },
+  "not_modeled": [
+    "product geometry",
+    "base or board",
+    "contact",
+    "friction",
+    "print beads",
+    "layer bonding",
+    "calibrated material",
+    "large deformation",
+    "failure",
+    "retention force"
+  ],
+  "checks_passed": true,
+  "hash_algorithm": "sha256",
+  "meshes": [
+    {
+      "mesh_size_mm": 3.2,
+      "mesh_quality": {
+        "nodes": 2187,
+        "tetra10_elements": 942,
+        "volume_mm3": 2183.04,
+        "expected_volume_mm3": 2183.0400000000004,
+        "relative_volume_error": 2.0830921599533864e-16,
+        "minimum_positive_tetra_volume_mm3": 0.8767999999999977,
+        "minimum_mean_ratio_quality": 0.5080159833068012,
+        "nonpositive_jacobians": 0,
+        "max_midside_coordinate_error_mm": 1.5888218580782548e-14
+      },
+      "synthetic_geo_sha256": "334c1452301df435b283875bf5b4bb4f8fa2d53e95258cbf7af1aef9c1b2bb5a",
+      "synthetic_mesh_sha256": "e9f900fb955555f68ab4e9ddf2522ed005de9a3f85d681abe478abd91a4e5d2f",
+      "cases": [
+        {
+          "support": "free_gauge",
+          "load_each_side_N": 0.005,
+          "gap_increase_mm": 0.063670325,
+          "gap_compliance_mm_per_N_each_side": 12.734065,
+          "constrained_DOFs": 6,
+          "force_residual_N": [
+            -3.8710884947869653e-13,
+            -1.6971352000000001e-13,
+            1.6168124e-13
+          ],
+          "moment_residual_Nmm": [
+            1.5113743199999952e-12,
+            -3.2376435050542746e-13,
+            2.785936968e-11
+          ],
+          "maximum_individual_support_reaction_N": 2.458168e-12,
+          "input_deck_sha256": "45a5067b109b6bd17ea806a7620073114316f195a1819eb7921a9e2af6cedcf7",
+          "checks_passed": true
+        },
+        {
+          "support": "rear_clamp",
+          "load_each_side_N": 0.005,
+          "gap_increase_mm": 0.029839608233333335,
+          "gap_compliance_mm_per_N_each_side": 5.967921646666667,
+          "constrained_DOFs": 1851,
+          "force_residual_N": [
+            -2.8189256484623115e-18,
+            -1.3999999992631018e-08,
+            4.080000001857511e-09
+          ],
+          "moment_residual_Nmm": [
+            2.4820898511523914e-07,
+            -1.6588293239028218e-17,
+            2.220446049250313e-16
+          ],
+          "maximum_individual_support_reaction_N": 0.03626146,
+          "input_deck_sha256": "1548ef69491cf34890d94639eb65bc7ade9854896d25b523a74cfc205c950b57",
+          "checks_passed": true
+        }
+      ]
+    },
+    {
+      "mesh_size_mm": 2.1,
+      "mesh_quality": {
+        "nodes": 4265,
+        "tetra10_elements": 1903,
+        "volume_mm3": 2183.04,
+        "expected_volume_mm3": 2183.0400000000004,
+        "relative_volume_error": 2.0830921599533864e-16,
+        "minimum_positive_tetra_volume_mm3": 0.2603587334258783,
+        "minimum_mean_ratio_quality": 0.3956860075778349,
+        "nonpositive_jacobians": 0,
+        "max_midside_coordinate_error_mm": 1.5888218580782548e-14
+      },
+      "synthetic_geo_sha256": "dce807cc33cf813be0ffce2634d34fae55adc4e1f15e91a3fc57c13683d5abad",
+      "synthetic_mesh_sha256": "1f9099bf310b2ad001c7b738ca1346be9030ad462bc1b5c6da198d234bc664a9",
+      "cases": [
+        {
+          "support": "free_gauge",
+          "load_each_side_N": 0.005,
+          "gap_increase_mm": 0.06349256445768656,
+          "gap_compliance_mm_per_N_each_side": 12.69851289153731,
+          "constrained_DOFs": 6,
+          "force_residual_N": [
+            -1.236484873135757e-12,
+            -4.594979999999999e-13,
+            -1.369961e-13
+          ],
+          "moment_residual_Nmm": [
+            -3.491306599999994e-12,
+            -9.14680961579783e-12,
+            1.861451599999999e-11
+          ],
+          "maximum_individual_support_reaction_N": 1.494069e-12,
+          "input_deck_sha256": "4e0e9c104de432fbd3bfa25794659d841418efe0828aa215f2fa57391a4361f2",
+          "checks_passed": true
+        },
+        {
+          "support": "rear_clamp",
+          "load_each_side_N": 0.005,
+          "gap_increase_mm": 0.029796864009376964,
+          "gap_compliance_mm_per_N_each_side": 5.959372801875393,
+          "constrained_DOFs": 3624,
+          "force_residual_N": [
+            1.0039999953266813e-09,
+            1.510000003008584e-08,
+            -3.5999999953729295e-10
+          ],
+          "moment_residual_Nmm": [
+            -6.010996089766962e-08,
+            2.3345518621780206e-08,
+            8.970676845625192e-08
+          ],
+          "maximum_individual_support_reaction_N": 0.02409303,
+          "input_deck_sha256": "292b1c4abe72fb08a562198c3e2f96bdd386e7ac13817788d7aa77adc91f9f7a",
+          "checks_passed": true
+        }
+      ]
+    },
+    {
+      "mesh_size_mm": 1.4,
+      "mesh_quality": {
+        "nodes": 10327,
+        "tetra10_elements": 5157,
+        "volume_mm3": 2183.04,
+        "expected_volume_mm3": 2183.0400000000004,
+        "relative_volume_error": 2.0830921599533864e-16,
+        "minimum_positive_tetra_volume_mm3": 0.08904025502409996,
+        "minimum_mean_ratio_quality": 0.41390779326466187,
+        "nonpositive_jacobians": 0,
+        "max_midside_coordinate_error_mm": 1.7763568394002505e-14
+      },
+      "synthetic_geo_sha256": "53e8ae14abfd5b8354af5f370b3ec8eaa3d51cee8822611033d6b64d24eeb469",
+      "synthetic_mesh_sha256": "eda12424af692661bea2acbf1f26137ce11945e201e4d84a1516f7faee65e588",
+      "cases": [
+        {
+          "support": "free_gauge",
+          "load_each_side_N": 0.005,
+          "gap_increase_mm": 0.06408143353949607,
+          "gap_compliance_mm_per_N_each_side": 12.816286707899213,
+          "constrained_DOFs": 6,
+          "force_residual_N": [
+            1.1961111597433163e-12,
+            -1.92282e-13,
+            -1.5075552999999984e-13
+          ],
+          "moment_residual_Nmm": [
+            -1.8825695399999957e-12,
+            5.2274432815639084e-12,
+            -2.8373999999999855e-13
+          ],
+          "maximum_individual_support_reaction_N": 2.144141e-12,
+          "input_deck_sha256": "28e0dbb398be7e8fa1a716077c2537ea3cbb7542ec3344610614a15519581d6c",
+          "checks_passed": true
+        },
+        {
+          "support": "rear_clamp",
+          "load_each_side_N": 0.005,
+          "gap_increase_mm": 0.029868041470836194,
+          "gap_compliance_mm_per_N_each_side": 5.973608294167239,
+          "constrained_DOFs": 8574,
+          "force_residual_N": [
+            -1.6579999945675813e-09,
+            9.870000008808423e-09,
+            2.5889999986808496e-09
+          ],
+          "moment_residual_Nmm": [
+            1.1508768568593668e-07,
+            -2.6291248510310755e-08,
+            2.456003414669228e-07
+          ],
+          "maximum_individual_support_reaction_N": 0.01480319,
+          "input_deck_sha256": "9405b53277754a0e63196f6bea12e9a0e7fc20235dba987e2a582e240dc48d89",
+          "checks_passed": true
+        }
+      ]
+    }
+  ]
+}

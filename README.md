@@ -102,6 +102,7 @@ raw training data，or model weights．See
 ## Documentation
 
 - [Mechanical CLI prototype](tools/mechanical-ci/README.md)
+- [Mechanical research experiments](experiments/mechanical-ci/README.md)
 - [XIAO first-fit holders and tray](hardware/xiao-first-fit-v0.1/README.md)
 - [Architecture](docs/architecture.md)
 - [Physical CI boundary](docs/physical-ci-boundary.md)
@@ -113,5 +114,5 @@ raw training data，or model weights．See
 ## License
 
 No license has been selected．The original source code in `tools/mechanical-ci`
-is published without selecting a license at this time．Dependency licenses remain
-unchanged．
+and `experiments/mechanical-ci` is published without selecting a license at this
+time．Dependency licenses remain unchanged．
