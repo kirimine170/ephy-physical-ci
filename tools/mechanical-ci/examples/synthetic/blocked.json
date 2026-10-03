@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "name": "synthetic_blocked_translation",
+  "units": "mm",
+  "assembly_to_print": [
+    [
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      1
+    ]
+  ],
+  "artifacts": {
+    "fixed": {
+      "path": "fixed_blocked.step",
+      "sha256": "f8fbdfa119740da7653eecf487c90b1b7714e9837302783ecae3b233b4bff120",
+      "frame": "assembly"
+    },
+    "moving": {
+      "path": "moving.step",
+      "sha256": "9c3e1a880866f59a084b09b0d1ed7425ea0e8a399ea86efaf3659bf5842cb2cd",
+      "frame": "assembly"
+    },
+    "print_mesh": {
+      "path": "fixed_blocked.stl",
+      "sha256": "b5e3159bb3d9ac203c1c5628d066ebc3e5ad634a9e3ee42fa26818a2e382f9e2",
+      "frame": "print"
+    },
+    "profile": {
+      "path": "analysis_profile.ini",
+      "sha256": "8d398be63d7e5a1dc50cffceabde9d603da0de071d0dbb069966e3d0976b3e6e",
+      "frame": "configuration"
+    }
+  },
+  "path_check": {
+    "kind": "sampled_translation",
+    "frame": "assembly",
+    "waypoints_mm": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        3,
+        0,
+        0
+      ],
+      [
+        3,
+        0,
+        4
+      ]
+    ],
+    "max_step_mm": 0.1,
+    "volume_tolerance_mm3": 1e-07,
+    "expected_outcome": "collision_found"
+  },
+  "slicing": {
+    "engine": "PrusaSlicer",
+    "expected_version": "2.9.2",
+    "center_mm": [
+      90,
+      90
+    ],
+    "support_mode": "auto"
+  }
+}

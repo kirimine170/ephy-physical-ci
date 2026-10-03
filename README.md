@@ -32,6 +32,11 @@ The repository defines a reproducible host baseline，a package-only camera
 validation playbook，generic reference-command wrappers，and staged artifact
 validation．Production job orchestration is not implemented．
 
+A bounded [mechanical CLI prototype](tools/mechanical-ci/README.md) adds
+frozen-STEP translation checks and local slicing/toolpath extraction with
+synthetic regression fixtures．It does not validate physical strength or
+support removal．
+
 ## Architecture
 
 Ansible declares the host baseline，accounts，directories，minimal USB access，
@@ -96,6 +101,7 @@ raw training data，or model weights．See
 
 ## Documentation
 
+- [Mechanical CLI prototype](tools/mechanical-ci/README.md)
 - [XIAO first-fit holders and tray](hardware/xiao-first-fit-v0.1/README.md)
 - [Architecture](docs/architecture.md)
 - [Physical CI boundary](docs/physical-ci-boundary.md)
@@ -106,5 +112,6 @@ raw training data，or model weights．See
 
 ## License
 
-No license has been selected．Determine visibility and licensing explicitly
-before distribution，then add a license file and update this section．
+No license has been selected．The original source code in `tools/mechanical-ci`
+is published without selecting a license at this time．Dependency licenses remain
+unchanged．

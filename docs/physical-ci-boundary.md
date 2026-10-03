@@ -35,3 +35,15 @@ peer that may submit or interpret future jobs．This repository never receives
 a four-board tray for unpowered fit checks．These are review-stage mechanical
 fixtures，not device firmware or powered thermal-qualified enclosures．They do
 not change USB access，host configuration，or the camera ownership boundary．
+
+## Headless mechanical checks
+
+`tools/mechanical-ci/` is a separate，bounded CLI prototype．It reads frozen
+single-solid STEP files，samples a declared translation path，and can invoke a
+local pinned PrusaSlicer to extract linear extrusion paths．Its included CAD
+fixtures are newly generated synthetic regression inputs．
+
+It does not connect to a printer or robot．Continuous collision，six-degree-of-
+freedom search，support removal，contact/strength FEM，material calibration，and
+robot measurement remain explicitly unimplemented gates．A passed regression
+is not a physical-retention or manufacturing qualification．
