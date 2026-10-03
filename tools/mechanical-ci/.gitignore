@@ -1,0 +1,6 @@
+*.egg-info/
+results/
+*.gcode
+*.gcode.txt
+*.jsonl
+!examples/**/*.jsonl
