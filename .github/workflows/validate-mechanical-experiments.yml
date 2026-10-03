@@ -1,0 +1,42 @@
+---
+name: Validate mechanical experiments
+
+on:
+  push:
+    paths:
+      - "experiments/mechanical-ci/**"
+      - ".github/workflows/validate-mechanical-experiments.yml"
+  pull_request:
+    paths:
+      - "experiments/mechanical-ci/**"
+      - ".github/workflows/validate-mechanical-experiments.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  experiments:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install escape experiment dependencies
+        run: >-
+          python -m pip install
+          -r experiments/mechanical-ci/escape-search/requirements.txt
+      - name: Test connected search and independent STEP replay
+        run: >-
+          python -m unittest discover
+          -s experiments/mechanical-ci/escape-search/tests -v
+      - name: Test frame experiment without external solvers
+        run: >-
+          python -m unittest discover
+          -s experiments/mechanical-ci/frame-compliance/tests -v
+      - name: Verify recorded artifact hashes and scope
+        run: >-
+          python -m unittest discover
+          -s experiments/mechanical-ci/tests -v
+      - name: Validate repository
+        run: python scripts/validate_repository.py --check-sensitive-patterns

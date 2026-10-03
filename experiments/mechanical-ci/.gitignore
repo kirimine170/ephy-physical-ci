@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+*.msh
+*.inp
+*.dat
+*.frd
+*.sta
+*.cvg
+*.12d
+*.log
+.venv/

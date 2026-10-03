@@ -1,0 +1,10 @@
+# Reproduce locally; do not commit solver decks, meshes, logs, or binary output.
+output/
+*.msh
+*.inp
+*.dat
+*.sta
+*.cvg
+*.frd
+*.12d
+spooles.out

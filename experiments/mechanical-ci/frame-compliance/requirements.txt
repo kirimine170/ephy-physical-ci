@@ -1,0 +1,3 @@
+# Python 3.10+ standard library only.
+# External Gmsh and CalculiX CLIs must already be installed and passed explicitly.
+# No binary is downloaded, installed, or bundled by this experiment.

@@ -1,0 +1,166 @@
+{
+  "schema_version": "escape-experiment/1",
+  "experiment_version": 1,
+  "result": "not_found_in_bounded_search",
+  "seed": 17,
+  "units": {
+    "length": "mm",
+    "angle": "degree"
+  },
+  "gates": {
+    "execution": "pass",
+    "selected_path_samples": "pass",
+    "continuous_collision": "unknown",
+    "retention": "unknown",
+    "material_calibration": "not_applicable"
+  },
+  "material_scope": "rigid_geometry_only",
+  "boundary_conditions": "fixed obstacle; moving rigid body",
+  "proposal_budget": 500,
+  "proposals_attempted": 500,
+  "connected_nodes": 259,
+  "mesh_collision_queries": 1751,
+  "pose_order": [
+    "dx_mm",
+    "dy_mm",
+    "dz_mm",
+    "roll_deg",
+    "pitch_deg",
+    "yaw_deg"
+  ],
+  "rotation": "Rz(yaw) Ry(pitch) Rx(roll) about initial BBox center",
+  "pivot_mm": [
+    0.0,
+    0.0,
+    3.0
+  ],
+  "radius_bound_mm": 1.7320508075688772,
+  "bounds": [
+    [
+      -4.0,
+      4.0
+    ],
+    [
+      -4.0,
+      4.0
+    ],
+    [
+      0.0,
+      10.0
+    ],
+    [
+      -30.0,
+      30.0
+    ],
+    [
+      -30.0,
+      30.0
+    ],
+    [
+      -30.0,
+      30.0
+    ]
+  ],
+  "goal": {
+    "kind": "whole_moving_BBox_above_fixed_BBox",
+    "min_z_mm": 8.01
+  },
+  "search_point_step_mm": 0.2,
+  "overlap_tolerance_mm3": 1e-07,
+  "input_sha256": {
+    "fixed": "40c3e1a73347424601debe1237f03ad0309e30b630cc49c07f696a027b9c9517",
+    "moving": "b16a2215149e096c2ba2d9da4287fa5873aefdeb32d9088a1a46c6c8a33d0fc7"
+  },
+  "mesh_triangles": {
+    "fixed": 24,
+    "moving": 12
+  },
+  "versions": {
+    "cadquery": "2.7.0",
+    "cadquery-ocp": "7.8.1.1.post1",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "python-fcl": "0.7.0.11"
+  },
+  "script_sha256": "02b25060dee01d946d30ec142a96a2415ebdc0b0bb916a1a2436014b097a925c",
+  "selected_path_kind": "reachable_play_only",
+  "selected_tree_path": [
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.8,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.008314584766977209,
+      0.27636838704931366,
+      0.8428908317788821,
+      4.3861255205211,
+      4.245689817503318,
+      -3.6293365655722627
+    ],
+    [
+      0.008314584766977209,
+      0.27636838704931366,
+      1.6428908317788822,
+      4.3861255205211,
+      4.245689817503318,
+      -3.6293365655722627
+    ],
+    [
+      0.008314584766977209,
+      0.27636838704931366,
+      2.4428908317788824,
+      4.3861255205211,
+      4.245689817503318,
+      -3.6293365655722627
+    ],
+    [
+      0.03589689993848674,
+      0.6045026511565548,
+      2.727769020496712,
+      4.352355894205527,
+      2.6125583453936985,
+      0.012154167014143624
+    ],
+    [
+      -0.01934410353388094,
+      0.5865715260181005,
+      2.381162384163032,
+      2.86819580781373,
+      0.8643176551160636,
+      -2.045104251848151
+    ],
+    [
+      0.07285225188965229,
+      0.703306517786982,
+      2.8367289515820295,
+      5.0888932480223215,
+      4.530892103598975,
+      -1.0535184099504429
+    ]
+  ],
+  "selected_path_BRep_replay": {
+    "independently_reimported_STEP": true,
+    "samples_checked": 52,
+    "sampled_clear": true,
+    "first_collision": null,
+    "max_overlap_mm3": 0.0,
+    "point_step_mm": 0.1,
+    "continuous_collision_certified": false
+  },
+  "selected_tree_nodes": 8,
+  "whole_graph_BRep_verified": false,
+  "retention_proven": false,
+  "physical_validation": "not_performed"
+}
