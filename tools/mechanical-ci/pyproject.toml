@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ephy-mechanical-ci"
+version = "0.1.0"
+description = "Bounded headless geometry and slicing checks for mechanical CI"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+geometry = ["cadquery==2.7.0"]
+
+[project.scripts]
+physical-ci = "physical_ci.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
