@@ -1,0 +1,36 @@
+---
+name: Validate mechanical CLI
+
+on:
+  push:
+    paths:
+      - "tools/mechanical-ci/**"
+      - ".github/workflows/validate-mechanical-cli.yml"
+  pull_request:
+    paths:
+      - "tools/mechanical-ci/**"
+      - ".github/workflows/validate-mechanical-cli.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install the geometry extra
+        run: python -m pip install './tools/mechanical-ci[geometry]'
+
+      - name: Test manifests, geometry, parser, and adapter failures
+        run: python -m unittest discover -s tools/mechanical-ci/tests -v
+
+      - name: Validate repository
+        run: python scripts/validate_repository.py --check-sensitive-patterns
