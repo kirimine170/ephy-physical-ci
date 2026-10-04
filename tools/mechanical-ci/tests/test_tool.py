@@ -19,7 +19,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from physical_ci.cli import main
 from physical_ci.errors import BackendError, InputError
 from physical_ci.manifest import sha256
-from physical_ci.tool import classify, load_tool_spec, measure, screen_tool, step_snapshot
+from physical_ci.tool import classify, consistent_endpoint, load_tool_spec, measure, screen_tool, step_snapshot
 
 HAVE_CADQUERY = importlib.util.find_spec("cadquery") is not None
 
@@ -227,6 +227,68 @@ class SpecAndSnapshotTests(unittest.TestCase):
         self.assertEqual(spec["sweep_to_mm"], [1e16 + 2, 0, 0])
         self.data["tool"].update({"axis": [0, 0, 1], "travel_mm": 6})
         load_tool_spec(self.write())  # Radius 2 is representable at this coordinate.
+
+    def test_constructed_sweep_endpoint_mismatch_rejected_before_backend(self):
+        original = copy.deepcopy(self.data)
+        # The origin/height reconstruction is one millimetre short before rounding,
+        # and two millimetres short at the supplied coordinate scale.
+        for coordinate in (1e16, -1e16, float(2 ** 54)):
+            for axis_index in range(3):
+                for sign in (-1, 1):
+                    self.data = copy.deepcopy(original)
+                    tip, axis = [0, 0, 0], [0, 0, 0]
+                    tip[axis_index], axis[axis_index] = coordinate, sign
+                    self.data["tool"].update({"tip_mm": tip, "axis": axis, "length_mm": 3, "travel_mm": 2})
+                    with self.subTest(tip=tip, axis=axis), self.assertRaises(InputError):
+                        load_tool_spec(self.write())
+        self.data = copy.deepcopy(original)
+        self.data["tool"].update({"tip_mm": [1e16, 0, 0], "axis": [1, 0, 0],
+                                  "length_mm": 3, "travel_mm": 2})
+        self.write()
+        for epsilon in (1e-7, 1e10):
+            self.data["numeric_epsilon_mm"] = epsilon
+            self.write()
+            with self.assertRaisesRegex(InputError, "constructed sweep endpoint"):
+                load_tool_spec(self.manifest)
+        with patch("physical_ci.cli.screen_tool") as backend:
+            self.assertEqual(self.run_quiet(), 2)
+            backend.assert_not_called()
+        self.assertFalse(self.output.exists())
+
+    def test_endpoint_consistency_accepts_normal_roundoff_and_zero_travel(self):
+        angle = math.radians(37)
+        c, s = math.cos(angle), math.sin(angle)
+        self.data["tool"].update({"tip_mm": [8 - s, -3, 5 - c], "axis": [s, 0, c]})
+        spec, _, _ = load_tool_spec(self.write())
+        self.assertLessEqual(spec["sweep_endpoint_error_mm"], spec["endpoint_consistency_tolerance_mm"])
+        self.assertLessEqual(spec["endpoint_consistency_tolerance_mm"], spec["numeric_epsilon_mm"])
+        self.data["tool"]["travel_mm"] = 0
+        load_tool_spec(self.write())
+        self.data["tool"].update({"tip_mm": [1.1, 0, 0], "axis": [1, 0, 0],
+                                  "length_mm": .1, "travel_mm": .1})
+        spec, _, _ = load_tool_spec(self.write())
+        self.assertGreater(spec["sweep_endpoint_error_mm"], 0)
+        self.assertLessEqual(spec["sweep_endpoint_error_mm"], spec["endpoint_consistency_tolerance_mm"])
+        self.data["numeric_epsilon_mm"] = 1e-17
+        with self.assertRaisesRegex(InputError, "constructed sweep endpoint"):
+            load_tool_spec(self.write())
+        # Near zero, tiny local dimensions may underflow the tolerance to zero;
+        # exact endpoint agreement remains acceptable, without a tolerance floor.
+        self.assertEqual(consistent_endpoint([0, 0, 0], [0, 0, 1], 1e-310, [0, 0, 1e-310], 0,
+                                             "synthetic endpoint")[1], 0)
+
+    def test_constructor_defensively_rechecks_endpoint_before_shape_creation(self):
+        spec, source, digest = load_tool_spec(self.write())
+        spec["sweep_to_mm"][2] += .01
+        backend = fake_cq()
+        with patch.object(backend.Solid, "makeCylinder") as constructor:
+            with patch.dict(sys.modules, {"cadquery": backend}):
+                result = screen_tool(spec, source, digest)
+            constructor.assert_not_called()
+        self.assertEqual(result["outcome"], "indeterminate")
+        self.assertFalse(result["model_clear"])
+        self.assertFalse(result["sweep"]["geometry_verified"])
+        self.assertEqual(result["reasons"], ["sweep_endpoint_contradiction"])
 
     def test_artifact_root_suffix_hash_format_and_frame(self):
         original = copy.deepcopy(self.data)

@@ -18,6 +18,7 @@ from .manifest import keys, number, sha256, vector
 MAX_SPEC_BYTES = 64 * 1024
 MAX_STEP_BYTES = 64 * 1024 * 1024
 AXIS_NORM_EPSILON = 1e-12
+ENDPOINT_REL_EPSILON = 1e-12
 
 
 def finite(value, label):
@@ -76,6 +77,15 @@ def resolved_radius(radius, axis, caps):
                 raise InputError("cylinder radius is below coordinate resolution")
 
 
+def consistent_endpoint(origin, direction, height, target, tolerance, label):
+    """Use the actual constructor parameters; never scale tolerance by origin."""
+    reconstructed = resolved_offset(origin, direction, height, label)
+    error = finite(math.dist(reconstructed, target), label)
+    if error > tolerance:
+        raise InputError(f"{label} disagrees with the declared endpoint")
+    return reconstructed, error
+
+
 def load_tool_spec(path):
     source = Path(path).resolve()
     with source.open("rb") as stream:
@@ -123,27 +133,35 @@ def load_tool_spec(path):
     if not math.isclose(norm, 1., rel_tol=0., abs_tol=AXIS_NORM_EPSILON):
         raise InputError("axis must be a unit vector (norm within 1e-12 of 1)")
     axis = [value / norm for value in declared_axis]
+    distance_epsilon = number(data["numeric_epsilon_mm"], "numeric_epsilon_mm", positive=True)
+    volume_epsilon = number(data["numeric_epsilon_mm3"], "numeric_epsilon_mm3", positive=True)
+    local_scale = min(radius, length, travel) if travel > 0 else min(radius, length)
+    endpoint_tolerance = min(distance_epsilon, ENDPOINT_REL_EPSILON * local_scale)
     swept_length = finite(length + travel, "swept length")
     if travel > 0 and (swept_length == length or swept_length == travel):
         raise InputError("sweep length or travel is below length resolution")
     backward = [-d for d in axis]
     base = resolved_offset(tip, backward, length, "initial cylinder length")
     end = resolved_offset(tip, axis, travel, "final tip travel")
-    resolved_offset(end, backward, length, "final cylinder length")
-    resolved_offset(base, axis, swept_length, "sweep extent")
+    final_base = resolved_offset(end, backward, length, "final cylinder length")
+    reconstructed_end, endpoint_error = consistent_endpoint(
+        base, axis, swept_length, end, endpoint_tolerance, "constructed sweep endpoint")
+    consistent_endpoint(base, axis, length, tip, endpoint_tolerance, "initial cylinder endpoint")
+    consistent_endpoint(final_base, axis, length, end, endpoint_tolerance, "final cylinder endpoint")
+    consistent_endpoint(base, axis, travel, final_base, endpoint_tolerance, "translated cylinder origin")
     if finite(math.dist(base, end), "sweep extent") == 0:
         raise InputError("sweep extent is below coordinate resolution")
     resolved_radius(radius, axis, (base, end))
     expected_volume = finite(math.pi * radius * radius * swept_length, "swept volume")
     if expected_volume <= 0:
         raise InputError("swept volume underflows to zero")
-    distance_epsilon = number(data["numeric_epsilon_mm"], "numeric_epsilon_mm", positive=True)
-    volume_epsilon = number(data["numeric_epsilon_mm3"], "numeric_epsilon_mm3", positive=True)
     normalized = {
         "radius_mm": radius, "length_mm": length, "travel_mm": travel,
         "tip_mm": tip, "declared_axis": declared_axis, "axis": axis,
         "sweep_from_mm": base, "sweep_to_mm": end, "sweep_length_mm": swept_length,
         "expected_sweep_volume_mm3": expected_volume,
+        "reconstructed_sweep_to_mm": reconstructed_end, "sweep_endpoint_error_mm": endpoint_error,
+        "endpoint_consistency_tolerance_mm": endpoint_tolerance,
         "numeric_epsilon_mm": distance_epsilon, "numeric_epsilon_mm3": volume_epsilon,
         "obstacle_sha256": digest,
     }
@@ -231,6 +249,12 @@ def measure(obstacle, sweep, distance_epsilon, volume_epsilon):
 def construct_sweep(cq, spec):
     volume = None
     try:
+        try:
+            consistent_endpoint(spec["sweep_from_mm"], spec["axis"], spec["sweep_length_mm"],
+                                spec["sweep_to_mm"], spec["endpoint_consistency_tolerance_mm"],
+                                "constructed sweep endpoint")
+        except InputError:
+            return None, volume, "sweep_endpoint_contradiction"
         sweep = cq.Solid.makeCylinder(spec["radius_mm"], spec["sweep_length_mm"],
                                       cq.Vector(*spec["sweep_from_mm"]), cq.Vector(*spec["axis"]))
         measured = sweep.Volume()
@@ -281,6 +305,9 @@ def screen_tool(spec, source, spec_sha256):
             "tool": {key: spec[key] for key in ("radius_mm", "length_mm", "tip_mm", "declared_axis", "axis", "travel_mm")},
             "sweep": {"kind": "axial_flat_end_cylinder", "from_mm": spec["sweep_from_mm"],
                       "to_mm": spec["sweep_to_mm"], "length_mm": spec["sweep_length_mm"],
+                      "reconstructed_to_mm": spec["reconstructed_sweep_to_mm"],
+                      "endpoint_error_mm": spec["sweep_endpoint_error_mm"],
+                      "endpoint_consistency_tolerance_mm": spec["endpoint_consistency_tolerance_mm"],
                       "volume_mm3": sweep_volume, "geometry_verified": sweep_error is None},
             "numeric_epsilon_mm": spec["numeric_epsilon_mm"], "numeric_epsilon_mm3": spec["numeric_epsilon_mm3"],
             "intersection_mm3": volume, "minimum_distance_mm": distance,

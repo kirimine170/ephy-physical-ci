@@ -65,6 +65,16 @@ positive tip travel, and the sweep; adding length and travel must retain both.
 Each nonzero radial coordinate extent at both sweep caps must also remain
 distinct from its cap coordinate in both directions. These are representability
 checks, not a blanket coordinate-magnitude limit or manufacturing tolerance.
+The checker reconstructs the endpoint using the exact origin, height, and
+direction supplied to the cylinder constructor and compares it with the
+resolved declared endpoint. Initial/final cylinder endpoints and the translated
+final origin must also agree. The absolute consistency tolerance is the smaller
+of the distance epsilon and `1e-12` times the smallest positive local radius,
+length, or travel (zero travel is omitted). World-coordinate magnitude never
+enlarges this tolerance; if it underflows to zero, exact agreement is required.
+Inconsistent inputs are rejected. The constructor repeats the sweep endpoint
+check defensively and returns indeterminate on inconsistency. The report records
+the reconstructed sweep endpoint, its error, and the consistency tolerance.
 No geometry generator is
 imported by the checker. The real kernel must accept exactly one valid positive-
 volume solid, with finite bounds; multiple solids and loose extra geometry are
