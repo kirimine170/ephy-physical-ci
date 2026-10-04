@@ -1,5 +1,12 @@
 # Mechanical CI CLI prototype
 
+`screen-tool` screens a nominal flat-end cylinder's entire straight axial sweep
+against one frozen, hash-bound single-solid STEP obstacle. It reports
+`model_clear`, `interference`, or `indeterminate` from intersection volume and
+minimum distance. See [Tool screen v1](docs/tool-screen-v1.md) for its strict
+schema, frozen-byte snapshot binding, synthetic oracles, and physical limits.
+The existing `check-path` stage continues to use discrete pose samples.
+
 The implemented `screen-support` stage screens nominal support/interface paths
 against strict, hash-bound AABBs in `gcode_machine_coordinates` and `mm`:
 
