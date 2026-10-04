@@ -92,6 +92,23 @@ class DecisionTests(unittest.TestCase):
             self.assertEqual(result[2], "indeterminate")
             self.assertIn("invalid_intersection_shape", result[3])
 
+    def test_invalid_zero_volume_common_with_positive_gap_is_indeterminate(self):
+        obstacle = FakeShape(distance=.5)
+        common = FakeShape(volume=0, valid=False)
+        with patch.object(obstacle, "intersect", return_value=common):
+            result = measure(obstacle, FakeShape(), 1e-7, 1e-9)
+        self.assertEqual(result[:3], (0, .5, "indeterminate"))
+        self.assertEqual(result[3], ["invalid_intersection_shape"])
+        # A valid empty Boolean still permits the explicit zero-volume/gap rule.
+        common.valid = True
+        with patch.object(obstacle, "intersect", return_value=common):
+            self.assertEqual(measure(obstacle, FakeShape(), 1e-7, 1e-9)[2], "model_clear")
+        with patch.object(obstacle, "intersect", return_value=common), \
+                patch.object(common, "isValid", side_effect=RuntimeError("synthetic validity fault")):
+            result = measure(obstacle, FakeShape(), 1e-7, 1e-9)
+        self.assertEqual(result[2], "indeterminate")
+        self.assertIn("intersection_kernel_failure", result[3])
+
 
 class SpecAndSnapshotTests(unittest.TestCase):
     def setUp(self):
@@ -170,6 +187,46 @@ class SpecAndSnapshotTests(unittest.TestCase):
             self.data = copy.deepcopy(original)
             self.data["tool"].update(values)
             with self.subTest(values=values), self.assertRaises(InputError): load_tool_spec(self.write())
+
+    def test_travel_length_radius_and_sweep_coordinate_collapse_rejected(self):
+        original = copy.deepcopy(self.data)
+        cases = [
+            ({"tip_mm": [1e16, 0, 0], "axis": [1, 0, 0], "length_mm": 2, "travel_mm": 1},
+             "final tip travel"),
+            ({"tip_mm": [-1e16, 0, 0], "axis": [1, 0, 0], "length_mm": 2, "travel_mm": 1},
+             "final tip travel"),
+            ({"tip_mm": [1e16, 0, 0], "axis": [1, 0, 0], "length_mm": 1, "travel_mm": 4},
+             "initial cylinder length"),
+            ({"tip_mm": [2 ** 53 - 2, 0, 0], "axis": [1, 0, 0], "length_mm": .75, "travel_mm": 4},
+             "final cylinder length"),
+            # The y component survives; the x component of this axial motion does not.
+            ({"tip_mm": [1e16, 0, 0], "axis": [.6, .8, 0], "length_mm": 4, "travel_mm": 1},
+             "final tip travel"),
+            ({"tip_mm": [0, 0, 0], "axis": [1, 0, 0], "length_mm": 1, "travel_mm": 1e16},
+             "sweep length"),
+            ({"tip_mm": [1e16, 0, 0], "axis": [0, 0, 1], "radius_mm": 1},
+             "cylinder radius"),
+        ]
+        for changes, message in cases:
+            self.data = copy.deepcopy(original)
+            self.data["tool"].update(changes)
+            with self.subTest(changes=changes), self.assertRaisesRegex(InputError, message):
+                load_tool_spec(self.write())
+        self.data = copy.deepcopy(original)
+        self.data["tool"].update(cases[0][0])
+        self.write()
+        with patch("physical_ci.cli.screen_tool") as backend:
+            self.assertEqual(self.run_quiet(), 2)
+            backend.assert_not_called()
+        self.assertFalse(self.output.exists())
+
+    def test_large_coordinates_with_resolved_dimensions_are_not_blanket_rejected(self):
+        self.data["tool"].update({"tip_mm": [1e16, 0, 0], "axis": [1, 0, 0], "travel_mm": 2})
+        spec, _, _ = load_tool_spec(self.write())
+        self.assertEqual(spec["sweep_from_mm"], [1e16 - 2, 0, 0])
+        self.assertEqual(spec["sweep_to_mm"], [1e16 + 2, 0, 0])
+        self.data["tool"].update({"axis": [0, 0, 1], "travel_mm": 6})
+        load_tool_spec(self.write())  # Radius 2 is representable at this coordinate.
 
     def test_artifact_root_suffix_hash_format_and_frame(self):
         original = copy.deepcopy(self.data)
@@ -286,6 +343,22 @@ class SpecAndSnapshotTests(unittest.TestCase):
         with patch.dict(sys.modules, {"cadquery": backend}):
             result = screen_tool(spec, source, digest)
         self.assertEqual(result["reasons"], ["sweep_kernel_failure"])
+
+    def test_collapsed_or_nonfinite_kernel_sweep_bounds_are_indeterminate(self):
+        spec, source, digest = load_tool_spec(self.write())
+        for low, high in ((1e16, 1e16), (float("nan"), 6), (-6, float("inf")), (-1e308, 1e308)):
+            backend = fake_cq()
+            sweep = backend.Solid.makeCylinder(2, 8, None, None)
+            bounds = sweep.BoundingBox()
+            bounds.xmin, bounds.xmax = low, high
+            with patch.object(sweep, "BoundingBox", return_value=bounds):
+                backend.Solid.makeCylinder = lambda *args: sweep
+                with patch.dict(sys.modules, {"cadquery": backend}):
+                    result = screen_tool(spec, source, digest)
+            self.assertEqual(result["outcome"], "indeterminate")
+            self.assertFalse(result["model_clear"])
+            self.assertFalse(result["sweep"]["geometry_verified"])
+            self.assertEqual(result["reasons"], ["invalid_sweep_bounds"])
 
     def test_mock_interference_and_indeterminate_are_reports_not_physical_passes(self):
         self.write()

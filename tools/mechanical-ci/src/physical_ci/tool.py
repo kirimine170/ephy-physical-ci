@@ -52,6 +52,30 @@ def reject_constant(token):
     raise InputError(f"nonfinite tool JSON constant: {token}")
 
 
+def resolved_offset(point, direction, distance, label):
+    """Reject nonzero axial components that disappear at the supplied scale."""
+    offset = [finite(distance * d, label) for d in direction]
+    moved = [finite(p + delta, label) for p, delta in zip(point, offset)]
+    for p, q, delta, d in zip(point, moved, offset, direction):
+        if distance > 0 and d != 0 and (delta == 0 or q == p):
+            raise InputError(f"{label} is below coordinate resolution")
+    return moved
+
+
+def resolved_radius(radius, axis, caps):
+    """Check the cylinder's radial coordinate extents at both sweep caps."""
+    for i in range(3):
+        transverse = math.hypot(*(axis[j] for j in range(3) if j != i))
+        extent = finite(radius * transverse, "radial extent")
+        if transverse == 0:
+            continue
+        for cap in caps:
+            low = finite(cap[i] - extent, "radial bound")
+            high = finite(cap[i] + extent, "radial bound")
+            if extent == 0 or low == cap[i] or high == cap[i]:
+                raise InputError("cylinder radius is below coordinate resolution")
+
+
 def load_tool_spec(path):
     source = Path(path).resolve()
     with source.open("rb") as stream:
@@ -100,10 +124,16 @@ def load_tool_spec(path):
         raise InputError("axis must be a unit vector (norm within 1e-12 of 1)")
     axis = [value / norm for value in declared_axis]
     swept_length = finite(length + travel, "swept length")
-    base = [finite(p - length * d, "cylinder base") for p, d in zip(tip, axis)]
-    end = [finite(p + travel * d, "final tip") for p, d in zip(tip, axis)]
-    if finite(math.dist(base, end), "sweep extent") == 0 or travel > 0 and swept_length == length:
-        raise InputError("sweep extent/travel is below coordinate or length resolution")
+    if travel > 0 and (swept_length == length or swept_length == travel):
+        raise InputError("sweep length or travel is below length resolution")
+    backward = [-d for d in axis]
+    base = resolved_offset(tip, backward, length, "initial cylinder length")
+    end = resolved_offset(tip, axis, travel, "final tip travel")
+    resolved_offset(end, backward, length, "final cylinder length")
+    resolved_offset(base, axis, swept_length, "sweep extent")
+    if finite(math.dist(base, end), "sweep extent") == 0:
+        raise InputError("sweep extent is below coordinate resolution")
+    resolved_radius(radius, axis, (base, end))
     expected_volume = finite(math.pi * radius * radius * swept_length, "swept volume")
     if expected_volume <= 0:
         raise InputError("swept volume underflows to zero")
@@ -182,7 +212,7 @@ def measure(obstacle, sweep, distance_epsilon, volume_epsilon):
         measured = common.Volume()
         if not isinstance(measured, bool) and isinstance(measured, (int, float)) and math.isfinite(measured):
             volume = float(measured)
-        if volume is not None and volume > 0 and not common.isValid():
+        if not common.isValid():
             reasons.append("invalid_intersection_shape")
     except Exception:
         reasons.append("intersection_kernel_failure")
@@ -208,6 +238,11 @@ def construct_sweep(cq, spec):
             volume = float(measured)
         if not sweep.isValid() or len(sweep.Solids()) != 1 or volume is None or volume <= 0:
             return None, volume, "invalid_swept_cylinder"
+        bounds = sweep.BoundingBox()
+        for axis in "xyz":
+            low, high = getattr(bounds, axis + "min"), getattr(bounds, axis + "max")
+            if not math.isfinite(low) or not math.isfinite(high) or not math.isfinite(high - low) or low >= high:
+                return None, volume, "invalid_sweep_bounds"
         # This analytic identity is independent of the user's overlap threshold.
         if not math.isclose(volume, spec["expected_sweep_volume_mm3"], rel_tol=1e-8, abs_tol=0.):
             return None, volume, "kernel_sweep_volume_contradiction"

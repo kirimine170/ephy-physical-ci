@@ -58,8 +58,14 @@ drive/stream paths, wrong frames, and malformed SHA256 are rejected.
 
 Input JSON is limited to 64 KiB and STEP to 64 MiB. Duplicate JSON keys,
 malformed JSON, NaN/infinity, overflow, underflow of nonzero JSON numbers to
-zero, nonfinite derived geometry, and numerically collapsed sweep extents/travel
-are rejected. No geometry generator is
+zero, nonfinite derived geometry, and numerically collapsed dimensions or motion
+are rejected. A nonzero axial component must remain nonzero after multiplication
+and coordinate addition. This is checked for initial/final cylinder length,
+positive tip travel, and the sweep; adding length and travel must retain both.
+Each nonzero radial coordinate extent at both sweep caps must also remain
+distinct from its cap coordinate in both directions. These are representability
+checks, not a blanket coordinate-magnitude limit or manufacturing tolerance.
+No geometry generator is
 imported by the checker. The real kernel must accept exactly one valid positive-
 volume solid, with finite bounds; multiple solids and loose extra geometry are
 rejected. STEP import failure is an input failure.
@@ -100,7 +106,10 @@ The kernel measures common volume `V` in mm3 and minimum solid-to-solid distance
 | Invalid/nonfinite/negative measurements, invalid Boolean shape, or kernel operation failure | `indeterminate` |
 
 Invalid sweep construction or disagreement with analytic cylinder volume is
-also `indeterminate`. The analytic volume identity uses its own small relative
+also `indeterminate`, as are nonfinite or collapsed kernel sweep bounds. Boolean
+shape validity is checked even when the intersection volume is zero; a failed
+validity check cannot be converted to model-clear by a positive distance.
+The analytic volume identity uses its own small relative
 numerical check; a large user overlap epsilon cannot mask an incorrect swept
 solid. Unavailable measurements are `null` in finite JSON, with reasons; they
 never become a model-clear result. The report includes the obstacle hash/volume,
