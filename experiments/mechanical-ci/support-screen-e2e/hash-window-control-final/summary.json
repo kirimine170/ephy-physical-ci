@@ -1,0 +1,40 @@
+{
+  "source_commit": "e45770fb168b6ba64ee41922ec70adab76eddb55",
+  "controls": [
+    {
+      "mutated": "gcode",
+      "exit_code": 0,
+      "before": {
+        "gcode_sha256": "8e71909df4941443dc2ffcc0e337d6babe5585c3337c579afec3a5faf2f42394",
+        "roi_sha256": "b942f818086438ce70384a637a87e294adfb7ffebc7538864aa5ec8d23778f97"
+      },
+      "after": {
+        "gcode_sha256": "6f01d934a23f6bf78822d2492af3d66eb7296a49d4ac73e359803bde5096fd9d",
+        "roi_sha256": "b942f818086438ce70384a637a87e294adfb7ffebc7538864aa5ec8d23778f97"
+      },
+      "report_hashes": {
+        "gcode_sha256": "8e71909df4941443dc2ffcc0e337d6babe5585c3337c579afec3a5faf2f42394",
+        "roi_sha256": "b942f818086438ce70384a637a87e294adfb7ffebc7538864aa5ec8d23778f97"
+      },
+      "reproduced": true
+    },
+    {
+      "mutated": "roi",
+      "exit_code": 0,
+      "before": {
+        "gcode_sha256": "8e71909df4941443dc2ffcc0e337d6babe5585c3337c579afec3a5faf2f42394",
+        "roi_sha256": "b942f818086438ce70384a637a87e294adfb7ffebc7538864aa5ec8d23778f97"
+      },
+      "after": {
+        "gcode_sha256": "8e71909df4941443dc2ffcc0e337d6babe5585c3337c579afec3a5faf2f42394",
+        "roi_sha256": "d4ed1ea777ab5d175f6fc9391ce80b3c42a0efb09463c0f4b3920bb602256052"
+      },
+      "report_hashes": {
+        "gcode_sha256": "8e71909df4941443dc2ffcc0e337d6babe5585c3337c579afec3a5faf2f42394",
+        "roi_sha256": "b942f818086438ce70384a637a87e294adfb7ffebc7538864aa5ec8d23778f97"
+      },
+      "reproduced": true
+    }
+  ],
+  "conclusion": "Reports bind bytes read earlier; they do not prove paths stayed unchanged through report creation. Before/after equality likewise does not exclude transient changes."
+}
