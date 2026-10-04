@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "name": "a_auto",
+  "units": "mm",
+  "assembly_to_print": [
+    [
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      1
+    ]
+  ],
+  "artifacts": {
+    "print_mesh": {
+      "path": "shelf.stl",
+      "sha256": "da9d1bf75e44497ca09e06c4edeb9419ce8acd128b0537dc9f1408cde53aa2e1",
+      "frame": "print"
+    },
+    "profile": {
+      "path": "profile.ini",
+      "sha256": "52bad7807d830b6619febb196793c3682f6d92cd2ad5b79277f8a7550cbc175f",
+      "frame": "configuration"
+    }
+  },
+  "slicing": {
+    "engine": "PrusaSlicer",
+    "expected_version": "2.9.2",
+    "center_mm": [
+      90,
+      90
+    ],
+    "support_mode": "auto"
+  }
+}
