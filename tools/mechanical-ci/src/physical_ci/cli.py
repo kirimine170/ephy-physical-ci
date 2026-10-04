@@ -11,6 +11,7 @@ from .geometry import check_path
 from .manifest import load_manifest, sha256
 from .slicer import run_slicer
 from .support import load_regions, screen_support
+from .tool import load_tool_spec, screen_tool
 
 
 def ensure_output(path, protected=()):
@@ -59,6 +60,9 @@ def parser():
     support.add_argument("input", help="supported linear G-code")
     support.add_argument("--roi", required=True, help="strict, hash-bound ROI JSON")
     support.add_argument("--output", required=True)
+    tool = sub.add_parser("screen-tool", help="screen one flat-end cylinder translating along its fixed axis against STEP")
+    tool.add_argument("manifest", help="strict tool screen v1 specification")
+    tool.add_argument("--output", required=True)
     slicing = sub.add_parser("slice", help="run a local pinned PrusaSlicer, then analyze output")
     slicing.add_argument("manifest")
     slicing.add_argument("--slicer", default="prusa-slicer")
@@ -70,6 +74,16 @@ def parser():
 def main(argv=None):
     args = parser().parse_args(argv)
     try:
+        if args.command == "screen-tool":
+            ensure_output(args.output, [args.manifest])
+            spec, source, digest = load_tool_spec(args.manifest)
+            protected = [args.manifest, source]
+            ensure_output(args.output, protected)
+            result = screen_tool(spec, source, digest)
+            write_json(args.output, result, protected)
+            print(json.dumps({"outcome": result["outcome"], "model_clear": result["model_clear"],
+                              "physical_validation": "not_performed", "printer_ready": False}))
+            return 0
         if args.command == "screen-support":
             source = Path(args.input)
             protected = [source, args.roi]
