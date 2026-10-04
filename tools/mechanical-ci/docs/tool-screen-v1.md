@@ -75,6 +75,19 @@ enlarges this tolerance; if it underflows to zero, exact agreement is required.
 Inconsistent inputs are rejected. The constructor repeats the sweep endpoint
 check defensively and returns indeterminate on inconsistency. The report records
 the reconstructed sweep endpoint, its error, and the consistency tolerance.
+After loading, the checker also calls the same `Vector.toDir()` conversion as
+the pinned CadQuery cylinder constructor, which produces OCCT's normalized
+`gp_Dir`. It uses that resulting direction and OCCT vector arithmetic to
+reconstruct the sweep cap, initial tip, and final tool origin. A disagreement
+with the declared path is indeterminate before cylinder construction. The
+direction difference multiplied by `(sweep length + 2 * radius)` must also fit
+the same local tolerance, so cancellation at a cap cannot hide amplified rim or
+intermediate-pose uncertainty. Direction conversion failure is indeterminate.
+The original vector is still passed to `makeCylinder`; the inspected `gp_Dir`
+is not supplied for a further normalization. Kernel direction, reconstructed
+cap, error, deviation bound, and verification state are recorded separately
+from the Python input preflight. This follows [CadQuery 2.7.0's cylinder and
+vector conversion](https://github.com/CadQuery/cadquery/tree/v2.7.0/cadquery/occ_impl).
 No geometry generator is
 imported by the checker. The real kernel must accept exactly one valid positive-
 volume solid, with finite bounds; multiple solids and loose extra geometry are
@@ -158,7 +171,7 @@ Real malformed/multi-solid STEP rejection and CLI hash round-trip are included.
 Schema/IO tests use explicitly labeled mocks only. They verify strict JSON,
 finite arithmetic, byte identity, snapshot tampering, live-source mutation,
 output protection, determinism, conservative metric decisions, and kernel
-failure handling. They are not geometry validation. Nine real-kernel tests are
+failure handling. They are not geometry validation. Eleven real-kernel tests are
 skipped if the existing CadQuery/OCCT extra is unavailable; execute them on the
 existing geometry CI or an already provisioned environment. A skip is an
 unperformed check, and kernel results are not claimed by the Windows mock tests.

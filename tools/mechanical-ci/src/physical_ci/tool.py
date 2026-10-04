@@ -248,31 +248,77 @@ def measure(obstacle, sweep, distance_epsilon, volume_epsilon):
 
 def construct_sweep(cq, spec):
     volume = None
+    kernel = {"kernel_axis": None, "kernel_reconstructed_to_mm": None,
+              "kernel_endpoint_error_mm": None, "kernel_direction_deviation_bound_mm": None,
+              "kernel_endpoint_verified": False}
     try:
         try:
             consistent_endpoint(spec["sweep_from_mm"], spec["axis"], spec["sweep_length_mm"],
                                 spec["sweep_to_mm"], spec["endpoint_consistency_tolerance_mm"],
                                 "constructed sweep endpoint")
         except InputError:
-            return None, volume, "sweep_endpoint_contradiction"
+            return None, volume, "sweep_endpoint_contradiction", kernel
+        origin_vector = cq.Vector(*spec["sweep_from_mm"])
+        axis_vector = cq.Vector(*spec["axis"])
+        try:
+            # CadQuery 2.7.0 makeCylinder copies this Vector and calls toDir().
+            # Inspect that same gp_Dir conversion without replacing the original
+            # constructor input, which would cause another normalization.
+            direction = axis_vector.toDir()
+            actual_axis = vector([direction.X(), direction.Y(), direction.Z()], "kernel direction")
+            kernel["kernel_axis"] = actual_axis
+            if not math.isclose(math.hypot(*actual_axis), 1., rel_tol=0., abs_tol=AXIS_NORM_EPSILON):
+                raise InputError("invalid kernel unit direction")
+        except Exception:
+            return None, volume, "kernel_direction_failure", kernel
+        actual_axis_vector = cq.Vector(*actual_axis)
+
+        def native_endpoint(height):
+            # Use OCCT vector multiplication/addition for the post-gp_Dir cap.
+            point = origin_vector.add(actual_axis_vector.multiply(height)).toTuple()
+            return vector(list(point), "kernel endpoint")
+
+        actual_end = native_endpoint(spec["sweep_length_mm"])
+        kernel["kernel_reconstructed_to_mm"] = actual_end
+        kernel["kernel_endpoint_error_mm"] = finite(math.dist(actual_end, spec["sweep_to_mm"]),
+                                                     "kernel endpoint error")
+        tolerance = spec["endpoint_consistency_tolerance_mm"]
+        if kernel["kernel_endpoint_error_mm"] > tolerance:
+            return None, volume, "kernel_sweep_endpoint_contradiction", kernel
+        initial_error = finite(math.dist(native_endpoint(spec["length_mm"]), spec["tip_mm"]),
+                               "kernel initial tip error")
+        declared_final_base = resolved_offset(spec["sweep_to_mm"], [-d for d in spec["axis"]],
+                                             spec["length_mm"], "declared final base")
+        final_base_error = finite(math.dist(native_endpoint(spec["travel_mm"]), declared_final_base),
+                                  "kernel final base error")
+        if initial_error > tolerance or final_base_error > tolerance:
+            return None, volume, "kernel_tool_pose_contradiction", kernel
+        # Cap cancellation alone can hide amplified rim/intermediate-pose error.
+        deviation = finite(math.dist(actual_axis, spec["axis"]) *
+                           (spec["sweep_length_mm"] + 2 * spec["radius_mm"]),
+                           "kernel direction deviation")
+        kernel["kernel_direction_deviation_bound_mm"] = deviation
+        if deviation > tolerance:
+            return None, volume, "kernel_direction_contradiction", kernel
+        kernel["kernel_endpoint_verified"] = True
         sweep = cq.Solid.makeCylinder(spec["radius_mm"], spec["sweep_length_mm"],
-                                      cq.Vector(*spec["sweep_from_mm"]), cq.Vector(*spec["axis"]))
+                                      origin_vector, axis_vector)
         measured = sweep.Volume()
         if not isinstance(measured, bool) and isinstance(measured, (int, float)) and math.isfinite(measured):
             volume = float(measured)
         if not sweep.isValid() or len(sweep.Solids()) != 1 or volume is None or volume <= 0:
-            return None, volume, "invalid_swept_cylinder"
+            return None, volume, "invalid_swept_cylinder", kernel
         bounds = sweep.BoundingBox()
         for axis in "xyz":
             low, high = getattr(bounds, axis + "min"), getattr(bounds, axis + "max")
             if not math.isfinite(low) or not math.isfinite(high) or not math.isfinite(high - low) or low >= high:
-                return None, volume, "invalid_sweep_bounds"
+                return None, volume, "invalid_sweep_bounds", kernel
         # This analytic identity is independent of the user's overlap threshold.
         if not math.isclose(volume, spec["expected_sweep_volume_mm3"], rel_tol=1e-8, abs_tol=0.):
-            return None, volume, "kernel_sweep_volume_contradiction"
-        return sweep, volume, None
+            return None, volume, "kernel_sweep_volume_contradiction", kernel
+        return sweep, volume, None, kernel
     except Exception:
-        return None, volume, "sweep_kernel_failure"
+        return None, volume, "sweep_kernel_failure", kernel
 
 
 def screen_tool(spec, source, spec_sha256):
@@ -290,7 +336,7 @@ def screen_tool(spec, source, spec_sha256):
             raise
         except Exception as error:
             raise InputError("cannot import a valid single-solid frozen obstacle STEP") from error
-        sweep, sweep_volume, sweep_error = construct_sweep(cq, spec)
+        sweep, sweep_volume, sweep_error, kernel_geometry = construct_sweep(cq, spec)
         if sweep_error:
             volume = distance = None
             outcome, reasons = "indeterminate", [sweep_error]
@@ -308,6 +354,7 @@ def screen_tool(spec, source, spec_sha256):
                       "reconstructed_to_mm": spec["reconstructed_sweep_to_mm"],
                       "endpoint_error_mm": spec["sweep_endpoint_error_mm"],
                       "endpoint_consistency_tolerance_mm": spec["endpoint_consistency_tolerance_mm"],
+                      **kernel_geometry,
                       "volume_mm3": sweep_volume, "geometry_verified": sweep_error is None},
             "numeric_epsilon_mm": spec["numeric_epsilon_mm"], "numeric_epsilon_mm3": spec["numeric_epsilon_mm3"],
             "intersection_mm3": volume, "minimum_distance_mm": distance,

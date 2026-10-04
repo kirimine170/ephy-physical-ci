@@ -22,6 +22,7 @@ from physical_ci.manifest import sha256
 from physical_ci.tool import classify, consistent_endpoint, load_tool_spec, measure, screen_tool, step_snapshot
 
 HAVE_CADQUERY = importlib.util.find_spec("cadquery") is not None
+GP_DIR_AXIS_CASE = [0.5354924745179264, -0.598732033804657, -0.5956238422283034]
 
 
 def specification(step):
@@ -49,14 +50,27 @@ class FakeShape:
     def distance(self, other): return self.gap
 
 
-def fake_cq(importer=None, shape=None):
+class FakeVector:
+    """Explicit arithmetic/dispatch mock; its toDir is not an OCCT oracle."""
+    def __init__(self, values, kernel_axis=None):
+        self.values, self.kernel_axis = tuple(values), kernel_axis
+
+    def toTuple(self): return self.values
+    def toDir(self):
+        values = self.kernel_axis if self.kernel_axis is not None else self.values
+        return SimpleNamespace(X=lambda: values[0], Y=lambda: values[1], Z=lambda: values[2])
+    def multiply(self, factor): return FakeVector([v * factor for v in self.values])
+    def add(self, other): return FakeVector([a + b for a, b in zip(self.values, other.values)])
+
+
+def fake_cq(importer=None, shape=None, kernel_axis=None):
     obstacle = shape or FakeShape()
     return SimpleNamespace(__version__="synthetic-mock",
                            importers=SimpleNamespace(importStep=importer or
                                                      (lambda path: SimpleNamespace(vals=lambda: [obstacle]))),
                            Solid=SimpleNamespace(makeCylinder=lambda r, length, p, d:
                                                  FakeShape(math.pi * r * r * length)),
-                           Vector=lambda *values: tuple(values))
+                           Vector=lambda *values: FakeVector(values, kernel_axis))
 
 
 class DecisionTests(unittest.TestCase):
@@ -289,6 +303,54 @@ class SpecAndSnapshotTests(unittest.TestCase):
         self.assertFalse(result["model_clear"])
         self.assertFalse(result["sweep"]["geometry_verified"])
         self.assertEqual(result["reasons"], ["sweep_endpoint_contradiction"])
+
+    def test_mock_post_direction_conversion_cannot_hide_amplified_geometry_error(self):
+        self.data["tool"].update({"tip_mm": [0, 0, 0], "axis": GP_DIR_AXIS_CASE, "travel_mm": 0})
+        for radius, length in ((10, 1e16), (1e16, 2)):
+            self.data["tool"].update({"radius_mm": radius, "length_mm": length})
+            spec, source, digest = load_tool_spec(self.write())
+            converted = [math.nextafter(v, 0) for v in spec["axis"]]
+            backend = fake_cq(kernel_axis=converted)
+            with patch.object(backend.Solid, "makeCylinder") as constructor:
+                with patch.dict(sys.modules, {"cadquery": backend}):
+                    result = screen_tool(spec, source, digest)
+                constructor.assert_not_called()
+            self.assertEqual(result["outcome"], "indeterminate")
+            self.assertFalse(result["model_clear"])
+            self.assertFalse(result["sweep"]["kernel_endpoint_verified"])
+            self.assertIn(result["reasons"][0], ("kernel_sweep_endpoint_contradiction",
+                                                  "kernel_direction_contradiction"))
+            json.dumps(result, allow_nan=False)
+
+    def test_mock_small_direction_roundoff_is_recorded_and_permitted(self):
+        spec, source, digest = load_tool_spec(self.write())
+        converted = [0, 0, math.nextafter(1., 0)]
+        with patch.dict(sys.modules, {"cadquery": fake_cq(kernel_axis=converted)}):
+            result = screen_tool(spec, source, digest)
+        self.assertTrue(result["model_clear"])
+        self.assertTrue(result["sweep"]["kernel_endpoint_verified"])
+        self.assertEqual(result["sweep"]["kernel_axis"], converted)
+        self.assertLessEqual(result["sweep"]["kernel_endpoint_error_mm"],
+                             result["sweep"]["endpoint_consistency_tolerance_mm"])
+        self.assertLessEqual(result["sweep"]["kernel_direction_deviation_bound_mm"],
+                             result["sweep"]["endpoint_consistency_tolerance_mm"])
+
+    def test_mock_invalid_or_failed_direction_conversion_cannot_clear(self):
+        spec, source, digest = load_tool_spec(self.write())
+        backends = [fake_cq(kernel_axis=[0, 0, 2]), fake_cq(kernel_axis=[0, 0, float("nan")])]
+        backend = fake_cq()
+        def failed_conversion(): raise RuntimeError("synthetic direction fault")
+        bad_vector = SimpleNamespace(toDir=failed_conversion)
+        backend.Vector = lambda *args: bad_vector
+        backends.append(backend)
+        for backend in backends:
+            with patch.dict(sys.modules, {"cadquery": backend}):
+                result = screen_tool(spec, source, digest)
+            self.assertEqual(result["outcome"], "indeterminate")
+            self.assertFalse(result["model_clear"])
+            self.assertFalse(result["sweep"]["kernel_endpoint_verified"])
+            self.assertEqual(result["reasons"], ["kernel_direction_failure"])
+            json.dumps(result, allow_nan=False)
 
     def test_artifact_root_suffix_hash_format_and_frame(self):
         original = copy.deepcopy(self.data)
@@ -564,6 +626,45 @@ class KernelOracleTests(unittest.TestCase):
         result = json.loads(report.read_text())
         self.assertEqual(result["outcome"], "model_clear")
         self.assertEqual(result["input"]["step_sha256"], sha256(self.step))
+
+    def test_actual_gp_dir_rejects_amplified_length_and_radius_without_constructing(self):
+        self.cq.exporters.export(self.bore(2.5), str(self.step))
+        for radius, length in ((10, 1e16), (1e16, 2)):
+            data = specification(self.step)
+            data["tool"].update({"radius_mm": radius, "length_mm": length,
+                                 "tip_mm": [0, 0, 0], "axis": GP_DIR_AXIS_CASE, "travel_mm": 0})
+            self.manifest.write_text(json.dumps(data))
+            spec, source, digest = load_tool_spec(self.manifest)
+            self.assertEqual(spec["sweep_endpoint_error_mm"], 0)
+            direction = self.cq.Vector(*spec["axis"]).toDir()
+            actual_axis = [direction.X(), direction.Y(), direction.Z()]
+            self.assertNotEqual(actual_axis, spec["axis"])
+            with patch.object(self.cq.Solid, "makeCylinder") as constructor:
+                result = screen_tool(spec, source, digest)
+                constructor.assert_not_called()
+            self.assertEqual(result["outcome"], "indeterminate")
+            self.assertFalse(result["model_clear"])
+            self.assertEqual(result["sweep"]["kernel_axis"], actual_axis)
+            if length == 1e16:
+                self.assertEqual(result["reasons"], ["kernel_sweep_endpoint_contradiction"])
+                self.assertGreater(result["sweep"]["kernel_endpoint_error_mm"],
+                                   result["sweep"]["endpoint_consistency_tolerance_mm"])
+            else:
+                self.assertEqual(result["reasons"], ["kernel_direction_contradiction"])
+
+    def test_actual_gp_dir_matches_constructed_cylinder_axis_at_normal_scale(self):
+        from OCP.BRepAdaptor import BRepAdaptor_Surface
+        angle = math.radians(37)
+        axis = [math.sin(angle), 0, math.cos(angle)]
+        result = self.run_shape(self.bore(2.5).rotate((0, 0, 0), (0, 1, 0), 37),
+                                {"axis": axis, "tip_mm": [-axis[0], 0, -axis[2]]})
+        self.assertTrue(result["model_clear"])
+        self.assertTrue(result["sweep"]["kernel_endpoint_verified"])
+        cylinder = self.cq.Solid.makeCylinder(2, 8, self.cq.Vector(*result["sweep"]["from_mm"]),
+                                             self.cq.Vector(*result["tool"]["axis"]))
+        face = next(face for face in cylinder.Faces() if face.geomType() == "CYLINDER")
+        actual = BRepAdaptor_Surface(face.wrapped).Cylinder().Axis().Direction()
+        self.assertEqual(result["sweep"]["kernel_axis"], [actual.X(), actual.Y(), actual.Z()])
 
 
 if __name__ == "__main__": unittest.main()
