@@ -1,4 +1,5 @@
 import argparse
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -9,6 +10,7 @@ from .gcode import extract
 from .geometry import check_path
 from .manifest import load_manifest, sha256
 from .slicer import run_slicer
+from .support import load_regions, screen_support
 
 
 def ensure_output(path, protected=()):
@@ -23,9 +25,13 @@ def ensure_output(path, protected=()):
 
 def write_json(path, data, protected=()):
     target = ensure_output(path, protected)
+    try:
+        payload = json.dumps(data, indent=2, allow_nan=False) + "\n"
+    except (ValueError, OverflowError) as error:
+        raise InputError("result cannot be represented as finite JSON") from error
     target.parent.mkdir(parents=True, exist_ok=True)
     with target.open("x", encoding="utf-8") as stream:
-        stream.write(json.dumps(data, indent=2, allow_nan=False) + "\n")
+        stream.write(payload)
 
 
 def write_segments(path, segments, protected=()):
@@ -49,6 +55,10 @@ def parser():
     analyze.add_argument("input")
     analyze.add_argument("--output", required=True)
     analyze.add_argument("--segments", help="optional segment JSONL output")
+    support = sub.add_parser("screen-support", help="screen nominal support extrusion against machine-frame ROI AABBs")
+    support.add_argument("input", help="supported linear G-code")
+    support.add_argument("--roi", required=True, help="strict, hash-bound ROI JSON")
+    support.add_argument("--output", required=True)
     slicing = sub.add_parser("slice", help="run a local pinned PrusaSlicer, then analyze output")
     slicing.add_argument("manifest")
     slicing.add_argument("--slicer", default="prusa-slicer")
@@ -60,6 +70,30 @@ def parser():
 def main(argv=None):
     args = parser().parse_args(argv)
     try:
+        if args.command == "screen-support":
+            source = Path(args.input)
+            protected = [source, args.roi]
+            ensure_output(args.output, protected)
+            if source.stat().st_size > 64 * 1024 * 1024:
+                raise InputError("G-code exceeds this prototype's 64 MiB limit")
+            gcode_digest = sha256(source)
+            regions, roi_digest = load_regions(args.roi, gcode_digest)
+            stationary = []
+            with source.open("rb") as stream:
+                raw_gcode = stream.read(64 * 1024 * 1024 + 1)
+            if len(raw_gcode) > 64 * 1024 * 1024:
+                raise InputError("G-code exceeds this prototype's 64 MiB limit")
+            if hashlib.sha256(raw_gcode).hexdigest() != gcode_digest:
+                raise InputError("G-code changed while being read")
+            summary, segments = extract(raw_gcode.decode("utf-8"), stationary_events=stationary)
+            if sha256(source) != gcode_digest:
+                raise InputError("G-code changed while being read")
+            result = screen_support(summary, segments, stationary, regions)
+            result.update({"gcode_sha256": gcode_digest, "roi_sha256": roi_digest})
+            write_json(args.output, result, protected)
+            print(json.dumps({"observed_hits": len(result["observed_hits"]),
+                              "coverage_complete": result["coverage_complete"], "printer_ready": False}))
+            return 0
         if args.command == "analyze-gcode":
             source = Path(args.input)
             if source.stat().st_size > 64 * 1024 * 1024:

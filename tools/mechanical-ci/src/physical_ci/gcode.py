@@ -14,14 +14,27 @@ ALLOWED_M = {"M73", "M82", "M83", "M84", "M104", "M106", "M107", "M109", "M140",
 UNSUPPORTED_G = {"G2", "G3", "G10", "G11", "G20", "G28", "G30", "G53", "G54", "G55", "G56", "G57", "G58", "G59", "G90.1", "G91", "G91.1", "G92.1"}
 
 
-def extract(text):
+def extract(text, *, stationary_events=None):
     position = dict.fromkeys("XYZE", None)
     absolute_xyz = units_mm = False
     absolute_e = None
     role, width, height = "Unknown", None, None
     segments, z_planes = [], set()
     retract_debt = stationary_extrusion = 0.
+
+    def record_stationary(line, deposited):
+        if stationary_events is not None:
+            stationary_events.append({"line": line, "role": role,
+                                      "position_mm": [position[k] for k in "XYZ"],
+                                      "filament_delta_mm": deposited,
+                                      "width_mm": width, "height_mm": height})
+
     for line_number, raw in enumerate(text.splitlines(), 1):
+        raw = raw.lstrip()
+        comment = raw.partition(";")[2].strip()
+        metadata = re.match(r"(?i)^(TYPE|WIDTH|HEIGHT|Z)\s*:", comment)
+        if metadata and (not raw.startswith(";") or not raw.startswith(";" + metadata.group(1).upper() + ":")):
+            raise InputError(f"metadata requires a standalone uppercase comment at line {line_number}")
         for prefix, variable in ((";WIDTH:", "width"), (";HEIGHT:", "height"), (";Z:", "z")):
             if raw.startswith(prefix):
                 try:
@@ -90,22 +103,30 @@ def extract(text):
                 raise InputError("extrusion arithmetic overflow")
         if de <= 0:
             retract_debt -= de
+            if not math.isfinite(retract_debt):
+                raise InputError("retraction arithmetic overflow")
             continue
         recovered = min(retract_debt, de)
         retract_debt -= recovered
         deposited = de - recovered
-        if deposited <= 1e-9:
+        if deposited <= 0:
             continue
         if not any(k in args for k in "XYZ"):
             stationary_extrusion += deposited
+            if not math.isfinite(stationary_extrusion):
+                raise InputError("stationary extrusion arithmetic overflow")
+            record_stationary(line_number, deposited)
             continue
         if any(previous[k] is None or position[k] is None for k in "XYZ"):
             raise InputError("establish all XYZ coordinates before moving extrusion")
         distance = math.dist([previous[k] for k in "XYZ"], [position[k] for k in "XYZ"])
         if not math.isfinite(distance):
             raise InputError("coordinate arithmetic overflow")
-        if distance <= 1e-9:
+        if distance == 0:
             stationary_extrusion += deposited
+            if not math.isfinite(stationary_extrusion):
+                raise InputError("stationary extrusion arithmetic overflow")
+            record_stationary(line_number, deposited)
             continue
         # A mixed unretract/extrude move is partitioned assuming uniform E per distance.
         start = [previous[k] + (position[k]-previous[k])*recovered/de for k in "XYZ"]
@@ -114,12 +135,14 @@ def extract(text):
                          "length_mm": math.dist(start,end), "filament_delta_mm": deposited,
                          "width_mm": width, "height_mm": height,
                          "xy_heading_deg": math.degrees(math.atan2(end[1]-start[1],end[0]-start[0]))})
-    if not segments:
+    if not segments and not stationary_events:
         raise InputError("no supported moving-extrusion paths found")
     counts = collections.Counter(segment["role"] for segment in segments)
     lengths = collections.defaultdict(float)
     for segment in segments:
         lengths[segment["role"]] += segment["length_mm"]
+        if not math.isfinite(lengths[segment["role"]]):
+            raise InputError("path length arithmetic overflow")
     widths = [s["width_mm"] for s in segments if s["width_mm"] is not None]
     missing = sum(s["width_mm"] is None or s["height_mm"] is None or s["role"] in ("Unknown", "Custom") for s in segments)
     summary = {"schema_version": 1, "tool_version": __version__, "command": "analyze-gcode",

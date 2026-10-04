@@ -1,5 +1,17 @@
 # Mechanical CI CLI prototype
 
+The implemented `screen-support` stage screens nominal support/interface paths
+against strict, hash-bound AABBs in `gcode_machine_coordinates` and `mm`:
+
+```sh
+physical-ci screen-support nominal.gcode --roi protected.json --output screen-001.json
+```
+
+See [Support ROI screen v1](docs/support-roi-v1.md) for the input schema,
+`axis_aligned_envelope_proxy`, clip intervals, and separate `observed_hits` /
+`coverage_complete` semantics. Support removal remains `not_implemented`,
+physical validation remains `not_performed`, and `printer_ready` is false.
+
 FAR向けの反復設計を想定した，小さなヘッドレス検証CLIです．凍結STEPの限定経路検査，実スライス，押出経路の抽出を機械可読な結果へまとめます．GUI操作や有料solver APIを前提にしません．
 
 **これは物理性能の合格判定システムではありません．** FEM，サポート除去，材料校正，触覚robot連携は未実装です．出力でも各gateを`not_implemented`と明示します．
