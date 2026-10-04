@@ -1,0 +1,1377 @@
+{
+  "flat_2.4": {
+    "gcode_sha256": "1b83972cf4a655da960935551bddeedb9ddc54b0941a371ced2dc96dbb00533d",
+    "layer_Z_tags": [
+      "0.2",
+      "0.4",
+      "0.6",
+      "0.8",
+      "1",
+      "1.2",
+      "1.4",
+      "1.6",
+      "1.8",
+      "2",
+      "2.2",
+      "2.4"
+    ],
+    "layer_heights": [
+      "0.2",
+      "0.4"
+    ],
+    "model_deposition_Z": [
+      "0.2",
+      "0.4",
+      "0.6",
+      "0.8",
+      "1",
+      "1.2",
+      "1.4",
+      "1.6",
+      "1.8",
+      "2",
+      "2.2",
+      "2.4"
+    ],
+    "model_layer_count": 12,
+    "model_top_Z": "2.4",
+    "model_event_count": 471,
+    "model_path_signature_sha256": "93a932cc8f0977bb22c06a5df165735c1948fb43e6ec34607f0a874270704315",
+    "outer_at_Z0p4": {
+      "xy_centerline_bounds": {
+        "X": [
+          "80.21",
+          "89.79"
+        ],
+        "Y": [
+          "80.21",
+          "87.79"
+        ]
+      },
+      "widths": [
+        "0.42"
+      ],
+      "y_nominal_envelope": [
+        "80.00",
+        "88.00"
+      ],
+      "witness_lines": [
+        1694,
+        1695,
+        1696,
+        1697
+      ]
+    },
+    "resolved_condition": {
+      "precise_z_height": "0",
+      "layer_height": "0.2",
+      "initial_layer_print_height": "0.2",
+      "wall_loops": "3",
+      "sparse_infill_density": "20%",
+      "nozzle_diameter": [
+        "0.4"
+      ],
+      "enable_support": "0",
+      "slicing_mode": "regular"
+    },
+    "input_bbox": [
+      [
+        80.0,
+        90.0
+      ],
+      [
+        80.0,
+        88.0
+      ],
+      [
+        0.0,
+        2.4000000953674316
+      ]
+    ],
+    "export_3mf_vertices_bbox": [
+      [
+        -5.0,
+        5.0
+      ],
+      [
+        -4.0,
+        4.0
+      ],
+      [
+        -1.20000005,
+        1.20000005
+      ]
+    ],
+    "export_instance_transforms": [
+      "1 0 0 0 1 0 0 0 1 85 84 1.20000005",
+      "1 0 0 0 1 0 0 0 1 0 0 0"
+    ],
+    "export_pose_verified": true
+  },
+  "flat_2.5": {
+    "gcode_sha256": "1b83972cf4a655da960935551bddeedb9ddc54b0941a371ced2dc96dbb00533d",
+    "layer_Z_tags": [
+      "0.2",
+      "0.4",
+      "0.6",
+      "0.8",
+      "1",
+      "1.2",
+      "1.4",
+      "1.6",
+      "1.8",
+      "2",
+      "2.2",
+      "2.4"
+    ],
+    "layer_heights": [
+      "0.2",
+      "0.4"
+    ],
+    "model_deposition_Z": [
+      "0.2",
+      "0.4",
+      "0.6",
+      "0.8",
+      "1",
+      "1.2",
+      "1.4",
+      "1.6",
+      "1.8",
+      "2",
+      "2.2",
+      "2.4"
+    ],
+    "model_layer_count": 12,
+    "model_top_Z": "2.4",
+    "model_event_count": 471,
+    "model_path_signature_sha256": "93a932cc8f0977bb22c06a5df165735c1948fb43e6ec34607f0a874270704315",
+    "outer_at_Z0p4": {
+      "xy_centerline_bounds": {
+        "X": [
+          "80.21",
+          "89.79"
+        ],
+        "Y": [
+          "80.21",
+          "87.79"
+        ]
+      },
+      "widths": [
+        "0.42"
+      ],
+      "y_nominal_envelope": [
+        "80.00",
+        "88.00"
+      ],
+      "witness_lines": [
+        1694,
+        1695,
+        1696,
+        1697
+      ]
+    },
+    "resolved_condition": {
+      "precise_z_height": "0",
+      "layer_height": "0.2",
+      "initial_layer_print_height": "0.2",
+      "wall_loops": "3",
+      "sparse_infill_density": "20%",
+      "nozzle_diameter": [
+        "0.4"
+      ],
+      "enable_support": "0",
+      "slicing_mode": "regular"
+    },
+    "input_bbox": [
+      [
+        80.0,
+        90.0
+      ],
+      [
+        80.0,
+        88.0
+      ],
+      [
+        0.0,
+        2.5
+      ]
+    ],
+    "export_3mf_vertices_bbox": [
+      [
+        -5.0,
+        5.0
+      ],
+      [
+        -4.0,
+        4.0
+      ],
+      [
+        -1.25,
+        1.25
+      ]
+    ],
+    "export_instance_transforms": [
+      "1 0 0 0 1 0 0 0 1 85 84 1.25",
+      "1 0 0 0 1 0 0 0 1 0 0 0"
+    ],
+    "export_pose_verified": true
+  },
+  "flat_2.6": {
+    "gcode_sha256": "9611ad1b6b805570bec9d89b960e1b89cfd5958240c023e89f3a6057043a4f82",
+    "layer_Z_tags": [
+      "0.2",
+      "0.4",
+      "0.6",
+      "0.8",
+      "1",
+      "1.2",
+      "1.4",
+      "1.6",
+      "1.8",
+      "2",
+      "2.2",
+      "2.4",
+      "2.6"
+    ],
+    "layer_heights": [
+      "0.2",
+      "0.4"
+    ],
+    "model_deposition_Z": [
+      "0.2",
+      "0.4",
+      "0.6",
+      "0.8",
+      "1",
+      "1.2",
+      "1.4",
+      "1.6",
+      "1.8",
+      "2",
+      "2.2",
+      "2.4",
+      "2.6"
+    ],
+    "model_layer_count": 13,
+    "model_top_Z": "2.6",
+    "model_event_count": 496,
+    "model_path_signature_sha256": "a16626a820026b7fdcbe48894550cd836d688fdc0e5979bb78841c2e4ecc13bc",
+    "outer_at_Z0p4": {
+      "xy_centerline_bounds": {
+        "X": [
+          "80.21",
+          "89.79"
+        ],
+        "Y": [
+          "80.21",
+          "87.79"
+        ]
+      },
+      "widths": [
+        "0.42"
+      ],
+      "y_nominal_envelope": [
+        "80.00",
+        "88.00"
+      ],
+      "witness_lines": [
+        1694,
+        1696,
+        1697,
+        1698
+      ]
+    },
+    "resolved_condition": {
+      "precise_z_height": "0",
+      "layer_height": "0.2",
+      "initial_layer_print_height": "0.2",
+      "wall_loops": "3",
+      "sparse_infill_density": "20%",
+      "nozzle_diameter": [
+        "0.4"
+      ],
+      "enable_support": "0",
+      "slicing_mode": "regular"
+    },
+    "input_bbox": [
+      [
+        80.0,
+        90.0
+      ],
+      [
+        80.0,
+        88.0
+      ],
+      [
+        0.0,
+        2.5999999046325684
+      ]
+    ],
+    "export_3mf_vertices_bbox": [
+      [
+        -5.0,
+        5.0
+      ],
+      [
+        -4.0,
+        4.0
+      ],
+      [
+        -1.29999995,
+        1.29999995
+      ]
+    ],
+    "export_instance_transforms": [
+      "1 0 0 0 1 0 0 0 1 85 84 1.29999995",
+      "1 0 0 0 1 0 0 0 1 0 0 0"
+    ],
+    "export_pose_verified": true
+  },
+  "flat_2.7": {
+    "gcode_sha256": "c040b1710c0e95ad285dfa5f9aba84641ea4166626d0d24dbf83e6c802360296",
+    "layer_Z_tags": [
+      "0.2",
+      "0.4",
+      "0.6",
+      "0.8",
+      "1",
+      "1.2",
+      "1.4",
+      "1.6",
+      "1.8",
+      "2",
+      "2.2",
+      "2.4",
+      "2.6",
+      "2.8"
+    ],
+    "layer_heights": [
+      "0.2",
+      "0.4"
+    ],
+    "model_deposition_Z": [
+      "0.2",
+      "0.4",
+      "0.6",
+      "0.8",
+      "1",
+      "1.2",
+      "1.4",
+      "1.6",
+      "1.8",
+      "2",
+      "2.2",
+      "2.4",
+      "2.6",
+      "2.8"
+    ],
+    "model_layer_count": 14,
+    "model_top_Z": "2.8",
+    "model_event_count": 521,
+    "model_path_signature_sha256": "6beadd1755cd5cdb77f0fe101cf6229eb1933b687c2f2ac1870775cff9fbb544",
+    "outer_at_Z0p4": {
+      "xy_centerline_bounds": {
+        "X": [
+          "80.21",
+          "89.79"
+        ],
+        "Y": [
+          "80.21",
+          "87.79"
+        ]
+      },
+      "widths": [
+        "0.42"
+      ],
+      "y_nominal_envelope": [
+        "80.00",
+        "88.00"
+      ],
+      "witness_lines": [
+        1692,
+        1693,
+        1694,
+        1696
+      ]
+    },
+    "resolved_condition": {
+      "precise_z_height": "0",
+      "layer_height": "0.2",
+      "initial_layer_print_height": "0.2",
+      "wall_loops": "3",
+      "sparse_infill_density": "20%",
+      "nozzle_diameter": [
+        "0.4"
+      ],
+      "enable_support": "0",
+      "slicing_mode": "regular"
+    },
+    "input_bbox": [
+      [
+        80.0,
+        90.0
+      ],
+      [
+        80.0,
+        88.0
+      ],
+      [
+        0.0,
+        2.700000047683716
+      ]
+    ],
+    "export_3mf_vertices_bbox": [
+      [
+        -5.0,
+        5.0
+      ],
+      [
+        -4.0,
+        4.0
+      ],
+      [
+        -1.35000002,
+        1.35000002
+      ]
+    ],
+    "export_instance_transforms": [
+      "1 0 0 0 1 0 0 0 1 85 84 1.35000002",
+      "1 0 0 0 1 0 0 0 1 0 0 0"
+    ],
+    "export_pose_verified": true
+  },
+  "flat_2.8": {
+    "gcode_sha256": "b011792ecf12cede3681e30365c1863a8f24981c4ab85987195f791aa2f3bd73",
+    "layer_Z_tags": [
+      "0.2",
+      "0.4",
+      "0.6",
+      "0.8",
+      "1",
+      "1.2",
+      "1.4",
+      "1.6",
+      "1.8",
+      "2",
+      "2.2",
+      "2.4",
+      "2.6",
+      "2.8"
+    ],
+    "layer_heights": [
+      "0.2",
+      "0.4"
+    ],
+    "model_deposition_Z": [
+      "0.2",
+      "0.4",
+      "0.6",
+      "0.8",
+      "1",
+      "1.2",
+      "1.4",
+      "1.6",
+      "1.8",
+      "2",
+      "2.2",
+      "2.4",
+      "2.6",
+      "2.8"
+    ],
+    "model_layer_count": 14,
+    "model_top_Z": "2.8",
+    "model_event_count": 521,
+    "model_path_signature_sha256": "99848ca6e214c0d656482a69eb24f5490c7d58b151f0fe63015860b88a6d3d77",
+    "outer_at_Z0p4": {
+      "xy_centerline_bounds": {
+        "X": [
+          "80.21",
+          "89.79"
+        ],
+        "Y": [
+          "80.21",
+          "87.79"
+        ]
+      },
+      "widths": [
+        "0.42"
+      ],
+      "y_nominal_envelope": [
+        "80.00",
+        "88.00"
+      ],
+      "witness_lines": [
+        1693,
+        1694,
+        1695,
+        1696
+      ]
+    },
+    "resolved_condition": {
+      "precise_z_height": "0",
+      "layer_height": "0.2",
+      "initial_layer_print_height": "0.2",
+      "wall_loops": "3",
+      "sparse_infill_density": "20%",
+      "nozzle_diameter": [
+        "0.4"
+      ],
+      "enable_support": "0",
+      "slicing_mode": "regular"
+    },
+    "input_bbox": [
+      [
+        80.0,
+        90.0
+      ],
+      [
+        80.0,
+        88.0
+      ],
+      [
+        0.0,
+        2.799999952316284
+      ]
+    ],
+    "export_3mf_vertices_bbox": [
+      [
+        -5.0,
+        5.0
+      ],
+      [
+        -4.0,
+        4.0
+      ],
+      [
+        -1.39999998,
+        1.39999998
+      ]
+    ],
+    "export_instance_transforms": [
+      "1 0 0 0 1 0 0 0 1 85 84 1.39999998",
+      "1 0 0 0 1 0 0 0 1 0 0 0"
+    ],
+    "export_pose_verified": true
+  },
+  "side_2.4": {
+    "gcode_sha256": "4f838497a9809756a5d35ec5101316850e9837cf9134a566b74397c0471959b7",
+    "layer_Z_tags": [
+      "0.2",
+      "0.4",
+      "0.6",
+      "0.8",
+      "1",
+      "1.2",
+      "1.4",
+      "1.6",
+      "1.8",
+      "2",
+      "2.2",
+      "2.4",
+      "2.6",
+      "2.8",
+      "3",
+      "3.2",
+      "3.4",
+      "3.6",
+      "3.8",
+      "4",
+      "4.2",
+      "4.4",
+      "4.6",
+      "4.8",
+      "5",
+      "5.2",
+      "5.4",
+      "5.6",
+      "5.8",
+      "6",
+      "6.2",
+      "6.4",
+      "6.6",
+      "6.8",
+      "7",
+      "7.2",
+      "7.4",
+      "7.6",
+      "7.8",
+      "8"
+    ],
+    "layer_heights": [
+      "0.2"
+    ],
+    "model_deposition_Z": [
+      "0.2",
+      "0.4",
+      "0.6",
+      "0.8",
+      "1",
+      "1.2",
+      "1.4",
+      "1.6",
+      "1.8",
+      "2",
+      "2.2",
+      "2.4",
+      "2.6",
+      "2.8",
+      "3",
+      "3.2",
+      "3.4",
+      "3.6",
+      "3.8",
+      "4",
+      "4.2",
+      "4.4",
+      "4.6",
+      "4.8",
+      "5",
+      "5.2",
+      "5.4",
+      "5.6",
+      "5.8",
+      "6",
+      "6.2",
+      "6.4",
+      "6.6",
+      "6.8",
+      "7",
+      "7.2",
+      "7.4",
+      "7.6",
+      "7.8",
+      "8"
+    ],
+    "model_layer_count": 40,
+    "model_top_Z": "8",
+    "model_event_count": 488,
+    "model_path_signature_sha256": "a24f6b4b0abe717ed3102bac5f391455cd1d2663f8779fc6b309e82c50665e4a",
+    "outer_at_Z0p4": {
+      "xy_centerline_bounds": {
+        "X": [
+          "80.21",
+          "89.79"
+        ],
+        "Y": [
+          "80.21",
+          "82.19"
+        ]
+      },
+      "widths": [
+        "0.42"
+      ],
+      "y_nominal_envelope": [
+        "80.00",
+        "82.40"
+      ],
+      "witness_lines": [
+        1650,
+        1651,
+        1652,
+        1653
+      ]
+    },
+    "resolved_condition": {
+      "precise_z_height": "0",
+      "layer_height": "0.2",
+      "initial_layer_print_height": "0.2",
+      "wall_loops": "3",
+      "sparse_infill_density": "20%",
+      "nozzle_diameter": [
+        "0.4"
+      ],
+      "enable_support": "0",
+      "slicing_mode": "regular"
+    },
+    "input_bbox": [
+      [
+        80.0,
+        90.0
+      ],
+      [
+        80.0,
+        82.4000015258789
+      ],
+      [
+        0.0,
+        8.0
+      ]
+    ],
+    "export_3mf_vertices_bbox": [
+      [
+        -5.0,
+        5.0
+      ],
+      [
+        -1.19999695,
+        1.20000458
+      ],
+      [
+        -4.0,
+        4.0
+      ]
+    ],
+    "export_instance_transforms": [
+      "1 0 0 0 1 0 0 0 1 85 81.2000008 4",
+      "1 0 0 0 1 0 0 0 1 0 0 0"
+    ],
+    "export_pose_verified": true
+  },
+  "side_2.5": {
+    "gcode_sha256": "152864a4a0e7fca62f4068d2a8e81b659c1504c7ff6b1babae51ba526ededec9",
+    "layer_Z_tags": [
+      "0.2",
+      "0.4",
+      "0.6",
+      "0.8",
+      "1",
+      "1.2",
+      "1.4",
+      "1.6",
+      "1.8",
+      "2",
+      "2.2",
+      "2.4",
+      "2.6",
+      "2.8",
+      "3",
+      "3.2",
+      "3.4",
+      "3.6",
+      "3.8",
+      "4",
+      "4.2",
+      "4.4",
+      "4.6",
+      "4.8",
+      "5",
+      "5.2",
+      "5.4",
+      "5.6",
+      "5.8",
+      "6",
+      "6.2",
+      "6.4",
+      "6.6",
+      "6.8",
+      "7",
+      "7.2",
+      "7.4",
+      "7.6",
+      "7.8",
+      "8"
+    ],
+    "layer_heights": [
+      "0.2"
+    ],
+    "model_deposition_Z": [
+      "0.2",
+      "0.4",
+      "0.6",
+      "0.8",
+      "1",
+      "1.2",
+      "1.4",
+      "1.6",
+      "1.8",
+      "2",
+      "2.2",
+      "2.4",
+      "2.6",
+      "2.8",
+      "3",
+      "3.2",
+      "3.4",
+      "3.6",
+      "3.8",
+      "4",
+      "4.2",
+      "4.4",
+      "4.6",
+      "4.8",
+      "5",
+      "5.2",
+      "5.4",
+      "5.6",
+      "5.8",
+      "6",
+      "6.2",
+      "6.4",
+      "6.6",
+      "6.8",
+      "7",
+      "7.2",
+      "7.4",
+      "7.6",
+      "7.8",
+      "8"
+    ],
+    "model_layer_count": 40,
+    "model_top_Z": "8",
+    "model_event_count": 527,
+    "model_path_signature_sha256": "7c121e9cfb41100132f0336f3dc8f57c73132e41ec0c3a4298e4a95ec6619ff5",
+    "outer_at_Z0p4": {
+      "xy_centerline_bounds": {
+        "X": [
+          "80.21",
+          "89.79"
+        ],
+        "Y": [
+          "80.21",
+          "82.29"
+        ]
+      },
+      "widths": [
+        "0.42"
+      ],
+      "y_nominal_envelope": [
+        "80.00",
+        "82.50"
+      ],
+      "witness_lines": [
+        1646,
+        1647,
+        1648,
+        1649
+      ]
+    },
+    "resolved_condition": {
+      "precise_z_height": "0",
+      "layer_height": "0.2",
+      "initial_layer_print_height": "0.2",
+      "wall_loops": "3",
+      "sparse_infill_density": "20%",
+      "nozzle_diameter": [
+        "0.4"
+      ],
+      "enable_support": "0",
+      "slicing_mode": "regular"
+    },
+    "input_bbox": [
+      [
+        80.0,
+        90.0
+      ],
+      [
+        80.0,
+        82.5
+      ],
+      [
+        0.0,
+        8.0
+      ]
+    ],
+    "export_3mf_vertices_bbox": [
+      [
+        -5.0,
+        5.0
+      ],
+      [
+        -1.25,
+        1.25
+      ],
+      [
+        -4.0,
+        4.0
+      ]
+    ],
+    "export_instance_transforms": [
+      "1 0 0 0 1 0 0 0 1 85 81.25 4",
+      "1 0 0 0 1 0 0 0 1 0 0 0"
+    ],
+    "export_pose_verified": true
+  },
+  "side_2.6": {
+    "gcode_sha256": "614a52e6e846de73c50b87fb1a452d7a8eadd6a0f87fc95838558a1a6b70ce8d",
+    "layer_Z_tags": [
+      "0.2",
+      "0.4",
+      "0.6",
+      "0.8",
+      "1",
+      "1.2",
+      "1.4",
+      "1.6",
+      "1.8",
+      "2",
+      "2.2",
+      "2.4",
+      "2.6",
+      "2.8",
+      "3",
+      "3.2",
+      "3.4",
+      "3.6",
+      "3.8",
+      "4",
+      "4.2",
+      "4.4",
+      "4.6",
+      "4.8",
+      "5",
+      "5.2",
+      "5.4",
+      "5.6",
+      "5.8",
+      "6",
+      "6.2",
+      "6.4",
+      "6.6",
+      "6.8",
+      "7",
+      "7.2",
+      "7.4",
+      "7.6",
+      "7.8",
+      "8"
+    ],
+    "layer_heights": [
+      "0.2"
+    ],
+    "model_deposition_Z": [
+      "0.2",
+      "0.4",
+      "0.6",
+      "0.8",
+      "1",
+      "1.2",
+      "1.4",
+      "1.6",
+      "1.8",
+      "2",
+      "2.2",
+      "2.4",
+      "2.6",
+      "2.8",
+      "3",
+      "3.2",
+      "3.4",
+      "3.6",
+      "3.8",
+      "4",
+      "4.2",
+      "4.4",
+      "4.6",
+      "4.8",
+      "5",
+      "5.2",
+      "5.4",
+      "5.6",
+      "5.8",
+      "6",
+      "6.2",
+      "6.4",
+      "6.6",
+      "6.8",
+      "7",
+      "7.2",
+      "7.4",
+      "7.6",
+      "7.8",
+      "8"
+    ],
+    "model_layer_count": 40,
+    "model_top_Z": "8",
+    "model_event_count": 527,
+    "model_path_signature_sha256": "38ed922c413d7a17e5e8631cafb747af2e1c2bcfbea4176b2083f73ce6a56fab",
+    "outer_at_Z0p4": {
+      "xy_centerline_bounds": {
+        "X": [
+          "80.21",
+          "89.79"
+        ],
+        "Y": [
+          "80.21",
+          "82.39"
+        ]
+      },
+      "widths": [
+        "0.42"
+      ],
+      "y_nominal_envelope": [
+        "80.00",
+        "82.60"
+      ],
+      "witness_lines": [
+        1648,
+        1649,
+        1650,
+        1651
+      ]
+    },
+    "resolved_condition": {
+      "precise_z_height": "0",
+      "layer_height": "0.2",
+      "initial_layer_print_height": "0.2",
+      "wall_loops": "3",
+      "sparse_infill_density": "20%",
+      "nozzle_diameter": [
+        "0.4"
+      ],
+      "enable_support": "0",
+      "slicing_mode": "regular"
+    },
+    "input_bbox": [
+      [
+        80.0,
+        90.0
+      ],
+      [
+        80.0,
+        82.5999984741211
+      ],
+      [
+        0.0,
+        8.0
+      ]
+    ],
+    "export_3mf_vertices_bbox": [
+      [
+        -5.0,
+        5.0
+      ],
+      [
+        -1.30000305,
+        1.29999542
+      ],
+      [
+        -4.0,
+        4.0
+      ]
+    ],
+    "export_instance_transforms": [
+      "1 0 0 0 1 0 0 0 1 85 81.2999992 4",
+      "1 0 0 0 1 0 0 0 1 0 0 0"
+    ],
+    "export_pose_verified": true
+  },
+  "side_2.7": {
+    "gcode_sha256": "99ef40725931bdd27a7b87e2ada8774d3540e693176f52c54911c20f5b6b990d",
+    "layer_Z_tags": [
+      "0.2",
+      "0.4",
+      "0.6",
+      "0.8",
+      "1",
+      "1.2",
+      "1.4",
+      "1.6",
+      "1.8",
+      "2",
+      "2.2",
+      "2.4",
+      "2.6",
+      "2.8",
+      "3",
+      "3.2",
+      "3.4",
+      "3.6",
+      "3.8",
+      "4",
+      "4.2",
+      "4.4",
+      "4.6",
+      "4.8",
+      "5",
+      "5.2",
+      "5.4",
+      "5.6",
+      "5.8",
+      "6",
+      "6.2",
+      "6.4",
+      "6.6",
+      "6.8",
+      "7",
+      "7.2",
+      "7.4",
+      "7.6",
+      "7.8",
+      "8"
+    ],
+    "layer_heights": [
+      "0.2"
+    ],
+    "model_deposition_Z": [
+      "0.2",
+      "0.4",
+      "0.6",
+      "0.8",
+      "1",
+      "1.2",
+      "1.4",
+      "1.6",
+      "1.8",
+      "2",
+      "2.2",
+      "2.4",
+      "2.6",
+      "2.8",
+      "3",
+      "3.2",
+      "3.4",
+      "3.6",
+      "3.8",
+      "4",
+      "4.2",
+      "4.4",
+      "4.6",
+      "4.8",
+      "5",
+      "5.2",
+      "5.4",
+      "5.6",
+      "5.8",
+      "6",
+      "6.2",
+      "6.4",
+      "6.6",
+      "6.8",
+      "7",
+      "7.2",
+      "7.4",
+      "7.6",
+      "7.8",
+      "8"
+    ],
+    "model_layer_count": 40,
+    "model_top_Z": "8",
+    "model_event_count": 531,
+    "model_path_signature_sha256": "3493ebe00a31e82f58bc1b11ebedd52b11a15d82d65fb60468d746cafa119c48",
+    "outer_at_Z0p4": {
+      "xy_centerline_bounds": {
+        "X": [
+          "80.21",
+          "89.79"
+        ],
+        "Y": [
+          "80.21",
+          "82.49"
+        ]
+      },
+      "widths": [
+        "0.42"
+      ],
+      "y_nominal_envelope": [
+        "80.00",
+        "82.70"
+      ],
+      "witness_lines": [
+        1638,
+        1640,
+        1641,
+        1642
+      ]
+    },
+    "resolved_condition": {
+      "precise_z_height": "0",
+      "layer_height": "0.2",
+      "initial_layer_print_height": "0.2",
+      "wall_loops": "3",
+      "sparse_infill_density": "20%",
+      "nozzle_diameter": [
+        "0.4"
+      ],
+      "enable_support": "0",
+      "slicing_mode": "regular"
+    },
+    "input_bbox": [
+      [
+        80.0,
+        90.0
+      ],
+      [
+        80.0,
+        82.69999694824219
+      ],
+      [
+        0.0,
+        8.0
+      ]
+    ],
+    "export_3mf_vertices_bbox": [
+      [
+        -5.0,
+        5.0
+      ],
+      [
+        -1.34999847,
+        1.34999847
+      ],
+      [
+        -4.0,
+        4.0
+      ]
+    ],
+    "export_instance_transforms": [
+      "1 0 0 0 1 0 0 0 1 85 81.3499985 4",
+      "1 0 0 0 1 0 0 0 1 0 0 0"
+    ],
+    "export_pose_verified": true
+  },
+  "side_2.8": {
+    "gcode_sha256": "b125bf7b3c2e8008ebd60736fd0ee02954a52da9afdc5978c6badd0aa881c7d6",
+    "layer_Z_tags": [
+      "0.2",
+      "0.4",
+      "0.6",
+      "0.8",
+      "1",
+      "1.2",
+      "1.4",
+      "1.6",
+      "1.8",
+      "2",
+      "2.2",
+      "2.4",
+      "2.6",
+      "2.8",
+      "3",
+      "3.2",
+      "3.4",
+      "3.6",
+      "3.8",
+      "4",
+      "4.2",
+      "4.4",
+      "4.6",
+      "4.8",
+      "5",
+      "5.2",
+      "5.4",
+      "5.6",
+      "5.8",
+      "6",
+      "6.2",
+      "6.4",
+      "6.6",
+      "6.8",
+      "7",
+      "7.2",
+      "7.4",
+      "7.6",
+      "7.8",
+      "8"
+    ],
+    "layer_heights": [
+      "0.2"
+    ],
+    "model_deposition_Z": [
+      "0.2",
+      "0.4",
+      "0.6",
+      "0.8",
+      "1",
+      "1.2",
+      "1.4",
+      "1.6",
+      "1.8",
+      "2",
+      "2.2",
+      "2.4",
+      "2.6",
+      "2.8",
+      "3",
+      "3.2",
+      "3.4",
+      "3.6",
+      "3.8",
+      "4",
+      "4.2",
+      "4.4",
+      "4.6",
+      "4.8",
+      "5",
+      "5.2",
+      "5.4",
+      "5.6",
+      "5.8",
+      "6",
+      "6.2",
+      "6.4",
+      "6.6",
+      "6.8",
+      "7",
+      "7.2",
+      "7.4",
+      "7.6",
+      "7.8",
+      "8"
+    ],
+    "model_layer_count": 40,
+    "model_top_Z": "8",
+    "model_event_count": 530,
+    "model_path_signature_sha256": "79344f43b342a8f2a8484e2a40656bc477643bd1d8c163da60fe78ea97123a8c",
+    "outer_at_Z0p4": {
+      "xy_centerline_bounds": {
+        "X": [
+          "80.21",
+          "89.79"
+        ],
+        "Y": [
+          "80.21",
+          "82.59"
+        ]
+      },
+      "widths": [
+        "0.42"
+      ],
+      "y_nominal_envelope": [
+        "80.00",
+        "82.80"
+      ],
+      "witness_lines": [
+        1635,
+        1636,
+        1637,
+        1638
+      ]
+    },
+    "resolved_condition": {
+      "precise_z_height": "0",
+      "layer_height": "0.2",
+      "initial_layer_print_height": "0.2",
+      "wall_loops": "3",
+      "sparse_infill_density": "20%",
+      "nozzle_diameter": [
+        "0.4"
+      ],
+      "enable_support": "0",
+      "slicing_mode": "regular"
+    },
+    "input_bbox": [
+      [
+        80.0,
+        90.0
+      ],
+      [
+        80.0,
+        82.80000305175781
+      ],
+      [
+        0.0,
+        8.0
+      ]
+    ],
+    "export_3mf_vertices_bbox": [
+      [
+        -5.0,
+        5.0
+      ],
+      [
+        -1.40000153,
+        1.40000153
+      ],
+      [
+        -4.0,
+        4.0
+      ]
+    ],
+    "export_instance_transforms": [
+      "1 0 0 0 1 0 0 0 1 85 81.4000015 4",
+      "1 0 0 0 1 0 0 0 1 0 0 0"
+    ],
+    "export_pose_verified": true
+  }
+}

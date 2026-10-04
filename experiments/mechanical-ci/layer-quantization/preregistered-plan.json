@@ -1,0 +1,21 @@
+{
+  "source": "original synthetic cuboids, not case CAD",
+  "heights_mm": [
+    2.4,
+    2.5,
+    2.6,
+    2.7,
+    2.8
+  ],
+  "flat_bbox": "[80,90]x[80,88]x[0,H]",
+  "side_bbox": "[80,90]x[80,80+H]x[0,8]",
+  "hypotheses": "Flat thickness projects to machine Z. Side thickness projects to machine Y. Compare deposition, not travel; no physical accuracy claim. Profile unchanged across runs.",
+  "profile_hashes": {
+    "machine.json": "1a489fbac3973b9e43cd0258bedc6b49c54061a7f07f74f10636ac08e86861aa",
+    "filament.json": "53c11f98f0c51ffd3ab2df9392c0cc06da81cf4a87da169d175fa639649f9588",
+    "process_fixed.json": "2f0b5a23c4ab7bc613f93762535bc6848cd4988e45e823e688200794026e5b3a"
+  },
+  "binary_sha256": "d267ad0b4589c46cb18f49e2414f87a529b446dc992cb6ab8a728fe43f549eb8",
+  "appimage_sha256": "d501b103fac5424513ec0e8d6bc145fb30719de2c7d94d7320d723740c81a7fd",
+  "cadquery_version": "2.7.0"
+}
