@@ -1,0 +1,209 @@
+{
+  "geometry_boxes_mm": [
+    [
+      0,
+      0,
+      0,
+      30,
+      20,
+      2
+    ],
+    [
+      0,
+      0,
+      2,
+      3,
+      20,
+      12
+    ],
+    [
+      3,
+      0,
+      12,
+      22,
+      20,
+      2
+    ]
+  ],
+  "cases": [
+    {
+      "name": "a_auto",
+      "center_mm": [
+        90,
+        90
+      ],
+      "support_mode": "auto",
+      "regions": [
+        {
+          "id": "body",
+          "min_mm": [
+            85,
+            84,
+            4
+          ],
+          "max_mm": [
+            95,
+            96,
+            10
+          ]
+        },
+        {
+          "id": "interface",
+          "min_mm": [
+            85,
+            84,
+            10
+          ],
+          "max_mm": [
+            95,
+            96,
+            12
+          ]
+        },
+        {
+          "id": "far",
+          "min_mm": [
+            140,
+            140,
+            4
+          ],
+          "max_mm": [
+            150,
+            150,
+            10
+          ]
+        }
+      ]
+    },
+    {
+      "name": "a_none",
+      "center_mm": [
+        90,
+        90
+      ],
+      "support_mode": "none",
+      "regions": [
+        {
+          "id": "body",
+          "min_mm": [
+            85,
+            84,
+            4
+          ],
+          "max_mm": [
+            95,
+            96,
+            10
+          ]
+        },
+        {
+          "id": "interface",
+          "min_mm": [
+            85,
+            84,
+            10
+          ],
+          "max_mm": [
+            95,
+            96,
+            12
+          ]
+        },
+        {
+          "id": "far",
+          "min_mm": [
+            140,
+            140,
+            4
+          ],
+          "max_mm": [
+            150,
+            150,
+            10
+          ]
+        }
+      ]
+    },
+    {
+      "name": "b_auto",
+      "center_mm": [
+        110,
+        100
+      ],
+      "support_mode": "auto",
+      "regions": [
+        {
+          "id": "body",
+          "min_mm": [
+            105,
+            94,
+            4
+          ],
+          "max_mm": [
+            115,
+            106,
+            10
+          ]
+        },
+        {
+          "id": "interface",
+          "min_mm": [
+            105,
+            94,
+            10
+          ],
+          "max_mm": [
+            115,
+            106,
+            12
+          ]
+        },
+        {
+          "id": "far",
+          "min_mm": [
+            140,
+            140,
+            4
+          ],
+          "max_mm": [
+            150,
+            150,
+            10
+          ]
+        },
+        {
+          "id": "old_body",
+          "min_mm": [
+            85,
+            84,
+            4
+          ],
+          "max_mm": [
+            95,
+            96,
+            10
+          ]
+        },
+        {
+          "id": "old_interface",
+          "min_mm": [
+            85,
+            84,
+            10
+          ],
+          "max_mm": [
+            95,
+            96,
+            12
+          ]
+        }
+      ]
+    }
+  ],
+  "mesh_sha256": "da9d1bf75e44497ca09e06c4edeb9419ce8acd128b0537dc9f1408cde53aa2e1",
+  "profile_sha256": "52bad7807d830b6619febb196793c3682f6d92cd2ad5b79277f8a7550cbc175f",
+  "cadquery_version": "2.7.0",
+  "oracle": "Independent Decimal modal parser and strictly interior endpoint/midpoint witnesses; no product clipping calls.",
+  "pose_oracle": "External perimeter extrema on base z0.4..1.8 and wall z4..10 within 0.6 mm of all four CAD XY bounds; all endpoints in expanded box; widths <=0.6 mm.",
+  "physical_validation": "not_performed"
+}

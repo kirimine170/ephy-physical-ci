@@ -1,0 +1,177 @@
+{
+  "checks_passed": true,
+  "source_commit": "e45770fb168b6ba64ee41922ec70adab76eddb55",
+  "cases": [
+    {
+      "input_hashes_before": {
+        "shelf.stl": "da9d1bf75e44497ca09e06c4edeb9419ce8acd128b0537dc9f1408cde53aa2e1",
+        "profile.ini": "52bad7807d830b6619febb196793c3682f6d92cd2ad5b79277f8a7550cbc175f",
+        "toolpath.analysis-only.gcode": "8e71909df4941443dc2ffcc0e337d6babe5585c3337c579afec3a5faf2f42394",
+        "roi.json": "b942f818086438ce70384a637a87e294adfb7ffebc7538864aa5ec8d23778f97"
+      },
+      "input_hashes_after": {
+        "shelf.stl": "da9d1bf75e44497ca09e06c4edeb9419ce8acd128b0537dc9f1408cde53aa2e1",
+        "profile.ini": "52bad7807d830b6619febb196793c3682f6d92cd2ad5b79277f8a7550cbc175f",
+        "toolpath.analysis-only.gcode": "8e71909df4941443dc2ffcc0e337d6babe5585c3337c579afec3a5faf2f42394",
+        "roi.json": "b942f818086438ce70384a637a87e294adfb7ffebc7538864aa5ec8d23778f97"
+      },
+      "case": "a_auto",
+      "gcode_sha256": "8e71909df4941443dc2ffcc0e337d6babe5585c3337c579afec3a5faf2f42394",
+      "roi_sha256": "b942f818086438ce70384a637a87e294adfb7ffebc7538864aa5ec8d23778f97",
+      "report_sha256": "35a4cae99eeffe35d79ccfd31df0355d03d184b1b5aa8473383fd0f8344bfee4",
+      "independent_events": 6049,
+      "screened_support_events": 2313,
+      "observed_hit_count": 220,
+      "coverage_complete": true,
+      "base_perimeter_extrema_xy_mm": [
+        [
+          75.225,
+          104.775
+        ],
+        [
+          80.225,
+          99.775
+        ]
+      ],
+      "interior_witnesses": {
+        "body": {
+          "line": 3713,
+          "role": "Support material",
+          "start_mm": [
+            78.404,
+            94.714,
+            4.1
+          ],
+          "end_mm": [
+            101.785,
+            94.714,
+            4.1
+          ]
+        },
+        "interface": {
+          "line": 5828,
+          "role": "Support material interface",
+          "start_mm": [
+            85.179,
+            78.215,
+            11.0
+          ],
+          "end_mm": [
+            85.179,
+            101.785,
+            11.0
+          ]
+        }
+      },
+      "repeat_byte_equal": true,
+      "bad_hash_rejected": true
+    },
+    {
+      "input_hashes_before": {
+        "shelf.stl": "da9d1bf75e44497ca09e06c4edeb9419ce8acd128b0537dc9f1408cde53aa2e1",
+        "profile.ini": "52bad7807d830b6619febb196793c3682f6d92cd2ad5b79277f8a7550cbc175f",
+        "toolpath.analysis-only.gcode": "37cf2d66709b0a04cca85c66259661019060c42c8e2708811d0156cb111ba858",
+        "roi.json": "4475dac89b0576e86c1ebd27c3c82d442b1f9738227e97aa3a50b6be776239a1"
+      },
+      "input_hashes_after": {
+        "shelf.stl": "da9d1bf75e44497ca09e06c4edeb9419ce8acd128b0537dc9f1408cde53aa2e1",
+        "profile.ini": "52bad7807d830b6619febb196793c3682f6d92cd2ad5b79277f8a7550cbc175f",
+        "toolpath.analysis-only.gcode": "37cf2d66709b0a04cca85c66259661019060c42c8e2708811d0156cb111ba858",
+        "roi.json": "4475dac89b0576e86c1ebd27c3c82d442b1f9738227e97aa3a50b6be776239a1"
+      },
+      "case": "a_none",
+      "gcode_sha256": "37cf2d66709b0a04cca85c66259661019060c42c8e2708811d0156cb111ba858",
+      "roi_sha256": "4475dac89b0576e86c1ebd27c3c82d442b1f9738227e97aa3a50b6be776239a1",
+      "report_sha256": "503789a9d9663fc05ca8f39ec2f1b470f38e35a4217e4fee7ecf2ed421666978",
+      "independent_events": 3736,
+      "screened_support_events": 0,
+      "observed_hit_count": 0,
+      "coverage_complete": true,
+      "base_perimeter_extrema_xy_mm": [
+        [
+          75.225,
+          104.775
+        ],
+        [
+          80.225,
+          99.775
+        ]
+      ],
+      "interior_witnesses": {},
+      "repeat_byte_equal": true,
+      "bad_hash_rejected": true
+    },
+    {
+      "input_hashes_before": {
+        "shelf.stl": "da9d1bf75e44497ca09e06c4edeb9419ce8acd128b0537dc9f1408cde53aa2e1",
+        "profile.ini": "52bad7807d830b6619febb196793c3682f6d92cd2ad5b79277f8a7550cbc175f",
+        "toolpath.analysis-only.gcode": "6d11695032d1fc1b49fd4455b00853433506f2d21f683527314b4a8691a43ff1",
+        "roi.json": "74fa3f1b1cf3a93d8854c7fdaacedbd262eb9c990233c7e4c073a7c92e3900b3"
+      },
+      "input_hashes_after": {
+        "shelf.stl": "da9d1bf75e44497ca09e06c4edeb9419ce8acd128b0537dc9f1408cde53aa2e1",
+        "profile.ini": "52bad7807d830b6619febb196793c3682f6d92cd2ad5b79277f8a7550cbc175f",
+        "toolpath.analysis-only.gcode": "6d11695032d1fc1b49fd4455b00853433506f2d21f683527314b4a8691a43ff1",
+        "roi.json": "74fa3f1b1cf3a93d8854c7fdaacedbd262eb9c990233c7e4c073a7c92e3900b3"
+      },
+      "case": "b_auto",
+      "gcode_sha256": "6d11695032d1fc1b49fd4455b00853433506f2d21f683527314b4a8691a43ff1",
+      "roi_sha256": "74fa3f1b1cf3a93d8854c7fdaacedbd262eb9c990233c7e4c073a7c92e3900b3",
+      "report_sha256": "f3508cc4019d34dc7de438a0c7d4808a163eb39795633c149bba2958520cc13c",
+      "independent_events": 6049,
+      "screened_support_events": 2313,
+      "observed_hit_count": 220,
+      "coverage_complete": true,
+      "base_perimeter_extrema_xy_mm": [
+        [
+          95.225,
+          124.775
+        ],
+        [
+          90.225,
+          109.775
+        ]
+      ],
+      "interior_witnesses": {
+        "body": {
+          "line": 3713,
+          "role": "Support material",
+          "start_mm": [
+            98.404,
+            104.714,
+            4.1
+          ],
+          "end_mm": [
+            121.785,
+            104.714,
+            4.1
+          ]
+        },
+        "interface": {
+          "line": 5828,
+          "role": "Support material interface",
+          "start_mm": [
+            105.179,
+            88.215,
+            11.0
+          ],
+          "end_mm": [
+            105.179,
+            111.785,
+            11.0
+          ]
+        }
+      },
+      "repeat_byte_equal": true,
+      "bad_hash_rejected": true
+    }
+  ],
+  "physical_validation": "not_performed",
+  "support_removal": "not_implemented",
+  "printer_ready": false,
+  "limits": [
+    "Synthetic geometry/profile only; no physical print or removal trial.",
+    "Fixed ROIs do not certify manufacturing or CAD-to-G-code transformations for other inputs.",
+    "Screen repeats are deterministic; identical bytes across separate slicer runs are not claimed."
+  ]
+}
