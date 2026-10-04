@@ -1,0 +1,40 @@
+test_analytic_crossing_both_endpoints_outside (test_support.ClipTests.test_analytic_crossing_both_endpoints_outside) ... ok
+test_arithmetic_overflow_is_an_input_error (test_support.ClipTests.test_arithmetic_overflow_is_an_input_error) ... ok
+test_diagonal_bbox_overlap_is_not_a_hit (test_support.ClipTests.test_diagonal_bbox_overlap_is_not_a_hit) ... ok
+test_parallel_contact_and_separation_in_y_and_z (test_support.ClipTests.test_parallel_contact_and_separation_in_y_and_z) ... ok
+test_point_envelope_inside_outside (test_support.ClipTests.test_point_envelope_inside_outside) ... ok
+test_reversed_direction_clip_parameters (test_support.ClipTests.test_reversed_direction_clip_parameters) ... ok
+test_single_point_tangent (test_support.ClipTests.test_single_point_tangent) ... ok
+test_bad_schema_frames_units_hashes_and_unknown_keys (test_support.RoiAndCliTests.test_bad_schema_frames_units_hashes_and_unknown_keys) ... ok
+test_cli_hashes_oracle_and_byte_determinism (test_support.RoiAndCliTests.test_cli_hashes_oracle_and_byte_determinism) ... ok
+test_cli_incomplete_negative_is_explicit (test_support.RoiAndCliTests.test_cli_incomplete_negative_is_explicit) ... ok
+test_duplicate_json_keys_top_level_and_nested (test_support.RoiAndCliTests.test_duplicate_json_keys_top_level_and_nested) ... ok
+test_gcode_hash_tamper_and_invalid_gcode_do_not_write (test_support.RoiAndCliTests.test_gcode_hash_tamper_and_invalid_gcode_do_not_write) ... ok
+test_invalid_vectors_bounds_and_nonboolean_numbers (test_support.RoiAndCliTests.test_invalid_vectors_bounds_and_nonboolean_numbers) ... ok
+test_missing_fields_and_nonobjects (test_support.RoiAndCliTests.test_missing_fields_and_nonobjects) ... ok
+test_modified_inputs_during_read_fail_closed (test_support.RoiAndCliTests.test_modified_inputs_during_read_fail_closed) ... ok
+test_nonfinite_json_is_rejected_before_creating_output (test_support.RoiAndCliTests.test_nonfinite_json_is_rejected_before_creating_output) ... ok
+test_output_inputs_existing_and_hardlink_are_preserved (test_support.RoiAndCliTests.test_output_inputs_existing_and_hardlink_are_preserved) ... ok
+test_overflow_utf8_recursion_and_file_limits (test_support.RoiAndCliTests.test_overflow_utf8_recursion_and_file_limits) ... ok
+test_regions_and_unique_identifiers (test_support.RoiAndCliTests.test_regions_and_unique_identifiers) ... ok
+test_stationary_overflow_does_not_create_output (test_support.RoiAndCliTests.test_stationary_overflow_does_not_create_output) ... ok
+test_hits_and_incomplete_coverage_coexist (test_support.ScreenTests.test_hits_and_incomplete_coverage_coexist) ... ok
+test_intersection_work_limit (test_support.ScreenTests.test_intersection_work_limit) ... ok
+test_known_perimeter_and_support_miss_are_complete_nominal_screens (test_support.ScreenTests.test_known_perimeter_and_support_miss_are_complete_nominal_screens) ... ok
+test_known_stationary_support_prime_uses_point_envelope (test_support.ScreenTests.test_known_stationary_support_prime_uses_point_envelope) ... ok
+test_metadata_whitespace_is_read_and_ambiguous_forms_rejected (test_support.ScreenTests.test_metadata_whitespace_is_read_and_ambiguous_forms_rejected) ... ok
+test_missing_and_unknown_dimension_metadata (test_support.ScreenTests.test_missing_and_unknown_dimension_metadata) ... ok
+test_mixed_retract_clip_starts_at_deposition (test_support.ScreenTests.test_mixed_retract_clip_starts_at_deposition) ... ok
+test_nonplanar_deposition_gap_for_support_and_perimeter (test_support.ScreenTests.test_nonplanar_deposition_gap_for_support_and_perimeter) ... ok
+test_retract_recovery_is_not_stationary_deposition (test_support.ScreenTests.test_retract_recovery_is_not_stationary_deposition) ... ok
+test_stationary_retract_and_length_accumulation_overflow (test_support.ScreenTests.test_stationary_retract_and_length_accumulation_overflow) ... ok
+test_support_interface_hits_and_perimeter_exclusion (test_support.ScreenTests.test_support_interface_hits_and_perimeter_exclusion) ... ok
+test_tiny_positive_extrusion_and_tiny_motion_are_preserved (test_support.ScreenTests.test_tiny_positive_extrusion_and_tiny_motion_are_preserved) ... ok
+test_unknown_prime_cannot_hide_behind_perimeter (test_support.ScreenTests.test_unknown_prime_cannot_hide_behind_perimeter) ... ok
+test_unknown_roles_do_not_prove_negative (test_support.ScreenTests.test_unknown_roles_do_not_prove_negative) ... ok
+test_unknown_stationary_prime_position_role_or_dimensions (test_support.ScreenTests.test_unknown_stationary_prime_position_role_or_dimensions) ... ok
+
+----------------------------------------------------------------------
+Ran 35 tests in 0.031s
+
+OK
