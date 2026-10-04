@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "frame": "gcode_machine_coordinates",
+  "units": "mm",
+  "gcode_sha256": "37cf2d66709b0a04cca85c66259661019060c42c8e2708811d0156cb111ba858",
+  "regions": [
+    {
+      "id": "body",
+      "min_mm": [
+        85,
+        84,
+        4
+      ],
+      "max_mm": [
+        95,
+        96,
+        10
+      ]
+    },
+    {
+      "id": "interface",
+      "min_mm": [
+        85,
+        84,
+        10
+      ],
+      "max_mm": [
+        95,
+        96,
+        12
+      ]
+    },
+    {
+      "id": "far",
+      "min_mm": [
+        140,
+        140,
+        4
+      ],
+      "max_mm": [
+        150,
+        150,
+        10
+      ]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "run": "run-001",
+  "outcome": "PrusaSlicer rejected profile before slicing",
+  "message": "Relative extruder addressing requires resetting the extruder position at each layer to prevent loss of floating point accuracy. Add \"G92 E0\" to layer_gcode.",
+  "change_before_fresh_run": "Added layer_gcode = G92 E0 for relative E; geometry, ROI coordinates, pose tolerances unchanged",
+  "product_code_modified": false,
+  "final_run": "run-003",
+  "intermediate_run_002": "Semantic success; source export had one extra blank line per file, corrected to exact GitHub bytes for final run"
+}

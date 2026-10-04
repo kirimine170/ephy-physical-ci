@@ -1,0 +1,18 @@
+{
+  "source_commit": "e45770fb168b6ba64ee41922ec70adab76eddb55",
+  "slicer_header": "PrusaSlicer-2.9.2+UNKNOWN based on Slic3r (with GUI support)",
+  "slicer_sha256": "7beaf8cc8861dcb97803da73222bdee358992e02c13a8e2b6212ae4809c121d2",
+  "python_version": "3.12.14",
+  "script_sha256": "b30b2202813d46bbf994db358fde5fbd29cc75f8879eff1bf4dac64e06b1f202",
+  "source_sha256": {
+    "tools/mechanical-ci/src/physical_ci/__init__.py": "05e8544e5ec9498bfc323256f2d3c2a94b7af0e8c28cc0d75c5d521c24cd30cd",
+    "tools/mechanical-ci/src/physical_ci/__main__.py": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+    "tools/mechanical-ci/src/physical_ci/cli.py": "31f941195e2ed01b0f695c3c3b9df88a64c231b40b2ee2bbbff8e58495cd8a61",
+    "tools/mechanical-ci/src/physical_ci/errors.py": "3c5b24e86e46bb8de6c586fa4a32d42ce44b12c0d4d48204c76cf801316b3c4b",
+    "tools/mechanical-ci/src/physical_ci/gcode.py": "ff64f756a42a91451188ab14c9ef07667f1545eb0011cc2167d976607d10e8bb",
+    "tools/mechanical-ci/src/physical_ci/geometry.py": "94a3de497750f59ff61bdad3a878ae5bcc783dc8652c12cef44a13f4023bfc32",
+    "tools/mechanical-ci/src/physical_ci/manifest.py": "bbe314e2cbd60efefb2c3eae1e66ea413c2c3f5ae9becbfe5f91f93a970da423",
+    "tools/mechanical-ci/src/physical_ci/slicer.py": "9dff1e1e33bd23ef0ca53ded9784dfedfe2a06be7e593bca1087e93a3edab262",
+    "tools/mechanical-ci/src/physical_ci/support.py": "bf56d3d9e50d69ce579036a21d723f77b9cf82f9daf4e3f438f9cdd08d09cb53"
+  }
+}

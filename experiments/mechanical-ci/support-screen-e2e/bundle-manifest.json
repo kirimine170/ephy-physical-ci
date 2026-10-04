@@ -1,0 +1,97 @@
+{
+  "source_commit": "e45770fb168b6ba64ee41922ec70adab76eddb55",
+  "product_code_modified": false,
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "bbec5da3c7cc6031c40c3976330b3999d519533b4a75f11a53d5d019f3849218",
+      "size_bytes": 3165
+    },
+    {
+      "path": "run_e2e.py",
+      "sha256": "b30b2202813d46bbf994db358fde5fbd29cc75f8879eff1bf4dac64e06b1f202",
+      "size_bytes": 11688
+    },
+    {
+      "path": "reproduce_hash_window.py",
+      "sha256": "33bf0e782e73e4d710823a12635d2172510e46a4bc914f4720f0a2180b3e6c07",
+      "size_bytes": 2552
+    },
+    {
+      "path": "run-history.json",
+      "sha256": "57197e07faaa0ab824756eb438621a5c96ca0ce10122f41d5c5a1fa55c4e6c5e",
+      "size_bytes": 588
+    },
+    {
+      "path": "run-003/summary.json",
+      "sha256": "0887ef553d38714a97639d53d1b9bcbb1a5483dd524116c69217bdbff96fe087",
+      "size_bytes": 6252
+    },
+    {
+      "path": "run-003/provenance.json",
+      "sha256": "6fa0e72cf205ada6b514f44b5b888da3fe6902609dc734174f1f47f1d3db7f4b",
+      "size_bytes": 1473
+    },
+    {
+      "path": "run-003/preregistered-plan.json",
+      "sha256": "f0c09f92da5ccf22553b7a84ff31299213ea388b8d58ab514176672ff806e385",
+      "size_bytes": 3560
+    },
+    {
+      "path": "hash-window-control-final/summary.json",
+      "sha256": "36ed147b7197bf7ef387930862a485e3ce40858f9ea6d3edbf8f2334bb437b78",
+      "size_bytes": 1701
+    },
+    {
+      "path": "support-unit-tests-final.log",
+      "sha256": "4b7527a1aaf4b831a91e762c91db7be4a8b2f9cf394e0e053798cda542023872",
+      "size_bytes": 4620
+    },
+    {
+      "path": "run-003/inputs/a_auto.json",
+      "sha256": "92003f1efddad7cc812ce2b3954470e6b572d01cd1503ae1bc22dbf3eb27c0e9",
+      "size_bytes": 788
+    },
+    {
+      "path": "run-003/inputs/a_none.json",
+      "sha256": "6e2df05fa067c01cde31cf4d954fbb406290c27571df5e337b957ce5293e9007",
+      "size_bytes": 788
+    },
+    {
+      "path": "run-003/inputs/b_auto.json",
+      "sha256": "26e44362a163345efe8c66588ec2ae15e01f8bdad76cb8beeb65e6afd8c9d703",
+      "size_bytes": 790
+    },
+    {
+      "path": "run-003/inputs/profile.ini",
+      "sha256": "52bad7807d830b6619febb196793c3682f6d92cd2ad5b79277f8a7550cbc175f",
+      "size_bytes": 1142
+    },
+    {
+      "path": "run-003/inputs/shelf.stl",
+      "sha256": "da9d1bf75e44497ca09e06c4edeb9419ce8acd128b0537dc9f1408cde53aa2e1",
+      "size_bytes": 1484
+    },
+    {
+      "path": "run-003/a_auto/roi.json",
+      "sha256": "b942f818086438ce70384a637a87e294adfb7ffebc7538864aa5ec8d23778f97",
+      "size_bytes": 662
+    },
+    {
+      "path": "run-003/a_none/roi.json",
+      "sha256": "4475dac89b0576e86c1ebd27c3c82d442b1f9738227e97aa3a50b6be776239a1",
+      "size_bytes": 662
+    },
+    {
+      "path": "run-003/b_auto/roi.json",
+      "sha256": "74fa3f1b1cf3a93d8854c7fdaacedbd262eb9c990233c7e4c073a7c92e3900b3",
+      "size_bytes": 992
+    }
+  ],
+  "excluded": [
+    "raw G-code (regenerate)",
+    "executables and dependencies",
+    "local path-containing slicer logs",
+    "private CAD/photos"
+  ]
+}
