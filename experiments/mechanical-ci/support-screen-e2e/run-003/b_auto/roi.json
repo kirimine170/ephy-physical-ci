@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "frame": "gcode_machine_coordinates",
+  "units": "mm",
+  "gcode_sha256": "6d11695032d1fc1b49fd4455b00853433506f2d21f683527314b4a8691a43ff1",
+  "regions": [
+    {
+      "id": "body",
+      "min_mm": [
+        105,
+        94,
+        4
+      ],
+      "max_mm": [
+        115,
+        106,
+        10
+      ]
+    },
+    {
+      "id": "interface",
+      "min_mm": [
+        105,
+        94,
+        10
+      ],
+      "max_mm": [
+        115,
+        106,
+        12
+      ]
+    },
+    {
+      "id": "far",
+      "min_mm": [
+        140,
+        140,
+        4
+      ],
+      "max_mm": [
+        150,
+        150,
+        10
+      ]
+    },
+    {
+      "id": "old_body",
+      "min_mm": [
+        85,
+        84,
+        4
+      ],
+      "max_mm": [
+        95,
+        96,
+        10
+      ]
+    },
+    {
+      "id": "old_interface",
+      "min_mm": [
+        85,
+        84,
+        10
+      ],
+      "max_mm": [
+        95,
+        96,
+        12
+      ]
+    }
+  ]
+}
