@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "units": "mm",
+  "frame": "assembly",
+  "obstacle": {
+    "path": "original.step",
+    "sha256": "43e5f42fc7fbd1e1e1f217689aeb91099e30d3bb8b330e8029a322a67e90c82c",
+    "frame": "assembly"
+  },
+  "motion": {
+    "tip_mm": [
+      0,
+      0,
+      -1
+    ],
+    "axis": [
+      0,
+      0,
+      1
+    ],
+    "travel_mm": 3
+  },
+  "components": [
+    {
+      "id": "tip",
+      "backset_mm": 0,
+      "length_mm": 2,
+      "radius_mm": 1.5
+    },
+    {
+      "id": "handle",
+      "backset_mm": 2,
+      "length_mm": 4,
+      "radius_mm": 3
+    }
+  ],
+  "numeric_epsilon_mm": 1e-07,
+  "numeric_epsilon_mm3": 1e-09
+}

@@ -1,0 +1,86 @@
+{
+  "fixture": "20x20x1 slab, through bore radius 2.5 mm",
+  "coordinate_frame": "assembly, mm",
+  "cases": [
+    {
+      "id": "original-2.5",
+      "travel_mm": 2.5,
+      "pose": "original",
+      "expected": {
+        "outcome": "model_clear",
+        "tip_distance": 1.0,
+        "handle_distance": 0.5,
+        "tip_volume": 0.0,
+        "handle_volume": 0.0,
+        "coverage_complete": true
+      }
+    },
+    {
+      "id": "original-3",
+      "travel_mm": 3,
+      "pose": "original",
+      "expected": {
+        "outcome": "indeterminate",
+        "tip_distance": 1.0,
+        "handle_distance": 0.0,
+        "tip_volume": 0.0,
+        "handle_volume": 0.0,
+        "coverage_complete": false
+      }
+    },
+    {
+      "id": "original-4",
+      "travel_mm": 4,
+      "pose": "original",
+      "expected": {
+        "outcome": "interference",
+        "tip_distance": 1.0,
+        "handle_distance": 0.0,
+        "tip_volume": 0.0,
+        "handle_volume": 8.63937979737193,
+        "coverage_complete": true
+      }
+    },
+    {
+      "id": "rigid_transform-2.5",
+      "travel_mm": 2.5,
+      "pose": "rigid_transform",
+      "expected": {
+        "outcome": "model_clear",
+        "tip_distance": 1.0,
+        "handle_distance": 0.5,
+        "tip_volume": 0.0,
+        "handle_volume": 0.0,
+        "coverage_complete": true
+      }
+    },
+    {
+      "id": "rigid_transform-3",
+      "travel_mm": 3,
+      "pose": "rigid_transform",
+      "expected": {
+        "outcome": "indeterminate",
+        "tip_distance": 1.0,
+        "handle_distance": 0.0,
+        "tip_volume": 0.0,
+        "handle_volume": 0.0,
+        "coverage_complete": false
+      }
+    },
+    {
+      "id": "rigid_transform-4",
+      "travel_mm": 4,
+      "pose": "rigid_transform",
+      "expected": {
+        "outcome": "interference",
+        "tip_distance": 1.0,
+        "handle_distance": 0.0,
+        "tip_volume": 0.0,
+        "handle_volume": 8.63937979737193,
+        "coverage_complete": true
+      }
+    }
+  ],
+  "rigid_transform": "rotate +90 degrees around Y, then translate (11,-7,5) mm",
+  "oracle": "tip gap 1 mm; handle end z=travel-3; annular overlap 2.75*pi at travel4"
+}

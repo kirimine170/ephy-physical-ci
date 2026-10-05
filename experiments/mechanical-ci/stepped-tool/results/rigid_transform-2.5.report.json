@@ -1,0 +1,317 @@
+{
+  "schema_version": 1,
+  "experiment": "two_coaxial_cylinders",
+  "specification_sha256": "ef433dfc6e39387890583a7d8cd76bca69f7f97e38acf821184c2398c3d32b99",
+  "step_sha256": "1b664e654ba7798878eecadabc6d1cef6f514b59072237afb6743e9c90c3f64d",
+  "same_snapshot_for_all_components": true,
+  "motion": {
+    "tip_mm": [
+      10,
+      -7,
+      5
+    ],
+    "axis": [
+      1,
+      0,
+      0
+    ],
+    "travel_mm": 2.5
+  },
+  "components": [
+    {
+      "schema_version": 1,
+      "tool_version": "0.1.0",
+      "command": "screen-tool",
+      "manifest_sha256": "b0b414664a6a796dc612f0056cb0274315e01c123986e9bb993dbda6b970a2eb",
+      "frame": "assembly",
+      "units": "mm",
+      "backend": {
+        "name": "CadQuery/OCCT",
+        "version": "2.7.0",
+        "python": "3.12.14"
+      },
+      "input": {
+        "step_sha256": "1b664e654ba7798878eecadabc6d1cef6f514b59072237afb6743e9c90c3f64d",
+        "snapshot_hash_verified": true,
+        "valid_single_solid": true,
+        "volume_mm3": 380.36504591506304
+      },
+      "tool": {
+        "radius_mm": 1.5,
+        "length_mm": 2.0,
+        "tip_mm": [
+          10.0,
+          -7.0,
+          5.0
+        ],
+        "declared_axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "travel_mm": 2.5
+      },
+      "sweep": {
+        "kind": "axial_flat_end_cylinder",
+        "from_mm": [
+          8.0,
+          -7.0,
+          5.0
+        ],
+        "to_mm": [
+          12.5,
+          -7.0,
+          5.0
+        ],
+        "length_mm": 4.5,
+        "reconstructed_to_mm": [
+          12.5,
+          -7.0,
+          5.0
+        ],
+        "endpoint_error_mm": 0.0,
+        "endpoint_consistency_tolerance_mm": 1.5e-12,
+        "kernel_axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "kernel_reconstructed_to_mm": [
+          12.5,
+          -7.0,
+          5.0
+        ],
+        "kernel_endpoint_error_mm": 0.0,
+        "kernel_direction_deviation_bound_mm": 0.0,
+        "kernel_endpoint_verified": true,
+        "volume_mm3": 31.808625617596654,
+        "geometry_verified": true
+      },
+      "numeric_epsilon_mm": 1e-07,
+      "numeric_epsilon_mm3": 1e-09,
+      "intersection_mm3": 0.0,
+      "minimum_distance_mm": 0.9999999999999993,
+      "outcome": "model_clear",
+      "reasons": [
+        "zero_overlap_and_positive_gap"
+      ],
+      "model_clear": true,
+      "continuous_for_this_motion_model": true,
+      "full_tool_assembly_verified": false,
+      "grip_access_verified": false,
+      "support_breakage": "not_implemented",
+      "support_removal": "not_implemented",
+      "rotation_or_lateral_motion": "not_implemented",
+      "path_search": "not_implemented",
+      "physical_validation": "not_performed",
+      "physical_safety_verified": false,
+      "printer_ready": false,
+      "limits": [
+        "Only a nominal flat-end cylinder translating along its fixed unit axis is modeled.",
+        "The swept cylinder covers the whole specified translation, including initial and final tool poses.",
+        "Numeric epsilons are kernel decision thresholds, not manufacturing clearance tolerances.",
+        "Model-clear is not a complete-tool, holder, gripping, support-fracture, or removal-access guarantee.",
+        "No guarantee of physical safety, forces, material behavior, or printer readiness.",
+        "No rotation, lateral motion, or path search is evaluated; sampled check-path is a separate stage.",
+        "Reported input hash binds the private STEP snapshot, not subsequent edits of the live source."
+      ],
+      "component": {
+        "id": "tip",
+        "backset_mm": 0,
+        "length_mm": 2,
+        "radius_mm": 1.5
+      },
+      "canonical_specification": {
+        "schema_version": 1,
+        "units": "mm",
+        "frame": "assembly",
+        "obstacle": {
+          "path": "obstacle.step",
+          "sha256": "1b664e654ba7798878eecadabc6d1cef6f514b59072237afb6743e9c90c3f64d",
+          "frame": "assembly"
+        },
+        "tool": {
+          "kind": "flat_end_cylinder",
+          "tip_mm": [
+            10.0,
+            -7.0,
+            5.0
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "travel_mm": 2.5,
+          "radius_mm": 1.5,
+          "length_mm": 2
+        },
+        "numeric_epsilon_mm": 1e-07,
+        "numeric_epsilon_mm3": 1e-09
+      }
+    },
+    {
+      "schema_version": 1,
+      "tool_version": "0.1.0",
+      "command": "screen-tool",
+      "manifest_sha256": "c3caa5340fc3b9fb404dc12196337317872dc4cc715ab5674c672492f1a42584",
+      "frame": "assembly",
+      "units": "mm",
+      "backend": {
+        "name": "CadQuery/OCCT",
+        "version": "2.7.0",
+        "python": "3.12.14"
+      },
+      "input": {
+        "step_sha256": "1b664e654ba7798878eecadabc6d1cef6f514b59072237afb6743e9c90c3f64d",
+        "snapshot_hash_verified": true,
+        "valid_single_solid": true,
+        "volume_mm3": 380.36504591506304
+      },
+      "tool": {
+        "radius_mm": 3.0,
+        "length_mm": 4.0,
+        "tip_mm": [
+          8.0,
+          -7.0,
+          5.0
+        ],
+        "declared_axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "travel_mm": 2.5
+      },
+      "sweep": {
+        "kind": "axial_flat_end_cylinder",
+        "from_mm": [
+          4.0,
+          -7.0,
+          5.0
+        ],
+        "to_mm": [
+          10.5,
+          -7.0,
+          5.0
+        ],
+        "length_mm": 6.5,
+        "reconstructed_to_mm": [
+          10.5,
+          -7.0,
+          5.0
+        ],
+        "endpoint_error_mm": 0.0,
+        "endpoint_consistency_tolerance_mm": 2.5e-12,
+        "kernel_axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "kernel_reconstructed_to_mm": [
+          10.5,
+          -7.0,
+          5.0
+        ],
+        "kernel_endpoint_error_mm": 0.0,
+        "kernel_direction_deviation_bound_mm": 0.0,
+        "kernel_endpoint_verified": true,
+        "volume_mm3": 183.7831702350029,
+        "geometry_verified": true
+      },
+      "numeric_epsilon_mm": 1e-07,
+      "numeric_epsilon_mm3": 1e-09,
+      "intersection_mm3": 0.0,
+      "minimum_distance_mm": 0.5,
+      "outcome": "model_clear",
+      "reasons": [
+        "zero_overlap_and_positive_gap"
+      ],
+      "model_clear": true,
+      "continuous_for_this_motion_model": true,
+      "full_tool_assembly_verified": false,
+      "grip_access_verified": false,
+      "support_breakage": "not_implemented",
+      "support_removal": "not_implemented",
+      "rotation_or_lateral_motion": "not_implemented",
+      "path_search": "not_implemented",
+      "physical_validation": "not_performed",
+      "physical_safety_verified": false,
+      "printer_ready": false,
+      "limits": [
+        "Only a nominal flat-end cylinder translating along its fixed unit axis is modeled.",
+        "The swept cylinder covers the whole specified translation, including initial and final tool poses.",
+        "Numeric epsilons are kernel decision thresholds, not manufacturing clearance tolerances.",
+        "Model-clear is not a complete-tool, holder, gripping, support-fracture, or removal-access guarantee.",
+        "No guarantee of physical safety, forces, material behavior, or printer readiness.",
+        "No rotation, lateral motion, or path search is evaluated; sampled check-path is a separate stage.",
+        "Reported input hash binds the private STEP snapshot, not subsequent edits of the live source."
+      ],
+      "component": {
+        "id": "handle",
+        "backset_mm": 2,
+        "length_mm": 4,
+        "radius_mm": 3
+      },
+      "canonical_specification": {
+        "schema_version": 1,
+        "units": "mm",
+        "frame": "assembly",
+        "obstacle": {
+          "path": "obstacle.step",
+          "sha256": "1b664e654ba7798878eecadabc6d1cef6f514b59072237afb6743e9c90c3f64d",
+          "frame": "assembly"
+        },
+        "tool": {
+          "kind": "flat_end_cylinder",
+          "tip_mm": [
+            8.0,
+            -7.0,
+            5.0
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "travel_mm": 2.5,
+          "radius_mm": 3,
+          "length_mm": 4
+        },
+        "numeric_epsilon_mm": 1e-07,
+        "numeric_epsilon_mm3": 1e-09
+      }
+    }
+  ],
+  "outcome": "model_clear",
+  "coverage_complete": true,
+  "model_clear": true,
+  "minimum_distance_mm": 0.5,
+  "blocking_components": [],
+  "indeterminate_components": [],
+  "union_intersection_volume_mm3": null,
+  "full_tool_assembly_verified": false,
+  "physical_validation": "not_performed",
+  "support_removal": "not_implemented",
+  "removal_force": "not_implemented",
+  "limits": [
+    "Only the two declared flat-ended coaxial cylinders and one forward axial translation are modeled.",
+    "Backsets and radii are independent; omitted gaps, handles, hands and attachments are not inferred.",
+    "Model-clear requires both component sweeps to be clear against the same frozen obstacle bytes.",
+    "Known interference is retained when another component is indeterminate; coverage stays incomplete.",
+    "Component sweep overlap volumes must not be summed as a union volume.",
+    "Numerical epsilons are not printing, manufacturing or physical clearance tolerances.",
+    "No path search, bending, lateral motion, rotation, support fracture or successful removal is certified.",
+    "Snapshot identity does not assert that the original live file remained unchanged."
+  ]
+}

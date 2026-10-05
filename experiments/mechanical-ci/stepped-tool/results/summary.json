@@ -1,0 +1,117 @@
+{
+  "base_commit": "afafbf4983bc922fff40e8d8944269e5f0a1676f",
+  "python": "3.12.14",
+  "cadquery": "2.7.0",
+  "OCP": "7.8.1.1",
+  "cases": [
+    {
+      "id": "original-2.5",
+      "outcome": "model_clear",
+      "checks": {
+        "outcome": true,
+        "coverage": true,
+        "tip_model_clear": true,
+        "union_volume_not_summed": true,
+        "same_obstacle_bytes": true,
+        "tip_volume": true,
+        "tip_distance": true,
+        "handle_volume": true,
+        "handle_distance": true
+      },
+      "passed": true,
+      "report_sha256": "03a4073c090c92ac9d675e8841738224b00e21b54422f96a462679f048855789"
+    },
+    {
+      "id": "original-3",
+      "outcome": "indeterminate",
+      "checks": {
+        "outcome": true,
+        "coverage": true,
+        "tip_model_clear": true,
+        "union_volume_not_summed": true,
+        "same_obstacle_bytes": true,
+        "tip_volume": true,
+        "tip_distance": true,
+        "handle_volume": true,
+        "handle_distance": true
+      },
+      "passed": true,
+      "report_sha256": "79daf37b0e400157589ffd95e7294778224c2b0e4862dcf8e8ea267b288e28d5"
+    },
+    {
+      "id": "original-4",
+      "outcome": "interference",
+      "checks": {
+        "outcome": true,
+        "coverage": true,
+        "tip_model_clear": true,
+        "union_volume_not_summed": true,
+        "same_obstacle_bytes": true,
+        "tip_volume": true,
+        "tip_distance": true,
+        "handle_volume": true,
+        "handle_distance": true
+      },
+      "passed": true,
+      "report_sha256": "7531a1db74a42e3886cbeaf86a31e1cb707c48e91ba278e3c329262b795c6e96"
+    },
+    {
+      "id": "rigid_transform-2.5",
+      "outcome": "model_clear",
+      "checks": {
+        "outcome": true,
+        "coverage": true,
+        "tip_model_clear": true,
+        "union_volume_not_summed": true,
+        "same_obstacle_bytes": true,
+        "tip_volume": true,
+        "tip_distance": true,
+        "handle_volume": true,
+        "handle_distance": true
+      },
+      "passed": true,
+      "report_sha256": "b73d16d193c380f7db4b6fe551809f753426ea0f3bf87996057aee8884cd7954"
+    },
+    {
+      "id": "rigid_transform-3",
+      "outcome": "indeterminate",
+      "checks": {
+        "outcome": true,
+        "coverage": true,
+        "tip_model_clear": true,
+        "union_volume_not_summed": true,
+        "same_obstacle_bytes": true,
+        "tip_volume": true,
+        "tip_distance": true,
+        "handle_volume": true,
+        "handle_distance": true
+      },
+      "passed": true,
+      "report_sha256": "16e6ad45eb19fbc5f289a0e45348b144a4328be0785ffbe6aea6461216557428"
+    },
+    {
+      "id": "rigid_transform-4",
+      "outcome": "interference",
+      "checks": {
+        "outcome": true,
+        "coverage": true,
+        "tip_model_clear": true,
+        "union_volume_not_summed": true,
+        "same_obstacle_bytes": true,
+        "tip_volume": true,
+        "tip_distance": true,
+        "handle_volume": true,
+        "handle_distance": true
+      },
+      "passed": true,
+      "report_sha256": "200c4aea6e7afca8e34e4f1be491bcafae771d864cd8169397e3a7636819bec5"
+    }
+  ],
+  "passed": true,
+  "source_sha256": {
+    "experiments/mechanical-ci/stepped-tool/reproduce.py": "f2d6f50cb120d61ab912345be0bd114190937a8ff0aecdde3b7ec1d10542ab6f",
+    "experiments/mechanical-ci/stepped-tool/screen.py": "790a8bf318f6a3c177a9448c868a3753e37034a552d7150c40ed69f0abcb0e05",
+    "tools/mechanical-ci/src/physical_ci/tool.py": "62608e15a50058481900d2c4119e3fffaab5a5e07830af5827751bc8272b10e1"
+  },
+  "physical_validation": "not_performed"
+}
