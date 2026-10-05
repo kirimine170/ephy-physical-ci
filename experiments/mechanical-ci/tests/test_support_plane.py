@@ -210,15 +210,28 @@ class RecordedStudyTests(unittest.TestCase):
             self.assertTrue(summary["recorded_reproduction_passed"])
             self.assertTrue(all(all(row["recorded_reproduction_checks"].values()) for row in summary["observations"]))
             provenance = json.loads(archive.read("provenance.json"))
-            compatibility = json.loads((EXPERIMENT / "parser-compatibility.json").read_text())
-            parser_path = "tools/mechanical-ci/src/physical_ci/gcode.py"
-            self.assertEqual(compatibility["source_path"], parser_path)
-            self.assertEqual(compatibility["required_replay_cases"], ["0", "0.1", "0.2", "0.3"])
-            self.assertEqual(compatibility["historical_archive_sha256"], hashlib.sha256((EXPERIMENT / "evidence.zip").read_bytes()).hexdigest())
-            self.assertEqual(compatibility["recorded_source_sha256"], provenance["source_sha256"][parser_path])
+            compatible = {}
+            for path, record in (("tools/mechanical-ci/src/physical_ci/gcode.py", "parser-compatibility.json"),
+                                 ("tools/mechanical-ci/src/physical_ci/slicer.py", "slicer-compatibility.json")):
+                compatibility = json.loads((EXPERIMENT / record).read_text())
+                self.assertEqual(compatibility["source_path"], path)
+                self.assertEqual(compatibility["required_replay_cases"], ["0", "0.1", "0.2", "0.3"])
+                self.assertEqual(compatibility["historical_archive_sha256"], hashlib.sha256((EXPERIMENT / "evidence.zip").read_bytes()).hexdigest())
+                self.assertEqual(compatibility["recorded_source_sha256"], provenance["source_sha256"][path])
+                compatible[path] = compatibility["compatible_source_sha256"]
             for name, digest in provenance["source_sha256"].items():
-                expected = compatibility["compatible_source_sha256"] if name == parser_path else digest
+                expected = compatible.get(name, digest)
                 self.assertEqual(hashlib.sha256((audit.ROOT / name).read_bytes()).hexdigest(), expected, name)
+
+    def test_slicer_snapshot_revision_records_all_four_fresh_reproduction_gates(self):
+        record = json.loads((EXPERIMENT / "slicer-compatibility.json").read_text())["fresh_pinned_reproduction"]
+        self.assertEqual(record["slicer_sha256"], "7beaf8cc8861dcb97803da73222bdee358992e02c13a8e2b6212ae4809c121d2")
+        self.assertTrue(record["recorded_reproduction_passed"])
+        self.assertTrue(record["independent_raw_audit_passed"])
+        expected = [(0., 12.), (.1, 11.7), (.2, 11.6), (.3, 11.5)]
+        self.assertEqual([(o["configured_contact_distance_mm"], o["known_selected_support_plane_z_mm"])
+                          for o in record["observations"]], expected)
+        self.assertTrue(all(all(o["recorded_reproduction_checks"].values()) for o in record["observations"]))
 
     def test_all_four_raw_inputs_replay_full_audit(self):
         with zipfile.ZipFile(EXPERIMENT / "evidence.zip") as archive:
