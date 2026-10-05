@@ -23,6 +23,18 @@
 
 経路はslicerが意図したcommandです．実際の線幅，押出誤差，空隙，層間接着，温度履歴，接触面の粗さを測定したものではありません．supportを出力できても，工具が届く，壊さず除去できる，除去後に機構が動く，とは判定できません．
 
+## スライス入力の結び付け
+
+- manifestは1回読んだ同じUTF-8 byte bufferからJSONを解析し，SHA256を計算します．その後のlive fileが不変であるという保証ではありません
+- `slice` はversion照会の前に，profile INIとprint STLをprivateな一時directoryへコピーし，同じ読込byteのSHA256をmanifestと照合します．元fileはslicerへ渡しません．basenameは維持します
+- 危険なpost-processやnetwork/secret設定の検査対象は，コピーしたINIです．検査後，version照会後，backend終了後，G-code解析後にもsnapshotのhashを確認します
+- 元fileがsnapshot作成後に編集・削除されても，照合済みcopyで処理できます．persistentなsnapshot改変は成功扱いにしません．同じuser権限の悪意あるprocessがsnapshotを書き換えて元へ戻す攻撃を防ぐsecurity sandboxではありません
+- INIは1 MiB，STLとG-codeはそれぞれ64 MiBまでです．空fileは拒否します．入力snapshotは終了時に削除します
+- `input_sha256` は従来どおりmanifestのartifact宣言，`consumed_input_sha256` は実際に渡したINI/STLのhashです．`input_binding=verified_private_snapshots` はこの範囲の結び付けを表します．CAD姿勢や物理性能の検証を追加するものではありません
+- G-codeは1つのbyte bufferを解析・hash化し，同じ内容を保存します．全gateの後に，同一filesystem上のhard linkで完成fileを排他的に公開するため，途中で作られた既存outputを上書きしません．対応filesystemが必要です．失敗時は一時生成物を除去し，backendのlocal logがある場合は診断用に残します
+
+実行backendは信頼できるものを使用してください．この入力対策が，slicer自身やその全依存libraryの安全性・実行中の不変性を保証するものではありません．
+
 ## 未実装gate
 
 現在の結果には以下を必ず`not_implemented`として含めます．

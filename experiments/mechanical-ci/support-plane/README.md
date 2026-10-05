@@ -31,6 +31,8 @@ G-codeとplane JSONはそれぞれ1回読み取った同じbyte bufferをhash化
 
 記録されたrun-005 archiveとprovenanceは，旧E parserを使った当時の原本として保持しています．その後の厳密な有理数E bookkeepingへの修正は `parser-compatibility.json` で旧source hash，新source hash，archive hashを明示して結び付け，4条件すべてのraw入力から完全なplane reportを再計算して一致を必須にしています．過去の実行が新parserを使ったという意味ではありません．現在のE underflow拒否と適用範囲は製品CLIのlimitations文書を参照してください．
 
+後続のINI/STL snapshot化とG-codeの単一buffer保存は，別の `slicer-compatibility.json` に旧adapter・新adapter・archiveのhashを結び付けています．旧archiveは変更せず，4つのraw reportの完全再計算を維持します．新adapterでも同じ固定profile・面・窓の4条件を新規sliceして，全再現gateと独立raw照合を確認しました．この追試も実物のgapや除去成功を検証するものではありません．
+
 吐出指令ZやHEIGHTは，物理的なbead表面の測定値ではありません．特にbridge HEIGHTから物理下面を作り，supportとの接触やair gapを算出することはしません．造形不良，熱変形，材料異方性，支持材の付着，除去破損，保持力，実際の除去成功は未検証です．今回のprofileは公開済みの合成解析用profileであり，ユーザーの実機用profileではありません．
 
 ## 独立oracleと原本

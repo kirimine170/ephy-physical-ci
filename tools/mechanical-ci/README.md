@@ -63,6 +63,8 @@ physical-ci analyze-gcode build/slice-run-001/toolpath.analysis-only.gcode \
 
 出力は新しいpathを指定します．既存fileへの上書きや，古いG-codeの再利用は拒否します．失敗後の再試行も新しいoutput directoryを使います．
 
+`slice` はINI/STLのhashを再確認したprivate copyを使い，INIの安全性検査もそのcopyに対して行います．元fileを実行中に編集しても，確認済み入力との結び付けを維持します．`consumed_input_sha256` に実際の2入力のhashを記録し，G-codeも解析・hash化した同じbytesだけを保存します．適用範囲，容量制限，filesystem条件は[検証範囲](docs/limitations.md#スライス入力の結び付け)を参照してください．
+
 ## テスト
 
 ```sh

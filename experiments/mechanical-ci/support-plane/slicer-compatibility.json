@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "historical_archive_sha256": "761f1cca3b69c13473d5d5ffe1c5d597d83c30517e93ac97d994c2d147ec234b",
+  "source_path": "tools/mechanical-ci/src/physical_ci/slicer.py",
+  "recorded_source_sha256": "9dff1e1e33bd23ef0ca53ded9784dfedfe2a06be7e593bca1087e93a3edab262",
+  "compatible_source_sha256": "3d9d374546d3bf51286f71121fb6b982b3d13297591ebb4953edd5e641c7733f",
+  "required_replay_cases": [
+    "0",
+    "0.1",
+    "0.2",
+    "0.3"
+  ],
+  "scope": "Historical run-005 archive/provenance are unchanged. Copied slicer inputs and same-buffer G-code handling are tested separately; all four archived raw plane reports still replay identically. The archived run did not use the new adapter.",
+  "fresh_pinned_reproduction": {
+    "slicer_sha256": "7beaf8cc8861dcb97803da73222bdee358992e02c13a8e2b6212ae4809c121d2",
+    "summary_sha256": "f3abfc6dd13cac9a0074ee77cda48588031c0867c657eb71baab5142f3764e3b",
+    "recorded_reproduction_passed": true,
+    "independent_raw_audit_passed": true,
+    "observations": [
+      {
+        "configured_contact_distance_mm": 0.0,
+        "known_selected_support_plane_z_mm": 12.0,
+        "nominal_CAD_plane_minus_support_plane_mm": 0.0,
+        "known_model_plane": {
+          "known_first_z_mm": 12.2,
+          "roles": [
+            "Solid infill"
+          ],
+          "height_metadata_mm": [
+            0.2
+          ]
+        },
+        "recorded_reproduction_checks": {
+          "coverage_complete": true,
+          "model_roles": true,
+          "model_height_metadata": true,
+          "support_plane": true,
+          "nominal_difference": true,
+          "model_plane": true
+        }
+      },
+      {
+        "configured_contact_distance_mm": 0.1,
+        "known_selected_support_plane_z_mm": 11.7,
+        "nominal_CAD_plane_minus_support_plane_mm": 0.3,
+        "known_model_plane": {
+          "known_first_z_mm": 12.2,
+          "roles": [
+            "Bridge infill"
+          ],
+          "height_metadata_mm": [
+            0.4
+          ]
+        },
+        "recorded_reproduction_checks": {
+          "coverage_complete": true,
+          "model_roles": true,
+          "model_height_metadata": true,
+          "support_plane": true,
+          "nominal_difference": true,
+          "model_plane": true
+        }
+      },
+      {
+        "configured_contact_distance_mm": 0.2,
+        "known_selected_support_plane_z_mm": 11.6,
+        "nominal_CAD_plane_minus_support_plane_mm": 0.4,
+        "known_model_plane": {
+          "known_first_z_mm": 12.2,
+          "roles": [
+            "Bridge infill"
+          ],
+          "height_metadata_mm": [
+            0.4
+          ]
+        },
+        "recorded_reproduction_checks": {
+          "coverage_complete": true,
+          "model_roles": true,
+          "model_height_metadata": true,
+          "support_plane": true,
+          "nominal_difference": true,
+          "model_plane": true
+        }
+      },
+      {
+        "configured_contact_distance_mm": 0.3,
+        "known_selected_support_plane_z_mm": 11.5,
+        "nominal_CAD_plane_minus_support_plane_mm": 0.5,
+        "known_model_plane": {
+          "known_first_z_mm": 12.2,
+          "roles": [
+            "Bridge infill"
+          ],
+          "height_metadata_mm": [
+            0.4
+          ]
+        },
+        "recorded_reproduction_checks": {
+          "coverage_complete": true,
+          "model_roles": true,
+          "model_height_metadata": true,
+          "support_plane": true,
+          "nominal_difference": true,
+          "model_plane": true
+        }
+      }
+    ]
+  }
+}
