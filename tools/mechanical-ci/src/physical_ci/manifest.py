@@ -78,7 +78,8 @@ def resolve_artifact(root, artifact):
 def load_manifest(path):
     source = Path(path).resolve()
     try:
-        data = json.loads(source.read_text(encoding="utf-8"))
+        raw = source.read_bytes()
+        data = json.loads(raw.decode("utf-8"))
     except (OSError, ValueError) as error:
         raise InputError(f"cannot read manifest: {error}") from error
     keys(data, ("schema_version", "name", "units", "assembly_to_print", "artifacts"),
@@ -126,4 +127,4 @@ def load_manifest(path):
         for key, frame, suffix in (("print_mesh", "print", ".stl"), ("profile", "configuration", ".ini")):
             if key not in artifacts or artifacts[key]["frame"] != frame or resolved[key].suffix.lower() != suffix:
                 raise InputError(f"{key} requires a {suffix} artifact in frame {frame}")
-    return data, resolved, sha256(source)
+    return data, resolved, hashlib.sha256(raw).hexdigest()
