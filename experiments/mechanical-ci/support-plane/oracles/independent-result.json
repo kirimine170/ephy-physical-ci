@@ -1,0 +1,66 @@
+{
+  "reviewed_audit_sha256": "3f7d24113b6710d95be5b033c53cae72fcf4869b0cd0f2aa5ff2058cbe7c2046",
+  "preregistered_oracles_sha256": "8048c039532cd88562e1665c8d831c641c1de168578c0463f2e97bab1cdd34f8",
+  "verifier_sha256": "e056f0f6aaf6ee0745cfdcad59a5e5e86d003a3ebbc7dc633f92b108fa01829e",
+  "all_7_fixtures_passed": true,
+  "integer_segment_oracles_passed": 2000,
+  "random_seed": 1729,
+  "results": [
+    {
+      "case": "crossing_and_outside",
+      "gcode_sha256": "53b4d0b41bce982a118e6272e31cec8e95ad0c7e31a7e029e8104a5b815dae54",
+      "outcome": "measured",
+      "known_selected_top_z_mm": 11.8,
+      "nominal_plane_minus_top_mm": 0.1999999999999993,
+      "coverage_complete": true
+    },
+    {
+      "case": "above_nominal_plane",
+      "gcode_sha256": "d23908b9f24d4a7887d578078d843d0f844e111fad7b040619fe60272eaab4c2",
+      "outcome": "measured",
+      "known_selected_top_z_mm": 12.2,
+      "nominal_plane_minus_top_mm": -0.1999999999999993,
+      "coverage_complete": true
+    },
+    {
+      "case": "closed_boundary",
+      "gcode_sha256": "67e60b37ad457c4e99978f91e2e2ec80b032fccf6bb63bc92c2564ba5a8a8dbf",
+      "outcome": "measured",
+      "known_selected_top_z_mm": 11.5,
+      "nominal_plane_minus_top_mm": 0.5,
+      "coverage_complete": true
+    },
+    {
+      "case": "no_support",
+      "gcode_sha256": "2d2cacf31edb5b6b170992614e660da7a9e38fc0fe0a619b15db51bdac6d60a2",
+      "outcome": "no_support_observed_in_window",
+      "known_selected_top_z_mm": null,
+      "nominal_plane_minus_top_mm": null,
+      "coverage_complete": true
+    },
+    {
+      "case": "unknown_role",
+      "gcode_sha256": "b86f0cb6524086e6ee7c6d142127ecbd31d7185c24486f923eca870f74e37fb7",
+      "outcome": "incomplete",
+      "known_selected_top_z_mm": 11.8,
+      "nominal_plane_minus_top_mm": null,
+      "coverage_complete": false
+    },
+    {
+      "case": "nonplanar_support",
+      "gcode_sha256": "05d05b0f58fe69ab45773a210e9bb6f18f61e26d3c2ca48b439da124561ef72e",
+      "outcome": "incomplete",
+      "known_selected_top_z_mm": 11.8,
+      "nominal_plane_minus_top_mm": null,
+      "coverage_complete": false
+    },
+    {
+      "case": "unlocalized_stationary_deposition",
+      "gcode_sha256": "41e6151ecc6f741f9eef3ea651519214d4a3384ba326c7859fc4c48a46287114",
+      "outcome": "incomplete",
+      "known_selected_top_z_mm": 11.8,
+      "nominal_plane_minus_top_mm": null,
+      "coverage_complete": false
+    }
+  ]
+}

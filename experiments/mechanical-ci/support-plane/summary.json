@@ -1,0 +1,396 @@
+{
+  "experiment": "nominal support extrusion-plane to CAD underside distance",
+  "base_commit": "a169ce162d453835d8377f73abb7cec0bb82bdff",
+  "observations": [
+    {
+      "configured_contact_distance_mm": 0.0,
+      "known_selected_support_plane_z_mm": 12.0,
+      "nominal_CAD_plane_minus_support_plane_mm": 0.0,
+      "coverage_complete": true,
+      "independent_top_witness_lines": [
+        6144,
+        6146,
+        6148,
+        6150,
+        6152,
+        6154,
+        6156,
+        6158,
+        6160,
+        6162,
+        6164,
+        6166,
+        6168,
+        6170,
+        6172,
+        6174,
+        6176,
+        6178,
+        6180,
+        6182,
+        6184,
+        6186,
+        6188,
+        6190,
+        6192,
+        6194,
+        6196,
+        6198
+      ],
+      "pose_gate": {
+        "base": {
+          "events": 32,
+          "xy_extrema_mm": [
+            [
+              75.225,
+              104.775
+            ],
+            [
+              80.225,
+              99.775
+            ]
+          ]
+        },
+        "wall": {
+          "events": 124,
+          "xy_extrema_mm": [
+            [
+              75.225,
+              77.775
+            ],
+            [
+              80.225,
+              99.775
+            ]
+          ]
+        }
+      },
+      "known_model_plane": {
+        "known_first_z_mm": 12.2,
+        "roles": [
+          "Solid infill"
+        ],
+        "height_metadata_mm": [
+          0.2
+        ]
+      },
+      "resolved_fixed_settings": {
+        "layer_height": "0.2",
+        "first_layer_height": "0.2",
+        "nozzle_diameter": "0.4",
+        "bridge_flow_ratio": "1",
+        "thick_bridges": "1",
+        "support_material_style": "grid",
+        "support_material_synchronize_layers": "0",
+        "z_offset": "0"
+      },
+      "conditional_prediction_conditions_verified": null,
+      "conditional_prediction_matches": null,
+      "recorded_reproduction_checks": {
+        "coverage_complete": true,
+        "model_roles": true,
+        "model_height_metadata": true,
+        "support_plane": true,
+        "nominal_difference": true,
+        "model_plane": true
+      },
+      "gcode_sha256": "4160c5f230e4cac7131d51bcc9ade2600a9ad528750e9fac0d346951dcdb3888",
+      "gcode_before_after_equal": true,
+      "report_sha256": "875f70c3878f98a7d068698c7bf75d4cdb08cebf83e6ee4c57e2849295d7f7f1"
+    },
+    {
+      "configured_contact_distance_mm": 0.1,
+      "known_selected_support_plane_z_mm": 11.7,
+      "nominal_CAD_plane_minus_support_plane_mm": 0.3,
+      "coverage_complete": true,
+      "independent_top_witness_lines": [
+        6387,
+        6389,
+        6391,
+        6393,
+        6395,
+        6397,
+        6399,
+        6401,
+        6403,
+        6405,
+        6407,
+        6409,
+        6411,
+        6413,
+        6415,
+        6417,
+        6419,
+        6421,
+        6423,
+        6425,
+        6427,
+        6429,
+        6431,
+        6433,
+        6435,
+        6437,
+        6439,
+        6441
+      ],
+      "pose_gate": {
+        "base": {
+          "events": 32,
+          "xy_extrema_mm": [
+            [
+              75.225,
+              104.775
+            ],
+            [
+              80.225,
+              99.775
+            ]
+          ]
+        },
+        "wall": {
+          "events": 124,
+          "xy_extrema_mm": [
+            [
+              75.225,
+              77.775
+            ],
+            [
+              80.225,
+              99.775
+            ]
+          ]
+        }
+      },
+      "known_model_plane": {
+        "known_first_z_mm": 12.2,
+        "roles": [
+          "Bridge infill"
+        ],
+        "height_metadata_mm": [
+          0.4
+        ]
+      },
+      "resolved_fixed_settings": {
+        "layer_height": "0.2",
+        "first_layer_height": "0.2",
+        "nozzle_diameter": "0.4",
+        "bridge_flow_ratio": "1",
+        "thick_bridges": "1",
+        "support_material_style": "grid",
+        "support_material_synchronize_layers": "0",
+        "z_offset": "0"
+      },
+      "conditional_prediction_conditions_verified": true,
+      "conditional_prediction_matches": true,
+      "recorded_reproduction_checks": {
+        "coverage_complete": true,
+        "model_roles": true,
+        "model_height_metadata": true,
+        "support_plane": true,
+        "nominal_difference": true,
+        "model_plane": true
+      },
+      "gcode_sha256": "ce4c1a6923445d5ee1d9b87ad2a9960b89974e7f3c0ef9a5ab521baf964f52d7",
+      "gcode_before_after_equal": true,
+      "report_sha256": "6dedc43c99ab1806cfeff911850867bac509f2b830ebc343be8c026bab6cf2e7"
+    },
+    {
+      "configured_contact_distance_mm": 0.2,
+      "known_selected_support_plane_z_mm": 11.6,
+      "nominal_CAD_plane_minus_support_plane_mm": 0.4,
+      "coverage_complete": true,
+      "independent_top_witness_lines": [
+        6284,
+        6286,
+        6288,
+        6290,
+        6292,
+        6294,
+        6296,
+        6298,
+        6300,
+        6302,
+        6304,
+        6306,
+        6308,
+        6310,
+        6312,
+        6314,
+        6316,
+        6318,
+        6320,
+        6322,
+        6324,
+        6326,
+        6328,
+        6330,
+        6332,
+        6334,
+        6336,
+        6338
+      ],
+      "pose_gate": {
+        "base": {
+          "events": 32,
+          "xy_extrema_mm": [
+            [
+              75.225,
+              104.775
+            ],
+            [
+              80.225,
+              99.775
+            ]
+          ]
+        },
+        "wall": {
+          "events": 124,
+          "xy_extrema_mm": [
+            [
+              75.225,
+              77.775
+            ],
+            [
+              80.225,
+              99.775
+            ]
+          ]
+        }
+      },
+      "known_model_plane": {
+        "known_first_z_mm": 12.2,
+        "roles": [
+          "Bridge infill"
+        ],
+        "height_metadata_mm": [
+          0.4
+        ]
+      },
+      "resolved_fixed_settings": {
+        "layer_height": "0.2",
+        "first_layer_height": "0.2",
+        "nozzle_diameter": "0.4",
+        "bridge_flow_ratio": "1",
+        "thick_bridges": "1",
+        "support_material_style": "grid",
+        "support_material_synchronize_layers": "0",
+        "z_offset": "0"
+      },
+      "conditional_prediction_conditions_verified": true,
+      "conditional_prediction_matches": true,
+      "recorded_reproduction_checks": {
+        "coverage_complete": true,
+        "model_roles": true,
+        "model_height_metadata": true,
+        "support_plane": true,
+        "nominal_difference": true,
+        "model_plane": true
+      },
+      "gcode_sha256": "579089463e0d39ec351b5cb691f9e4170d45353a156e240379c313be4a2c4a87",
+      "gcode_before_after_equal": true,
+      "report_sha256": "5f3cc7a54c5560cf0e4366081612063d0003be0dd20492cc82711fd685e5cbb0"
+    },
+    {
+      "configured_contact_distance_mm": 0.3,
+      "known_selected_support_plane_z_mm": 11.5,
+      "nominal_CAD_plane_minus_support_plane_mm": 0.5,
+      "coverage_complete": true,
+      "independent_top_witness_lines": [
+        6342,
+        6344,
+        6346,
+        6348,
+        6350,
+        6352,
+        6354,
+        6356,
+        6358,
+        6360,
+        6362,
+        6364,
+        6366,
+        6368,
+        6370,
+        6372,
+        6374,
+        6376,
+        6378,
+        6380,
+        6382,
+        6384,
+        6386,
+        6388,
+        6390,
+        6392,
+        6394,
+        6396
+      ],
+      "pose_gate": {
+        "base": {
+          "events": 32,
+          "xy_extrema_mm": [
+            [
+              75.225,
+              104.775
+            ],
+            [
+              80.225,
+              99.775
+            ]
+          ]
+        },
+        "wall": {
+          "events": 124,
+          "xy_extrema_mm": [
+            [
+              75.225,
+              77.775
+            ],
+            [
+              80.225,
+              99.775
+            ]
+          ]
+        }
+      },
+      "known_model_plane": {
+        "known_first_z_mm": 12.2,
+        "roles": [
+          "Bridge infill"
+        ],
+        "height_metadata_mm": [
+          0.4
+        ]
+      },
+      "resolved_fixed_settings": {
+        "layer_height": "0.2",
+        "first_layer_height": "0.2",
+        "nozzle_diameter": "0.4",
+        "bridge_flow_ratio": "1",
+        "thick_bridges": "1",
+        "support_material_style": "grid",
+        "support_material_synchronize_layers": "0",
+        "z_offset": "0"
+      },
+      "conditional_prediction_conditions_verified": true,
+      "conditional_prediction_matches": true,
+      "recorded_reproduction_checks": {
+        "coverage_complete": true,
+        "model_roles": true,
+        "model_height_metadata": true,
+        "support_plane": true,
+        "nominal_difference": true,
+        "model_plane": true
+      },
+      "gcode_sha256": "39e5fdf6b97567ca5c23bcdc8cc87d5346cf71f4e853ee91619155397412ba06",
+      "gcode_before_after_equal": true,
+      "report_sha256": "4cac6149824bce0681c598805b6b89f87c74319df90fe15d65ce25089efadf5e"
+    }
+  ],
+  "independent_raw_audit_passed": true,
+  "physical_air_gap_measured": false,
+  "recorded_reproduction_passed": true,
+  "profile_settings_identical_except_contact_distance": true,
+  "physical_validation": "not_performed",
+  "note": "Configured contact distance and the nominal CAD-to-command-plane difference need not be equal; zero is a separate slicing regime."
+}

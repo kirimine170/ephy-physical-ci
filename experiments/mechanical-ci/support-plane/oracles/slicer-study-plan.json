@@ -1,0 +1,74 @@
+{
+  "name": "nominal support extrusion-plane to CAD underside distance",
+  "status": "preregistered before new contact-distance sweep",
+  "fixture": "same original synthetic shelf as support-screen E2E; base [0,30]x[0,20]x[0,2], wall [0,3]x[0,20]x[2,14], roof [3,25]x[0,20]x[12,14]",
+  "machine_pose": {
+    "translation_mm": [
+      75,
+      80,
+      0
+    ],
+    "xy_window_min": [
+      85,
+      84
+    ],
+    "xy_window_max": [
+      95,
+      96
+    ],
+    "cad_underside_z_mm": 12
+  },
+  "fixed_resolved_settings": {
+    "layer_height": 0.2,
+    "first_layer_height": 0.2,
+    "nozzle_diameter": 0.4,
+    "bridge_flow_ratio": 1,
+    "thick_bridges": 1,
+    "support_material_style": "grid",
+    "support_material_synchronize_layers": 0,
+    "z_offset": 0
+  },
+  "vary_only": "support_material_contact_distance",
+  "levels_mm": [
+    0,
+    0.1,
+    0.2,
+    0.3
+  ],
+  "selection": "closed XY rectangle intersects planar positive-support-extrusion centerline; width not used",
+  "measured": "max selected support/interface command Z, and CAD underside minus that plane; list raw line witnesses and completeness",
+  "conditional_predictions": [
+    {
+      "configured_gap_mm": 0.1,
+      "support_plane_z_mm": 11.7,
+      "nominal_plane_distance_mm": 0.3
+    },
+    {
+      "configured_gap_mm": 0.2,
+      "support_plane_z_mm": 11.6,
+      "nominal_plane_distance_mm": 0.4
+    },
+    {
+      "configured_gap_mm": 0.3,
+      "support_plane_z_mm": 11.5,
+      "nominal_plane_distance_mm": 0.5
+    }
+  ],
+  "prediction_conditions": "central interface supports thick bridge at model print_z12.2 with bridging_height.4; source formula support_print_z=layer.print_z-bridging_height-gap; verify conditions from raw roles/heights and resolved settings; mismatch requires investigation, not oracle adjustment",
+  "zero_gap_regime": "soluble-interface branch aligns contact with layer.bottom_z and bridge flow changes; predict plane12 only if pinned pose and first model layer bottom12 verified; report as separate regime",
+  "pose_gate": "use preregistered base exterior and middle-wall extrema checks from existing E2E; no output-derived ROI relocation",
+  "independent_audit": "reparse raw G-code separately from product parser, track units/XYZ/E modes and retraction debt, restrict supported commands, retain exact source line witnesses; hash raw inputs and reports",
+  "limitations": [
+    "not physical air gap",
+    "not support strength or removal-force prediction",
+    "not as-printed dimensions",
+    "bridge cross section and actual contact remain unresolved",
+    "single horizontal nominal CAD plane and explicit machine coordinates only"
+  ],
+  "sources": [
+    "https://help.prusa3d.com/article/support-material_1698",
+    "https://github.com/prusa3d/PrusaSlicer/blob/version_2.9.2/src/libslic3r/Flow.hpp",
+    "https://github.com/prusa3d/PrusaSlicer/blob/version_2.9.2/src/libslic3r/GCode.cpp#L2563",
+    "https://github.com/prusa3d/PrusaSlicer/blob/version_2.9.2/src/libslic3r/Support/SupportMaterial.cpp#L1383"
+  ]
+}

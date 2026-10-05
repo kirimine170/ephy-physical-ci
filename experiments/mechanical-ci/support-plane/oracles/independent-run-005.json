@@ -1,0 +1,185 @@
+{
+  "all_4_raw_audits_passed": true,
+  "manifest_entries_verified": 28,
+  "manifest_sha256": "626c13ee9b267c842f10105e2c2353af48bd434395170b2d499b13007e942373",
+  "preregistered_sha256": "3b498a96691d684593c038f963b9fe7fc305efce4f480ddf39ab98d2431f7cd3",
+  "verifier_sha256": "9f13c98d1db88c2ce2e4c2c0a60171f9c9777ea1afd2c0b3469db6842b32f030",
+  "only_changed_profile_key": [
+    "support_material_contact_distance"
+  ],
+  "observations": [
+    {
+      "case": "contact-0",
+      "gcode_sha256": "4160c5f230e4cac7131d51bcc9ade2600a9ad528750e9fac0d346951dcdb3888",
+      "selected_top_z_mm": "12",
+      "nominal_plane_distance_mm": "0",
+      "top_witness_lines": [
+        6144,
+        6146,
+        6148,
+        6150,
+        6152,
+        6154,
+        6156,
+        6158,
+        6160,
+        6162,
+        6164,
+        6166,
+        6168,
+        6170,
+        6172,
+        6174,
+        6176,
+        6178,
+        6180,
+        6182,
+        6184,
+        6186,
+        6188,
+        6190,
+        6192,
+        6194,
+        6196,
+        6198
+      ],
+      "model_z_mm": "12.2",
+      "model_roles": [
+        "Solid infill"
+      ],
+      "model_height_metadata_mm": [
+        "0.2"
+      ]
+    },
+    {
+      "case": "contact-0.1",
+      "gcode_sha256": "ce4c1a6923445d5ee1d9b87ad2a9960b89974e7f3c0ef9a5ab521baf964f52d7",
+      "selected_top_z_mm": "11.7",
+      "nominal_plane_distance_mm": "0.3",
+      "top_witness_lines": [
+        6387,
+        6389,
+        6391,
+        6393,
+        6395,
+        6397,
+        6399,
+        6401,
+        6403,
+        6405,
+        6407,
+        6409,
+        6411,
+        6413,
+        6415,
+        6417,
+        6419,
+        6421,
+        6423,
+        6425,
+        6427,
+        6429,
+        6431,
+        6433,
+        6435,
+        6437,
+        6439,
+        6441
+      ],
+      "model_z_mm": "12.2",
+      "model_roles": [
+        "Bridge infill"
+      ],
+      "model_height_metadata_mm": [
+        "0.4"
+      ]
+    },
+    {
+      "case": "contact-0.2",
+      "gcode_sha256": "579089463e0d39ec351b5cb691f9e4170d45353a156e240379c313be4a2c4a87",
+      "selected_top_z_mm": "11.6",
+      "nominal_plane_distance_mm": "0.4",
+      "top_witness_lines": [
+        6284,
+        6286,
+        6288,
+        6290,
+        6292,
+        6294,
+        6296,
+        6298,
+        6300,
+        6302,
+        6304,
+        6306,
+        6308,
+        6310,
+        6312,
+        6314,
+        6316,
+        6318,
+        6320,
+        6322,
+        6324,
+        6326,
+        6328,
+        6330,
+        6332,
+        6334,
+        6336,
+        6338
+      ],
+      "model_z_mm": "12.2",
+      "model_roles": [
+        "Bridge infill"
+      ],
+      "model_height_metadata_mm": [
+        "0.4"
+      ]
+    },
+    {
+      "case": "contact-0.3",
+      "gcode_sha256": "39e5fdf6b97567ca5c23bcdc8cc87d5346cf71f4e853ee91619155397412ba06",
+      "selected_top_z_mm": "11.5",
+      "nominal_plane_distance_mm": "0.5",
+      "top_witness_lines": [
+        6342,
+        6344,
+        6346,
+        6348,
+        6350,
+        6352,
+        6354,
+        6356,
+        6358,
+        6360,
+        6362,
+        6364,
+        6366,
+        6368,
+        6370,
+        6372,
+        6374,
+        6376,
+        6378,
+        6380,
+        6382,
+        6384,
+        6386,
+        6388,
+        6390,
+        6392,
+        6394,
+        6396
+      ],
+      "model_z_mm": "12.2",
+      "model_roles": [
+        "Bridge infill"
+      ],
+      "model_height_metadata_mm": [
+        "0.4"
+      ]
+    }
+  ],
+  "scope": "Command-plane observations only; not physical air gap or force validation."
+}

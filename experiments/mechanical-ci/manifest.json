@@ -44,6 +44,21 @@
       "scope": "Two declared coaxial cylinders; fixed axial translation against one frozen STEP; nominal model clearance only",
       "physical_retention": "unknown",
       "material_calibration": "not_applicable_rigid_geometry"
+    },
+    {
+      "id": "support-plane",
+      "input_scope": "original_synthetic_fixture",
+      "input_source": "support-plane/reproduce.py",
+      "entrypoint": "support-plane/audit.py",
+      "records": [
+        "support-plane/summary.json",
+        "support-plane/oracles/independent-run-005.json",
+        "support-plane/oracles/independent-failure-result.json"
+      ],
+      "execution": "pass",
+      "scope": "Nominal command-plane observations in one fixed window; not physical air gap or removal force",
+      "physical_retention": "unknown",
+      "material_calibration": "not_applicable_command_geometry"
     }
   ],
   "integration": {
@@ -54,7 +69,7 @@
   "artifacts": [
     {
       "path": "README.md",
-      "sha256": "af4aec332199a3509a10f72ce812e742457c0333df63f77b809c6ce60895c5cf"
+      "sha256": "7e8f0991f642575d542c9b7983ef259e5f1b4de563c662a4a222f48f8d36139b"
     },
     {
       "path": "lessons.md",
@@ -215,6 +230,98 @@
     {
       "path": "tests/test_stepped_tool.py",
       "sha256": "2f3d2b75b88edc62cd72a0eb286f7f6c5da810bc00cc9e6f84fa771528e4c941"
+    },
+    {
+      "path": "support-plane/README.md",
+      "sha256": "8a9691ee877cd5f5554c46c92ab04584b54ecc289c6a8692b41e6b65e8372772"
+    },
+    {
+      "path": "support-plane/REVIEW_HISTORY.md",
+      "sha256": "a640cf1b1d7a26ca9a98f5aff8f28bb18666e9dce7b9a83f7d473b0a7287bc75"
+    },
+    {
+      "path": "support-plane/audit.py",
+      "sha256": "3f7d24113b6710d95be5b033c53cae72fcf4869b0cd0f2aa5ff2058cbe7c2046"
+    },
+    {
+      "path": "support-plane/evidence.zip",
+      "sha256": "761f1cca3b69c13473d5d5ffe1c5d597d83c30517e93ac97d994c2d147ec234b"
+    },
+    {
+      "path": "support-plane/oracles/above_nominal_plane.gcode",
+      "sha256": "d23908b9f24d4a7887d578078d843d0f844e111fad7b040619fe60272eaab4c2"
+    },
+    {
+      "path": "support-plane/oracles/closed_boundary.gcode",
+      "sha256": "67e60b37ad457c4e99978f91e2e2ec80b032fccf6bb63bc92c2564ba5a8a8dbf"
+    },
+    {
+      "path": "support-plane/oracles/crossing_and_outside.gcode",
+      "sha256": "53b4d0b41bce982a118e6272e31cec8e95ad0c7e31a7e029e8104a5b815dae54"
+    },
+    {
+      "path": "support-plane/oracles/independent-failure-result.json",
+      "sha256": "8e9b5d4d148606a1599d01ca66aa3a4b0cb42d274a37b606f4918d18151b738f"
+    },
+    {
+      "path": "support-plane/oracles/independent-result.json",
+      "sha256": "422da009f363580da8393abaf7b7d8ae29d818e17b97bf5f382e36917c1286d0"
+    },
+    {
+      "path": "support-plane/oracles/independent-run-004.json",
+      "sha256": "30238173d97f82ff47dcb07049449f43ad90ad0dfe6fc25f0f8a5bee257bb068"
+    },
+    {
+      "path": "support-plane/oracles/independent-run-005.json",
+      "sha256": "3634932fa89e27a2551b7a9c14cf99c5ab166aa643a765159bf91f3b6de3c613"
+    },
+    {
+      "path": "support-plane/oracles/no_support.gcode",
+      "sha256": "2d2cacf31edb5b6b170992614e660da7a9e38fc0fe0a619b15db51bdac6d60a2"
+    },
+    {
+      "path": "support-plane/oracles/nonplanar_support.gcode",
+      "sha256": "05d05b0f58fe69ab45773a210e9bb6f18f61e26d3c2ca48b439da124561ef72e"
+    },
+    {
+      "path": "support-plane/oracles/preregistered-oracles.json",
+      "sha256": "8048c039532cd88562e1665c8d831c641c1de168578c0463f2e97bab1cdd34f8"
+    },
+    {
+      "path": "support-plane/oracles/slicer-study-plan.json",
+      "sha256": "3b498a96691d684593c038f963b9fe7fc305efce4f480ddf39ab98d2431f7cd3"
+    },
+    {
+      "path": "support-plane/oracles/unknown_role.gcode",
+      "sha256": "b86f0cb6524086e6ee7c6d142127ecbd31d7185c24486f923eca870f74e37fb7"
+    },
+    {
+      "path": "support-plane/oracles/unlocalized_stationary_deposition.gcode",
+      "sha256": "41e6151ecc6f741f9eef3ea651519214d4a3384ba326c7859fc4c48a46287114"
+    },
+    {
+      "path": "support-plane/oracles/verify_failure_child.py",
+      "sha256": "ab0779f7caeeccbf916f5fddafbb90182fc6097ac679f7a6fbaf62e378a048db"
+    },
+    {
+      "path": "support-plane/oracles/verify_implementation.py",
+      "sha256": "e056f0f6aaf6ee0745cfdcad59a5e5e86d003a3ebbc7dc633f92b108fa01829e"
+    },
+    {
+      "path": "support-plane/oracles/verify_raw_slices.py",
+      "sha256": "9f13c98d1db88c2ce2e4c2c0a60171f9c9777ea1afd2c0b3469db6842b32f030"
+    },
+    {
+      "path": "support-plane/reproduce.py",
+      "sha256": "356b15c92d325301071bede0b96cbca04ededc31a7d443b810a7d19abd8a3155"
+    },
+    {
+      "path": "support-plane/summary.json",
+      "sha256": "0bf5c8861889f08907641c448e921fa20966a5bb4ca6387a6f7fac73945bce8e"
+    },
+    {
+      "path": "tests/test_support_plane.py",
+      "sha256": "64955b6dceb4a5f2caa78f5038dbe410f2b789f87c540f05d893626f9d764cd9"
     }
   ]
 }
