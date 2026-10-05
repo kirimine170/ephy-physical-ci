@@ -210,8 +210,15 @@ class RecordedStudyTests(unittest.TestCase):
             self.assertTrue(summary["recorded_reproduction_passed"])
             self.assertTrue(all(all(row["recorded_reproduction_checks"].values()) for row in summary["observations"]))
             provenance = json.loads(archive.read("provenance.json"))
+            compatibility = json.loads((EXPERIMENT / "parser-compatibility.json").read_text())
+            parser_path = "tools/mechanical-ci/src/physical_ci/gcode.py"
+            self.assertEqual(compatibility["source_path"], parser_path)
+            self.assertEqual(compatibility["required_replay_cases"], ["0", "0.1", "0.2", "0.3"])
+            self.assertEqual(compatibility["historical_archive_sha256"], hashlib.sha256((EXPERIMENT / "evidence.zip").read_bytes()).hexdigest())
+            self.assertEqual(compatibility["recorded_source_sha256"], provenance["source_sha256"][parser_path])
             for name, digest in provenance["source_sha256"].items():
-                self.assertEqual(hashlib.sha256((audit.ROOT / name).read_bytes()).hexdigest(), digest, name)
+                expected = compatibility["compatible_source_sha256"] if name == parser_path else digest
+                self.assertEqual(hashlib.sha256((audit.ROOT / name).read_bytes()).hexdigest(), expected, name)
 
     def test_all_four_raw_inputs_replay_full_audit(self):
         with zipfile.ZipFile(EXPERIMENT / "evidence.zip") as archive:
