@@ -6,6 +6,7 @@
 
 - [Escape search](escape-search/README.md): 合成STEPの連結6自由度mesh探索と，選択経路の独立BRep再生
 - [Frame compliance](frame-compliance/README.md): 合成U-frameの小荷重線形FEMと，支持条件による剛性の差
+- [Stepped tool](stepped-tool/README.md): 同軸の先端と太い柄について，指定直進 sweep を同一STEPへ照合する合成実験
 - [検証から得た知見](lessons.md): 何を調べても，どこから先は未確認のままか
 
 公開fixtureはこの実験用に作った単純形状です．製品CAD，写真，実機profile，実験時の私的path，製品固有の数値・raw dataを含みません．各実験の生成script，依存版，コマンド，合成結果と限界を一緒に置きます．

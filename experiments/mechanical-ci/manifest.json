@@ -30,6 +30,20 @@
       "scope": "Small-load linear synthetic FEM; free-gauge versus artificial rear-clamp comparison",
       "physical_retention": "unknown",
       "material_calibration": "unknown"
+    },
+    {
+      "id": "stepped-tool",
+      "input_scope": "original_synthetic_fixture",
+      "input_source": "stepped-tool/reproduce.py",
+      "entrypoint": "stepped-tool/screen.py",
+      "records": [
+        "stepped-tool/results/summary.json",
+        "stepped-tool/review/result.json"
+      ],
+      "execution": "pass",
+      "scope": "Two declared coaxial cylinders; fixed axial translation against one frozen STEP; nominal model clearance only",
+      "physical_retention": "unknown",
+      "material_calibration": "not_applicable_rigid_geometry"
     }
   ],
   "integration": {
@@ -40,7 +54,7 @@
   "artifacts": [
     {
       "path": "README.md",
-      "sha256": "6208f50637d1296002650a14a5f6e48ecdeaecc77c0376653a3d47abe452e630"
+      "sha256": "af4aec332199a3509a10f72ce812e742457c0333df63f77b809c6ce60895c5cf"
     },
     {
       "path": "lessons.md",
@@ -105,6 +119,102 @@
     {
       "path": "tests/test_manifest.py",
       "sha256": "8f05060f323b72ba7f5129cbf383f3f2ed05991f7f4c67b820de4215b36338cd"
+    },
+    {
+      "path": "stepped-tool/README.md",
+      "sha256": "f1a9b5d7f8dfd617f0ee4b6d442dc9b276b6da1ccbd6c01866a56b8e3a55dbc8"
+    },
+    {
+      "path": "stepped-tool/REVIEW_HISTORY.md",
+      "sha256": "e0b46bac323c5a3566a9d35f68fa04df75d82d94d314e9b17687aa7f70e1c15b"
+    },
+    {
+      "path": "stepped-tool/reproduce.py",
+      "sha256": "f2d6f50cb120d61ab912345be0bd114190937a8ff0aecdde3b7ec1d10542ab6f"
+    },
+    {
+      "path": "stepped-tool/results/manifest.json",
+      "sha256": "be08989463a59113706523c856e777a520a3b78fd387c57b5ed4f0858daebddd"
+    },
+    {
+      "path": "stepped-tool/results/original-2.5.json",
+      "sha256": "3f40900cf154d88431534676d05c6aa4e558267d8299a60e89ef49c1969ac9b1"
+    },
+    {
+      "path": "stepped-tool/results/original-2.5.report.json",
+      "sha256": "03a4073c090c92ac9d675e8841738224b00e21b54422f96a462679f048855789"
+    },
+    {
+      "path": "stepped-tool/results/original-3.json",
+      "sha256": "164bb3c6c1623c91ac182fb131389891896a44fa907209c2178731ce67938f20"
+    },
+    {
+      "path": "stepped-tool/results/original-3.report.json",
+      "sha256": "79daf37b0e400157589ffd95e7294778224c2b0e4862dcf8e8ea267b288e28d5"
+    },
+    {
+      "path": "stepped-tool/results/original-4.json",
+      "sha256": "818c2b5ba59de6c776812ed157a78f1442f04b6f44ab8b7d2f3e69c6be7051ff"
+    },
+    {
+      "path": "stepped-tool/results/original-4.report.json",
+      "sha256": "7531a1db74a42e3886cbeaf86a31e1cb707c48e91ba278e3c329262b795c6e96"
+    },
+    {
+      "path": "stepped-tool/results/original.step",
+      "sha256": "43e5f42fc7fbd1e1e1f217689aeb91099e30d3bb8b330e8029a322a67e90c82c"
+    },
+    {
+      "path": "stepped-tool/results/preregistered.json",
+      "sha256": "8961b708dc2fe6a202ac97064db118074601d62b689a53fa83dee55b366388e1"
+    },
+    {
+      "path": "stepped-tool/results/rigid_transform-2.5.json",
+      "sha256": "ef433dfc6e39387890583a7d8cd76bca69f7f97e38acf821184c2398c3d32b99"
+    },
+    {
+      "path": "stepped-tool/results/rigid_transform-2.5.report.json",
+      "sha256": "b73d16d193c380f7db4b6fe551809f753426ea0f3bf87996057aee8884cd7954"
+    },
+    {
+      "path": "stepped-tool/results/rigid_transform-3.json",
+      "sha256": "e626a2db25d1e1f9defb852002e32e0aad0b42f5b9458d1a9240f25296f518ff"
+    },
+    {
+      "path": "stepped-tool/results/rigid_transform-3.report.json",
+      "sha256": "16e6ad45eb19fbc5f289a0e45348b144a4328be0785ffbe6aea6461216557428"
+    },
+    {
+      "path": "stepped-tool/results/rigid_transform-4.json",
+      "sha256": "2f0c062a5dd1a0fcf91545fa159576942051c07945107b6fd42bd5f86686dc6f"
+    },
+    {
+      "path": "stepped-tool/results/rigid_transform-4.report.json",
+      "sha256": "200c4aea6e7afca8e34e4f1be491bcafae771d864cd8169397e3a7636819bec5"
+    },
+    {
+      "path": "stepped-tool/results/rigid_transform.step",
+      "sha256": "1b664e654ba7798878eecadabc6d1cef6f514b59072237afb6743e9c90c3f64d"
+    },
+    {
+      "path": "stepped-tool/results/summary.json",
+      "sha256": "ef58fb3c00656cc6485ed444617378b7f41f5e6b0ffe495b0ab62a55e5db26c8"
+    },
+    {
+      "path": "stepped-tool/review/result.json",
+      "sha256": "93a5449e97856b2638d561742d78ad29b134519300de11cad1b90fe7ed438311"
+    },
+    {
+      "path": "stepped-tool/review/verify.py",
+      "sha256": "88fde145f10aeb3ae32aabdf440413076370398bb24fbdc84ebbb25fbc626791"
+    },
+    {
+      "path": "stepped-tool/screen.py",
+      "sha256": "790a8bf318f6a3c177a9448c868a3753e37034a552d7150c40ed69f0abcb0e05"
+    },
+    {
+      "path": "tests/test_stepped_tool.py",
+      "sha256": "2f3d2b75b88edc62cd72a0eb286f7f6c5da810bc00cc9e6f84fa771528e4c941"
     }
   ]
 }
