@@ -10,11 +10,16 @@ import sys
 import unittest
 import zipfile
 from unittest.mock import patch
+from types import SimpleNamespace
 
 EXPERIMENT = Path(__file__).resolve().parents[1] / "support-plane"
 loader = importlib.util.spec_from_file_location("support_plane_audit", EXPERIMENT / "audit.py")
 audit = importlib.util.module_from_spec(loader)
 loader.loader.exec_module(audit)
+study_loader = importlib.util.spec_from_file_location("support_plane_study", EXPERIMENT / "reproduce.py")
+study = importlib.util.module_from_spec(study_loader)
+with patch.dict(sys.modules, {"audit": audit}):
+    study_loader.loader.exec_module(study)
 
 
 def specification(raw):
@@ -168,6 +173,18 @@ class PlaneTests(unittest.TestCase):
 
 
 class RecordedStudyTests(unittest.TestCase):
+    def test_independent_failure_controls_bind_current_reproducer(self):
+        root = EXPERIMENT / "oracles"
+        record = json.loads((root / "independent-failure-result.json").read_text())
+        self.assertEqual(record["reproduce_sha256"], hashlib.sha256((EXPERIMENT / "reproduce.py").read_bytes()).hexdigest())
+        self.assertEqual(record["fault_child_sha256"], hashlib.sha256((root / "verify_failure_child.py").read_bytes()).hexdigest())
+        self.assertTrue(record["all_failure_controls_passed"])
+        self.assertEqual(len(record["observations"]), 2)
+        for observation in record["observations"]:
+            self.assertNotEqual(observation["exit_code"], 0)
+            self.assertFalse(observation["success_summary_exists"])
+            self.assertEqual(observation["failure"]["outcome"], "reproduction_failed")
+
     def test_independent_reviews_bind_current_audit_and_raw_archive(self):
         oracles = EXPERIMENT / "oracles"
         implementation = json.loads((oracles / "independent-result.json").read_text())
@@ -175,7 +192,7 @@ class RecordedStudyTests(unittest.TestCase):
         self.assertEqual(implementation["verifier_sha256"], hashlib.sha256((oracles / "verify_implementation.py").read_bytes()).hexdigest())
         self.assertEqual(implementation["integer_segment_oracles_passed"], 2000)
         self.assertTrue(implementation["all_7_fixtures_passed"])
-        raw_review = json.loads((oracles / "independent-run-004.json").read_text())
+        raw_review = json.loads((oracles / "independent-run-005.json").read_text())
         self.assertTrue(raw_review["all_4_raw_audits_passed"])
         self.assertEqual(raw_review["verifier_sha256"], hashlib.sha256((oracles / "verify_raw_slices.py").read_bytes()).hexdigest())
         with zipfile.ZipFile(EXPERIMENT / "evidence.zip") as archive:
@@ -189,6 +206,9 @@ class RecordedStudyTests(unittest.TestCase):
             for name, digest in manifest.items():
                 self.assertEqual(hashlib.sha256(archive.read(name)).hexdigest(), digest, name)
             self.assertEqual(archive.read("summary.json"), (EXPERIMENT / "summary.json").read_bytes())
+            summary = json.loads(archive.read("summary.json"))
+            self.assertTrue(summary["recorded_reproduction_passed"])
+            self.assertTrue(all(all(row["recorded_reproduction_checks"].values()) for row in summary["observations"]))
             provenance = json.loads(archive.read("provenance.json"))
             for name, digest in provenance["source_sha256"].items():
                 self.assertEqual(hashlib.sha256((audit.ROOT / name).read_bytes()).hexdigest(), digest, name)
@@ -223,6 +243,78 @@ class RecordedStudyTests(unittest.TestCase):
                 self.assertEqual(values.pop("support_material_contact_distance"), gap)
                 settings.append(values)
             self.assertTrue(all(row == settings[0] for row in settings))
+
+
+class ReproductionGateTests(unittest.TestCase):
+    def observations(self, gap):
+        row = study.RECORDED_CASES[gap]
+        return ({"coverage_complete": True, "known_selected_top_z_mm": row["support_plane_z_mm"],
+                 "nominal_plane_minus_top_mm": 12-row["support_plane_z_mm"]},
+                {"known_first_z_mm": row["model_z_mm"], "roles": list(row["roles"]),
+                 "height_metadata_mm": list(row["heights_mm"])})
+
+    def test_all_four_recorded_cases_are_required(self):
+        for gap in study.RECORDED_CASES:
+            report, model = self.observations(gap)
+            self.assertTrue(all(study.verify_recorded_case(gap, report, model).values()))
+            mutations = [("known_selected_top_z_mm", report["known_selected_top_z_mm"]+.01),
+                         ("nominal_plane_minus_top_mm", report["nominal_plane_minus_top_mm"]+.01),
+                         ("coverage_complete", False), ("known_selected_top_z_mm", None),
+                         ("known_selected_top_z_mm", float("nan"))]
+            for field, value in mutations:
+                bad = dict(report, **{field: value})
+                with self.subTest(gap=gap, field=field), self.assertRaises(study.ReproductionMismatch):
+                    study.verify_recorded_case(gap, bad, model)
+
+    def test_bridge_regime_and_zero_gap_model_conditions_are_required(self):
+        for gap in study.RECORDED_CASES:
+            report, model = self.observations(gap)
+            for field, value in (("known_first_z_mm", 12.3), ("known_first_z_mm", None),
+                                 ("roles", []), ("roles", ["Perimeter"]),
+                                 ("height_metadata_mm", [.3])):
+                with self.subTest(gap=gap, field=field), self.assertRaises(study.ReproductionMismatch):
+                    study.verify_recorded_case(gap, report, dict(model, **{field: value}))
+
+    def test_consistent_but_different_slicer_output_has_no_success_summary(self):
+        # Both the product audit and independent raw auditor see the SAME
+        # altered G-code. Their agreement alone must not be called reproduction.
+        with tempfile.TemporaryDirectory() as tmp, zipfile.ZipFile(EXPERIMENT / "evidence.zip") as archive:
+            root = Path(tmp)
+            binary = root / "mock-pinned-binary"
+            binary.write_bytes(b"IO fixture; never executed")
+            output = root / "run"
+            real_sha = study.sha
+
+            def controlled_sha(path):
+                return study.SLICER_SHA256 if Path(path) == binary else real_sha(path)
+
+            def fake_slice(manifest, paths, digest, executable, directory):
+                directory = Path(directory)
+                directory.mkdir()
+                name = directory.name
+                raw = archive.read(name + "/toolpath.analysis-only.gcode")
+                if name == "contact-0":
+                    # The selected support plane becomes 12.1; model Z12.2
+                    # remains unchanged. Units, roles, pose and metadata stay valid.
+                    import re
+                    raw = re.sub(rb"(?m)^(G[01] .*?)Z12(?:\.0*)?(?=\s|$)", rb"\g<1>Z12.1", raw)
+                gcode = directory / "toolpath.analysis-only.gcode"
+                gcode.write_bytes(raw)
+                summary = json.loads(archive.read(name + "/slice-summary.json"))
+                summary["gcode_sha256"] = hashlib.sha256(raw).hexdigest()
+                return summary, []
+
+            with patch.object(study, "sha", side_effect=controlled_sha), \
+                    patch.object(study.subprocess, "run", return_value=SimpleNamespace(stdout="PrusaSlicer-2.9.2+MOCK\n", stderr="")), \
+                    patch.object(study, "run_slicer", side_effect=fake_slice):
+                with self.assertRaises(study.ReproductionMismatch):
+                    study.reproduce(binary, output)
+            self.assertFalse((output / "summary.json").exists())
+            failure = json.loads((output / "failure.json").read_text())
+            self.assertEqual(failure["outcome"], "reproduction_failed")
+            self.assertEqual(failure["case"], "contact-0")
+            self.assertAlmostEqual(failure["observed_support_plane_z_mm"], 12.1)
+            self.assertEqual(failure["expected"]["support_plane_z_mm"], 12.)
 
 
 if __name__ == "__main__":
