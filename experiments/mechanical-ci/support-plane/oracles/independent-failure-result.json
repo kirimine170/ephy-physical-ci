@@ -1,0 +1,71 @@
+{
+  "reproduce_sha256": "356b15c92d325301071bede0b96cbca04ededc31a7d443b810a7d19abd8a3155",
+  "fault_child_sha256": "ab0779f7caeeccbf916f5fddafbb90182fc6097ac679f7a6fbaf62e378a048db",
+  "all_failure_controls_passed": true,
+  "observations": [
+    {
+      "mode": "support_plane",
+      "exit_code": 1,
+      "success_summary_exists": false,
+      "failure": {
+        "outcome": "reproduction_failed",
+        "case": "contact-0.2",
+        "reason": "contact-0.2 failed recorded reproduction checks: support_plane, nominal_difference",
+        "expected": {
+          "support_plane_z_mm": 11.6,
+          "model_z_mm": 12.2,
+          "roles": [
+            "Bridge infill"
+          ],
+          "heights_mm": [
+            0.4
+          ]
+        },
+        "observed_support_plane_z_mm": 11.65,
+        "observed_model_plane": {
+          "known_first_z_mm": 12.2,
+          "roles": [
+            "Bridge infill"
+          ],
+          "height_metadata_mm": [
+            0.4
+          ]
+        },
+        "gcode_sha256": "966569f143c9d494fd758ba7f6af16ba70fc7fc8aad9f69f9cd05dd08aa4107d",
+        "report_sha256": "7e2210bf7e2881ceb3ac6d7d0c4619d722a0f851b55efff1c21b40e056b7371c"
+      }
+    },
+    {
+      "mode": "zero_model_role",
+      "exit_code": 1,
+      "success_summary_exists": false,
+      "failure": {
+        "outcome": "reproduction_failed",
+        "case": "contact-0",
+        "reason": "contact-0 failed recorded reproduction checks: model_roles",
+        "expected": {
+          "support_plane_z_mm": 12.0,
+          "model_z_mm": 12.2,
+          "roles": [
+            "Solid infill"
+          ],
+          "heights_mm": [
+            0.2
+          ]
+        },
+        "observed_support_plane_z_mm": 12.0,
+        "observed_model_plane": {
+          "known_first_z_mm": 12.2,
+          "roles": [
+            "Top solid infill"
+          ],
+          "height_metadata_mm": [
+            0.2
+          ]
+        },
+        "gcode_sha256": "ec31bfb04d618dc5aa5558b8e9f5d6b8c36d616fb5892a1ad11535591eb27800",
+        "report_sha256": "f682543729b2e23dff95613063c3bbfd17796f6649634ed0eb12f3b2b1700219"
+      }
+    }
+  ]
+}
