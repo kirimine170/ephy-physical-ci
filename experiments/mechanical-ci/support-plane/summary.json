@@ -86,9 +86,17 @@
       },
       "conditional_prediction_conditions_verified": null,
       "conditional_prediction_matches": null,
-      "gcode_sha256": "3cbbc47fb436e5715478e8d048efd5a1ae963ba948d39abc652c8527e547fe56",
+      "recorded_reproduction_checks": {
+        "coverage_complete": true,
+        "model_roles": true,
+        "model_height_metadata": true,
+        "support_plane": true,
+        "nominal_difference": true,
+        "model_plane": true
+      },
+      "gcode_sha256": "4160c5f230e4cac7131d51bcc9ade2600a9ad528750e9fac0d346951dcdb3888",
       "gcode_before_after_equal": true,
-      "report_sha256": "8c4afde79a0930e30e351e78bc44ab921ac629bd937abe4b2b94e1bf451c97b6"
+      "report_sha256": "875f70c3878f98a7d068698c7bf75d4cdb08cebf83e6ee4c57e2849295d7f7f1"
     },
     {
       "configured_contact_distance_mm": 0.1,
@@ -174,9 +182,17 @@
       },
       "conditional_prediction_conditions_verified": true,
       "conditional_prediction_matches": true,
-      "gcode_sha256": "6f71ad2201b9c740d7cef87a75acd0363dceeb4b468f8683e21539f68f4195d1",
+      "recorded_reproduction_checks": {
+        "coverage_complete": true,
+        "model_roles": true,
+        "model_height_metadata": true,
+        "support_plane": true,
+        "nominal_difference": true,
+        "model_plane": true
+      },
+      "gcode_sha256": "ce4c1a6923445d5ee1d9b87ad2a9960b89974e7f3c0ef9a5ab521baf964f52d7",
       "gcode_before_after_equal": true,
-      "report_sha256": "93769e5867b8ef7e02519cf21750c262488afcd9c3bdaa5dea50659c9a628c89"
+      "report_sha256": "6dedc43c99ab1806cfeff911850867bac509f2b830ebc343be8c026bab6cf2e7"
     },
     {
       "configured_contact_distance_mm": 0.2,
@@ -262,9 +278,17 @@
       },
       "conditional_prediction_conditions_verified": true,
       "conditional_prediction_matches": true,
-      "gcode_sha256": "c73ee7fafcc883eb22937ef2de211d78c170cbcbc088f093335c2ea463ea62c4",
+      "recorded_reproduction_checks": {
+        "coverage_complete": true,
+        "model_roles": true,
+        "model_height_metadata": true,
+        "support_plane": true,
+        "nominal_difference": true,
+        "model_plane": true
+      },
+      "gcode_sha256": "579089463e0d39ec351b5cb691f9e4170d45353a156e240379c313be4a2c4a87",
       "gcode_before_after_equal": true,
-      "report_sha256": "9f65a3628e3ba32945e0573245bc80c3ee862221ba3e846d8fc2c7fd0a97812c"
+      "report_sha256": "5f3cc7a54c5560cf0e4366081612063d0003be0dd20492cc82711fd685e5cbb0"
     },
     {
       "configured_contact_distance_mm": 0.3,
@@ -350,13 +374,22 @@
       },
       "conditional_prediction_conditions_verified": true,
       "conditional_prediction_matches": true,
-      "gcode_sha256": "e40007b355e53f1443ece13dc77d2834aa6321553139bc5972e265205afde9ae",
+      "recorded_reproduction_checks": {
+        "coverage_complete": true,
+        "model_roles": true,
+        "model_height_metadata": true,
+        "support_plane": true,
+        "nominal_difference": true,
+        "model_plane": true
+      },
+      "gcode_sha256": "39e5fdf6b97567ca5c23bcdc8cc87d5346cf71f4e853ee91619155397412ba06",
       "gcode_before_after_equal": true,
-      "report_sha256": "828ef992e5a756b49f761d813e3d37cbfe1dbeaaf4eaf14e90e91205e0ce5fcb"
+      "report_sha256": "4cac6149824bce0681c598805b6b89f87c74319df90fe15d65ce25089efadf5e"
     }
   ],
   "independent_raw_audit_passed": true,
   "physical_air_gap_measured": false,
+  "recorded_reproduction_passed": true,
   "profile_settings_identical_except_contact_distance": true,
   "physical_validation": "not_performed",
   "note": "Configured contact distance and the nominal CAD-to-command-plane difference need not be equal; zero is a separate slicing regime."

@@ -21,6 +21,35 @@ SLICER_SHA256 = "7beaf8cc8861dcb97803da73222bdee358992e02c13a8e2b6212ae4809c121d
 FIXED = {"layer_height": "0.2", "first_layer_height": "0.2", "nozzle_diameter": "0.4",
          "bridge_flow_ratio": "1", "thick_bridges": "1", "support_material_style": "grid",
          "support_material_synchronize_layers": "0", "z_offset": "0"}
+RECORDED_CASES = {
+    "0": {"support_plane_z_mm": 12., "model_z_mm": 12.2, "roles": ["Solid infill"], "heights_mm": [.2]},
+    "0.1": {"support_plane_z_mm": 11.7, "model_z_mm": 12.2, "roles": ["Bridge infill"], "heights_mm": [.4]},
+    "0.2": {"support_plane_z_mm": 11.6, "model_z_mm": 12.2, "roles": ["Bridge infill"], "heights_mm": [.4]},
+    "0.3": {"support_plane_z_mm": 11.5, "model_z_mm": 12.2, "roles": ["Bridge infill"], "heights_mm": [.4]},
+}
+
+
+class ReproductionMismatch(RuntimeError):
+    pass
+
+
+def verify_recorded_case(gap, report, model):
+    """A successful reproduction must match every recorded case, including zero."""
+    expected = RECORDED_CASES[gap]
+    checks = {"coverage_complete": report["coverage_complete"] is True,
+              "model_roles": model["roles"] == expected["roles"],
+              "model_height_metadata": model["height_metadata_mm"] == expected["heights_mm"]}
+    for key, observed, wanted in (
+        ("support_plane", report["known_selected_top_z_mm"], expected["support_plane_z_mm"]),
+        ("nominal_difference", report["nominal_plane_minus_top_mm"], 12 - expected["support_plane_z_mm"]),
+        ("model_plane", model["known_first_z_mm"], expected["model_z_mm"]),
+    ):
+        checks[key] = type(observed) in (int, float) and math.isfinite(observed) and math.isclose(
+            observed, wanted, rel_tol=0., abs_tol=1e-9)
+    if not all(checks.values()):
+        raise ReproductionMismatch(f"contact-{gap} failed recorded reproduction checks: " +
+                                   ", ".join(key for key, passed in checks.items() if not passed))
+    return checks
 
 
 def sha(path):
@@ -93,6 +122,8 @@ def resolved_settings(text):
 
 
 def reproduce(slicer, output):
+    if not __debug__:
+        raise RuntimeError("Reproduction requires Python assertions; do not use -O")
     output = Path(output).resolve()
     output.mkdir(parents=True, exist_ok=False)
     slicer = Path(slicer).resolve()
@@ -173,6 +204,15 @@ def reproduce(slicer, output):
         model = {"known_first_z_mm": report["known_first_model_plane_at_or_above_nominal_z_mm"],
                  "roles": sorted({e["role"] for e in model_witnesses}),
                  "height_metadata_mm": sorted({e["height_metadata_mm"] for e in model_witnesses})}
+        try:
+            reproduction_checks = verify_recorded_case(gap, report, model)
+        except ReproductionMismatch as error:
+            write(output / "failure.json", {"outcome": "reproduction_failed", "case": f"contact-{gap}",
+                  "reason": str(error), "expected": RECORDED_CASES[gap],
+                  "observed_support_plane_z_mm": report["known_selected_top_z_mm"],
+                  "observed_model_plane": model, "gcode_sha256": before,
+                  "report_sha256": sha(case / "plane-report.json")})
+            raise
         prediction = next((v for v in plan["conditional_predictions"] if D(str(v["configured_gap_mm"])) == D(gap)), None)
         conditions_verified = (model["known_first_z_mm"] == 12.2
                                and model["roles"] == ["Bridge infill"]
@@ -185,11 +225,13 @@ def reproduce(slicer, output):
             "resolved_fixed_settings": {k: resolved[k] for k in FIXED},
             "conditional_prediction_conditions_verified": conditions_verified if prediction is not None else None,
             "conditional_prediction_matches": prediction_matches,
+            "recorded_reproduction_checks": reproduction_checks,
             "gcode_sha256": before, "gcode_before_after_equal": True,
             "report_sha256": sha(case / "plane-report.json")})
     assert binary_digest == sha(slicer), "binary hash changed during this run"
     result = {"experiment": plan["name"], "base_commit": BASE_COMMIT, "observations": observations,
               "independent_raw_audit_passed": True, "physical_air_gap_measured": False,
+              "recorded_reproduction_passed": True,
               "profile_settings_identical_except_contact_distance": True,
               "physical_validation": "not_performed",
               "note": "Configured contact distance and the nominal CAD-to-command-plane difference need not be equal; zero is a separate slicing regime."}

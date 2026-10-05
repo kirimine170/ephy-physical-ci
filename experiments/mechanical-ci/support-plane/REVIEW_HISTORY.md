@@ -8,3 +8,5 @@
 - 単純な `model Z−HEIGHT−support Z` を実物のair gapと呼ぶ案は採用していません．名目CAD下面とsupport指令面の差だけを主量として残します．
 - run-003の独立raw再監査でも，4条件の全最高support行・最初のmodel行集合，固定profile差，解決設定，28個のmanifest対象bytesが一致しました．full原本29filesをarchiveへ収録しています．
 - repo全体の実験testで，公開済みE2E auditorをimportすると，その履歴artifact directoryにPython bytecode cacheが生成され，厳密なartifact一覧検査が失敗しました．定義の読込みをbytecodeを生成しない `runpy.run_path` に変更し，directory不変の回帰testを追加しました．計算方式・窓・設定は変更せず，run-004へ再生成し，独立raw再監査も全成功しました．
+- PR reviewのP1指摘により，測定方式が一致していても固定実験の期待値に一致しない実行を成功終了させないよう修正しました．全4条件のsupport面・model role/HEIGHT・coverageを必須gateとし，設定0も明示検査します．意図的にraw G-codeのsupport面を12.1へ変え，両auditorがその値に一致しても，失敗recordを保存して成功summaryを出さない回帰testを追加しました．期待値・窓・slice設定は変更していません．
+- run-005で4実sliceを再生成し，全条件の必須gateと独立raw監査が成功しました．別の独立process検証でも，contact0.2のsupport Z11.6→11.65とcontact0のmodel role変更が，それぞれexit1・failure.json・成功summaryなしになりました．

@@ -17,6 +17,8 @@
 
 非ゼロ3条件の事前予測は，中央のthick bridgeが print Z12.2・height0.4という条件で，support指令面が `12.2−0.4−設定値` になるというものです．原本のrole・HEIGHT・解決済み設定で条件を確認し，結果が一致しました．設定値そのものが，この名目距離や実物の隙間と等しいわけではありません．
 
+独立raw監査の一致は，測定方法同士の整合を示します．再現成功には，さらに表の4条件すべてのsupport面・名目距離・model面・role・HEIGHTと完全なcoverageが一致することを必須とします．設定0もsupport Z12.0，model Z12.2 / Solid infill / HEIGHT0.2を検査します．記録した条件からの逸脱を検出した場合は `failure.json` に期待値・観測値・失敗条件を残して非ゼロ終了し，成功の `summary.json` を出しません．数値比較の1e−9 mmは計算の再現閾値であり，実物精度ではありません．
+
 ## 範囲と定義
 
 `audit.py` は，明示した機械座標系の水平CAD面と閉XY矩形を受け取ります．正の移動吐出を持つ，平面内の `Support material` / `Support material interface` 中心線が矩形と交わる場合だけ選びます．線幅を加えて窓を広げず，両端が窓外でも横切る線分を選びます．既知の最高Zとsource行を保存し，coverageが完全な場合のみCAD面との差を返します．負の差もそのまま残します．支持材が観測されなければ距離は null です．
@@ -36,6 +38,7 @@ G-codeとplane JSONはそれぞれ1回読み取った同じbyte bufferをhash化
 - `oracles/slicer-study-plan.json` は新slice前の固定窓・面・設定・条件付き予測です．結果に合わせて窓や予測を動かしていません．
 - `evidence.zip` は4条件のraw G-code，合成STL，profile，hash付き入力，full reports，provenance，manifestを含みます．絶対pathを含み得るlocal slicer logは除外しています．`summary.json` は同じarchive内のsummaryのbyte単位コピーです．
 - 独立raw監査は別のDecimal modal parserと線分交差方式で，最高supportと最初のmodel planeのsource行集合，profile差，解決設定，manifestのhashを照合します．
+- 現archiveに対応するraw監査は `oracles/independent-run-005.json` です．run-004のrecordは前revisionの履歴として残しています．`verify_failure_child.py` / `independent-failure-result.json` は，support面の逸脱と設定0のmodel role逸脱を別processで注入し，非ゼロ終了・成功summary不在を確認した記録です．placeholder binaryは実行しません．
 
 ## 再現
 
