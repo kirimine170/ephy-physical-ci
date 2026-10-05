@@ -5,6 +5,8 @@ This extracts intended paths, not deposited material geometry or strength.
 import collections
 import math
 import re
+from fractions import Fraction
+import sys
 
 from . import UNIMPLEMENTED_GATES, __version__
 from .errors import InputError
@@ -12,6 +14,22 @@ from .errors import InputError
 TOKEN = re.compile(r"([A-Z])([-+]?(?:\d+(?:\.\d*)?|\.\d+))")
 ALLOWED_M = {"M73", "M82", "M83", "M84", "M104", "M106", "M107", "M109", "M140", "M190", "M201", "M203", "M204", "M205", "M220", "M300", "M400"}
 UNSUPPORTED_G = {"G2", "G3", "G10", "G11", "G20", "G28", "G30", "G53", "G54", "G55", "G56", "G57", "G58", "G59", "G90.1", "G91", "G91.1", "G92.1"}
+MAX_E_TOKEN_CHARS = 4096
+MAX_FLOAT = Fraction(sys.float_info.max)
+
+
+def bounded_extrusion(value, label):
+    """Retain existing finite-report range while keeping exact internal E debt."""
+    if abs(value) > MAX_FLOAT:
+        raise InputError(f"{label} arithmetic overflow")
+    return value
+
+
+def reported_extrusion(value):
+    result = float(bounded_extrusion(value, "extrusion"))
+    if value != 0 and result == 0:
+        raise InputError("nonzero extrusion is below float report precision")
+    return result
 
 
 def extract(text, *, stationary_events=None):
@@ -20,13 +38,13 @@ def extract(text, *, stationary_events=None):
     absolute_e = None
     role, width, height = "Unknown", None, None
     segments, z_planes = [], set()
-    retract_debt = stationary_extrusion = 0.
+    retract_debt = stationary_extrusion = Fraction(0)
 
     def record_stationary(line, deposited):
         if stationary_events is not None:
             stationary_events.append({"line": line, "role": role,
                                       "position_mm": [position[k] for k in "XYZ"],
-                                      "filament_delta_mm": deposited,
+                                      "filament_delta_mm": reported_extrusion(deposited),
                                       "width_mm": width, "height_mm": height})
 
     for line_number, raw in enumerate(text.splitlines(), 1):
@@ -81,6 +99,13 @@ def extract(text, *, stationary_events=None):
         args = {key: float(value) for key, value in tokens}
         if any(key not in "XYZEF" for key in args) or not all(math.isfinite(v) for v in args.values()):
             raise InputError(f"unsupported/nonfinite coordinate at line {line_number}")
+        if "E" in args:
+            token = next(value for key, value in tokens if key == "E")
+            if len(token) > MAX_E_TOKEN_CHARS:
+                raise InputError(f"E token exceeds {MAX_E_TOKEN_CHARS} characters at line {line_number}")
+            # Build from the original decimal spelling, never from a rounded float.
+            # Fraction avoids both binary cancellation and Decimal context rounding.
+            args["E"] = bounded_extrusion(Fraction(token), "extrusion")
         if not units_mm or not absolute_xyz:
             raise InputError("G21 and G90 must precede coordinate commands")
         if "E" in args and absolute_e is None:
@@ -94,27 +119,24 @@ def extract(text, *, stationary_events=None):
         position.update({key: value for key, value in args.items() if key in "XYZ"})
         if "E" in args and absolute_e and previous["E"] is None:
             raise InputError("absolute extrusion requires an explicit G92 E baseline")
-        de = ((args["E"] - previous["E"]) if absolute_e else args["E"]) if "E" in args else 0.
-        if not math.isfinite(de):
-            raise InputError("extrusion arithmetic overflow")
+        de = ((args["E"] - previous["E"]) if absolute_e else args["E"]) if "E" in args else Fraction(0)
+        bounded_extrusion(de, "extrusion")
         if previous["E"] is not None:
             position["E"] = previous["E"] + de
-            if not math.isfinite(position["E"]):
-                raise InputError("extrusion arithmetic overflow")
+            bounded_extrusion(position["E"], "extrusion")
         if de <= 0:
             retract_debt -= de
-            if not math.isfinite(retract_debt):
-                raise InputError("retraction arithmetic overflow")
+            bounded_extrusion(retract_debt, "retraction")
             continue
         recovered = min(retract_debt, de)
         retract_debt -= recovered
         deposited = de - recovered
         if deposited <= 0:
             continue
+        deposit_report = reported_extrusion(deposited)
         if not any(k in args for k in "XYZ"):
             stationary_extrusion += deposited
-            if not math.isfinite(stationary_extrusion):
-                raise InputError("stationary extrusion arithmetic overflow")
+            bounded_extrusion(stationary_extrusion, "stationary extrusion")
             record_stationary(line_number, deposited)
             continue
         if any(previous[k] is None or position[k] is None for k in "XYZ"):
@@ -124,15 +146,17 @@ def extract(text, *, stationary_events=None):
             raise InputError("coordinate arithmetic overflow")
         if distance == 0:
             stationary_extrusion += deposited
-            if not math.isfinite(stationary_extrusion):
-                raise InputError("stationary extrusion arithmetic overflow")
+            bounded_extrusion(stationary_extrusion, "stationary extrusion")
             record_stationary(line_number, deposited)
             continue
         # A mixed unretract/extrude move is partitioned assuming uniform E per distance.
-        start = [previous[k] + (position[k]-previous[k])*recovered/de for k in "XYZ"]
+        recovery_fraction = float(recovered / de)
+        start = [previous[k] + (position[k]-previous[k])*recovery_fraction for k in "XYZ"]
         end = [position[k] for k in "XYZ"]
+        if start == end:
+            raise InputError("moving extrusion is below coordinate report precision")
         segments.append({"line": line_number, "role": role, "from_mm": start, "to_mm": end,
-                         "length_mm": math.dist(start,end), "filament_delta_mm": deposited,
+                         "length_mm": math.dist(start,end), "filament_delta_mm": deposit_report,
                          "width_mm": width, "height_mm": height,
                          "xy_heading_deg": math.degrees(math.atan2(end[1]-start[1],end[0]-start[0]))})
     if not segments and not stationary_events:
@@ -150,7 +174,7 @@ def extract(text, *, stationary_events=None):
                "segments_by_role": dict(counts), "length_mm_by_role": dict(lengths),
                "z_planes_mm": sorted(z_planes), "unique_z_planes": len(z_planes),
                "width_range_mm": [min(widths),max(widths)] if widths else None,
-               "segments_with_incomplete_metadata": missing, "stationary_extrusion_mm": stationary_extrusion,
+               "segments_with_incomplete_metadata": missing, "stationary_extrusion_mm": reported_extrusion(stationary_extrusion),
                "physical_validation": "not_performed", "unimplemented_gates": dict(UNIMPLEMENTED_GATES),
                "limits": ["Intended extrusion paths are not material volume, bonding, or strength.",
                           "Support paths do not prove support removal or post-removal function.",
