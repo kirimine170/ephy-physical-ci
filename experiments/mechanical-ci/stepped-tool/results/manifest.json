@@ -1,0 +1,18 @@
+{
+  "original-2.5.json": "3f40900cf154d88431534676d05c6aa4e558267d8299a60e89ef49c1969ac9b1",
+  "original-2.5.report.json": "03a4073c090c92ac9d675e8841738224b00e21b54422f96a462679f048855789",
+  "original-3.json": "164bb3c6c1623c91ac182fb131389891896a44fa907209c2178731ce67938f20",
+  "original-3.report.json": "79daf37b0e400157589ffd95e7294778224c2b0e4862dcf8e8ea267b288e28d5",
+  "original-4.json": "818c2b5ba59de6c776812ed157a78f1442f04b6f44ab8b7d2f3e69c6be7051ff",
+  "original-4.report.json": "7531a1db74a42e3886cbeaf86a31e1cb707c48e91ba278e3c329262b795c6e96",
+  "original.step": "43e5f42fc7fbd1e1e1f217689aeb91099e30d3bb8b330e8029a322a67e90c82c",
+  "preregistered.json": "8961b708dc2fe6a202ac97064db118074601d62b689a53fa83dee55b366388e1",
+  "rigid_transform-2.5.json": "ef433dfc6e39387890583a7d8cd76bca69f7f97e38acf821184c2398c3d32b99",
+  "rigid_transform-2.5.report.json": "b73d16d193c380f7db4b6fe551809f753426ea0f3bf87996057aee8884cd7954",
+  "rigid_transform-3.json": "e626a2db25d1e1f9defb852002e32e0aad0b42f5b9458d1a9240f25296f518ff",
+  "rigid_transform-3.report.json": "16e6ad45eb19fbc5f289a0e45348b144a4328be0785ffbe6aea6461216557428",
+  "rigid_transform-4.json": "2f0c062a5dd1a0fcf91545fa159576942051c07945107b6fd42bd5f86686dc6f",
+  "rigid_transform-4.report.json": "200c4aea6e7afca8e34e4f1be491bcafae771d864cd8169397e3a7636819bec5",
+  "rigid_transform.step": "1b664e654ba7798878eecadabc6d1cef6f514b59072237afb6743e9c90c3f64d",
+  "summary.json": "ef58fb3c00656cc6485ed444617378b7f41f5e6b0ffe495b0ab62a55e5db26c8"
+}
