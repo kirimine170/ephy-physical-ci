@@ -1,0 +1,87 @@
+{
+  "scope": "Handwritten geometry-only centerline-plane audit oracles. No bead surface, contact, removability, or force oracle. No printer execution.",
+  "window": {
+    "frame": "gcode_machine_coordinates",
+    "units": "mm",
+    "xy_min": [
+      0,
+      0
+    ],
+    "xy_max": [
+      10,
+      10
+    ],
+    "nominal_plane_z_mm": 12,
+    "boundary": "closed"
+  },
+  "cases": {
+    "crossing_and_outside": {
+      "gcode_file": "crossing_and_outside.gcode",
+      "sha256": "53b4d0b41bce982a118e6272e31cec8e95ad0c7e31a7e029e8104a5b815dae54",
+      "expected": {
+        "known_selected_top_z_mm": 11.8,
+        "nominal_plane_minus_top_mm": 0.2,
+        "coverage_complete": true,
+        "note": "Both endpoints of selected segment are outside window. Higher lines are outside. Width is not used for centerline selection."
+      }
+    },
+    "above_nominal_plane": {
+      "gcode_file": "above_nominal_plane.gcode",
+      "sha256": "d23908b9f24d4a7887d578078d843d0f844e111fad7b040619fe60272eaab4c2",
+      "expected": {
+        "known_selected_top_z_mm": 12.2,
+        "nominal_plane_minus_top_mm": -0.2,
+        "coverage_complete": true
+      }
+    },
+    "closed_boundary": {
+      "gcode_file": "closed_boundary.gcode",
+      "sha256": "67e60b37ad457c4e99978f91e2e2ec80b032fccf6bb63bc92c2564ba5a8a8dbf",
+      "expected": {
+        "known_selected_top_z_mm": 11.5,
+        "nominal_plane_minus_top_mm": 0.5,
+        "coverage_complete": true,
+        "note": "Closed XY window includes touching endpoint."
+      }
+    },
+    "no_support": {
+      "gcode_file": "no_support.gcode",
+      "sha256": "2d2cacf31edb5b6b170992614e660da7a9e38fc0fe0a619b15db51bdac6d60a2",
+      "expected": {
+        "known_selected_top_z_mm": null,
+        "nominal_plane_minus_top_mm": null,
+        "coverage_complete": true,
+        "state": "no_support_observed"
+      }
+    },
+    "unknown_role": {
+      "gcode_file": "unknown_role.gcode",
+      "sha256": "b86f0cb6524086e6ee7c6d142127ecbd31d7185c24486f923eca870f74e37fb7",
+      "expected": {
+        "known_selected_top_z_mm": 11.8,
+        "nominal_plane_minus_top_mm": null,
+        "coverage_complete": false,
+        "note": "Known observation remains, definitive maximum and separation withheld."
+      }
+    },
+    "nonplanar_support": {
+      "gcode_file": "nonplanar_support.gcode",
+      "sha256": "05d05b0f58fe69ab45773a210e9bb6f18f61e26d3c2ca48b439da124561ef72e",
+      "expected": {
+        "known_selected_top_z_mm": 11.8,
+        "nominal_plane_minus_top_mm": null,
+        "coverage_complete": false
+      }
+    },
+    "unlocalized_stationary_deposition": {
+      "gcode_file": "unlocalized_stationary_deposition.gcode",
+      "sha256": "41e6151ecc6f741f9eef3ea651519214d4a3384ba326c7859fc4c48a46287114",
+      "expected": {
+        "known_selected_top_z_mm": 11.8,
+        "nominal_plane_minus_top_mm": null,
+        "coverage_complete": false,
+        "note": "Conservative until parser supplies tested location and role provenance."
+      }
+    }
+  }
+}
