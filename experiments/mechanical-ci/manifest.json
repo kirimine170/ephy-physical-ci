@@ -233,7 +233,7 @@
     },
     {
       "path": "support-plane/README.md",
-      "sha256": "f42d693d6e0f892bb1046e32fa5bc6e3346cbc2acd872c7a36f34244fd18adc5"
+      "sha256": "c276be2196b33789226d4d7accfce6f1e2ab407b8f54f7b9f2f44deacb8ba502"
     },
     {
       "path": "support-plane/REVIEW_HISTORY.md",
@@ -321,11 +321,15 @@
     },
     {
       "path": "tests/test_support_plane.py",
-      "sha256": "c42f2ec5f432f2de56dd022d9750fdbe4afc7d731ff1598822ae05e4af653788"
+      "sha256": "3fe61df27576037f68a16e872158d7949c25edd17076cf4940b451083ddb47a4"
     },
     {
       "path": "support-plane/parser-compatibility.json",
       "sha256": "f90319bfdce5cca8478ac1f8ddf186949be11a46c46aab56ec5add868c698bd0"
+    },
+    {
+      "path": "support-plane/slicer-compatibility.json",
+      "sha256": "f32d052bfc91c54f5e08c0c376c8dd9808ecbc76b853ecaaf48a34254ba1bf4d"
     }
   ]
 }
