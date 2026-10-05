@@ -52,7 +52,8 @@
       "entrypoint": "support-plane/audit.py",
       "records": [
         "support-plane/summary.json",
-        "support-plane/oracles/independent-run-004.json"
+        "support-plane/oracles/independent-run-005.json",
+        "support-plane/oracles/independent-failure-result.json"
       ],
       "execution": "pass",
       "scope": "Nominal command-plane observations in one fixed window; not physical air gap or removal force",
@@ -232,11 +233,11 @@
     },
     {
       "path": "support-plane/README.md",
-      "sha256": "34d9e599124b0f3cdf71e98656d67798fe90da5c1bd83a17b8f205d2407eab1e"
+      "sha256": "8a9691ee877cd5f5554c46c92ab04584b54ecc289c6a8692b41e6b65e8372772"
     },
     {
       "path": "support-plane/REVIEW_HISTORY.md",
-      "sha256": "a6e0a7e8c389f6c47949fdf9cd8dc70310e1407b12a19750f10023f66d8a7459"
+      "sha256": "a640cf1b1d7a26ca9a98f5aff8f28bb18666e9dce7b9a83f7d473b0a7287bc75"
     },
     {
       "path": "support-plane/audit.py",
@@ -244,7 +245,7 @@
     },
     {
       "path": "support-plane/evidence.zip",
-      "sha256": "1dae1cf754408c3293d0a68ae5b34542aa53b78f02019e2d507f27b149326198"
+      "sha256": "761f1cca3b69c13473d5d5ffe1c5d597d83c30517e93ac97d994c2d147ec234b"
     },
     {
       "path": "support-plane/oracles/above_nominal_plane.gcode",
@@ -259,12 +260,20 @@
       "sha256": "53b4d0b41bce982a118e6272e31cec8e95ad0c7e31a7e029e8104a5b815dae54"
     },
     {
+      "path": "support-plane/oracles/independent-failure-result.json",
+      "sha256": "8e9b5d4d148606a1599d01ca66aa3a4b0cb42d274a37b606f4918d18151b738f"
+    },
+    {
       "path": "support-plane/oracles/independent-result.json",
       "sha256": "422da009f363580da8393abaf7b7d8ae29d818e17b97bf5f382e36917c1286d0"
     },
     {
       "path": "support-plane/oracles/independent-run-004.json",
       "sha256": "30238173d97f82ff47dcb07049449f43ad90ad0dfe6fc25f0f8a5bee257bb068"
+    },
+    {
+      "path": "support-plane/oracles/independent-run-005.json",
+      "sha256": "3634932fa89e27a2551b7a9c14cf99c5ab166aa643a765159bf91f3b6de3c613"
     },
     {
       "path": "support-plane/oracles/no_support.gcode",
@@ -291,6 +300,10 @@
       "sha256": "41e6151ecc6f741f9eef3ea651519214d4a3384ba326c7859fc4c48a46287114"
     },
     {
+      "path": "support-plane/oracles/verify_failure_child.py",
+      "sha256": "ab0779f7caeeccbf916f5fddafbb90182fc6097ac679f7a6fbaf62e378a048db"
+    },
+    {
       "path": "support-plane/oracles/verify_implementation.py",
       "sha256": "e056f0f6aaf6ee0745cfdcad59a5e5e86d003a3ebbc7dc633f92b108fa01829e"
     },
@@ -300,15 +313,15 @@
     },
     {
       "path": "support-plane/reproduce.py",
-      "sha256": "803e4785b57e40be1a6d7a54997a4a09794408052396cae7f8f28e327c252bb7"
+      "sha256": "356b15c92d325301071bede0b96cbca04ededc31a7d443b810a7d19abd8a3155"
     },
     {
       "path": "support-plane/summary.json",
-      "sha256": "b4608bfe584808b0b506d08edf08ea72d95d2a49503b249e83ef7ec589c773f3"
+      "sha256": "0bf5c8861889f08907641c448e921fa20966a5bb4ca6387a6f7fac73945bce8e"
     },
     {
       "path": "tests/test_support_plane.py",
-      "sha256": "3c14f36f6c8f2a5f371e020682a7aaae866038d597b61d6d13ca0b5034ee5503"
+      "sha256": "64955b6dceb4a5f2caa78f5038dbe410f2b789f87c540f05d893626f9d764cd9"
     }
   ]
 }
