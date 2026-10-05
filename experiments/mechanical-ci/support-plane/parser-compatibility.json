@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "historical_archive_sha256": "761f1cca3b69c13473d5d5ffe1c5d597d83c30517e93ac97d994c2d147ec234b",
+  "source_path": "tools/mechanical-ci/src/physical_ci/gcode.py",
+  "recorded_source_sha256": "ff64f756a42a91451188ab14c9ef07667f1545eb0011cc2167d976607d10e8bb",
+  "compatible_source_sha256": "40c19a9bf96ffe7ba987601480b7612efa9e96b8a626be0880ad8a676313a8ad",
+  "scope": "The archived run-005 source and provenance remain unchanged. The exact-E parser revision replays all four raw plane reports byte-equivalently as JSON objects in test_all_four_raw_inputs_replay_full_audit. This is compatibility of these recorded reports, not a claim that the archived slicer run used the new parser.",
+  "required_replay_cases": [
+    "0",
+    "0.1",
+    "0.2",
+    "0.3"
+  ]
+}

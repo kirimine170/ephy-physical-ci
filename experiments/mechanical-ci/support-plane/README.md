@@ -29,6 +29,8 @@
 
 G-codeとplane JSONはそれぞれ1回読み取った同じbyte bufferをhash化・解析します．元のlive pathがその後も不変であるという証明ではありません．また，既存parserの限定方言・浮動小数点演算に依存します．既知の極小E underflow制限を製品側で修正したものではありません．任意のG-code方言全体を検証したとは扱いません．
 
+記録されたrun-005 archiveとprovenanceは，旧E parserを使った当時の原本として保持しています．その後の厳密な有理数E bookkeepingへの修正は `parser-compatibility.json` で旧source hash，新source hash，archive hashを明示して結び付け，4条件すべてのraw入力から完全なplane reportを再計算して一致を必須にしています．過去の実行が新parserを使ったという意味ではありません．現在のE underflow拒否と適用範囲は製品CLIのlimitations文書を参照してください．
+
 吐出指令ZやHEIGHTは，物理的なbead表面の測定値ではありません．特にbridge HEIGHTから物理下面を作り，supportとの接触やair gapを算出することはしません．造形不良，熱変形，材料異方性，支持材の付着，除去破損，保持力，実際の除去成功は未検証です．今回のprofileは公開済みの合成解析用profileであり，ユーザーの実機用profileではありません．
 
 ## 独立oracleと原本

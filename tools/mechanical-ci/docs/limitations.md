@@ -15,6 +15,8 @@
 - 造形移動の前にXYZを確立します．G92によるXYZ offset，relative XYZ，arc，複数tool，volumetric E，flow override，未知のM commandなどは拒否します
 - 座標tokenは空白で区切った10進表記のみです．packed commandや指数表記は対象外です
 - retractの回復量を押出から除きます．同一移動内の回復/押出は距離に比例すると仮定して分割します
+- Eのbaseline，差分，retract debtは，入力10進tokenから作る厳密な有理数で管理します．G92 Eのresetでも未回復debtを維持し，絶対Eの丸め差から偽の微小primeを作りません．epsilonで微小な正の押出を消す処理は行いません
+- E tokenは最大4096文字，Eの絶対値と内部累積は有限floatの範囲内です．出力はJSONのfloatへ変換するため，正の押出量が0へunderflowする場合や，mixed unretractの移動区間が端点へ丸め潰れる場合は入力エラーにします．XYZ，線幅，層高，経路の座標演算全体を厳密化したものではありません
 - stationary primeは線分と分けて数えます
 - 幅/層高/役割が不足する線分はunknownとして数え，補完しません
 - 解析fileは最大64 MiBです．これは汎用のfirmware interpreterやsecurity sandboxではありません

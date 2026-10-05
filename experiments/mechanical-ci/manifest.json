@@ -233,7 +233,7 @@
     },
     {
       "path": "support-plane/README.md",
-      "sha256": "8a9691ee877cd5f5554c46c92ab04584b54ecc289c6a8692b41e6b65e8372772"
+      "sha256": "f42d693d6e0f892bb1046e32fa5bc6e3346cbc2acd872c7a36f34244fd18adc5"
     },
     {
       "path": "support-plane/REVIEW_HISTORY.md",
@@ -321,7 +321,11 @@
     },
     {
       "path": "tests/test_support_plane.py",
-      "sha256": "64955b6dceb4a5f2caa78f5038dbe410f2b789f87c540f05d893626f9d764cd9"
+      "sha256": "c42f2ec5f432f2de56dd022d9750fdbe4afc7d731ff1598822ae05e4af653788"
+    },
+    {
+      "path": "support-plane/parser-compatibility.json",
+      "sha256": "f90319bfdce5cca8478ac1f8ddf186949be11a46c46aab56ec5add868c698bd0"
     }
   ]
 }
