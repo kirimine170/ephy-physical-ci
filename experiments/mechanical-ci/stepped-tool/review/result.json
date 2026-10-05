@@ -1,0 +1,246 @@
+{
+  "reviewed_screen_sha256": "790a8bf318f6a3c177a9448c868a3753e37034a552d7150c40ed69f0abcb0e05",
+  "review_script_sha256": "88fde145f10aeb3ae32aabdf440413076370398bb24fbdc84ebbb25fbc626791",
+  "cadquery": "2.7.0",
+  "OCP": "7.8.1.1",
+  "all_19_controls_passed": true,
+  "controls": [
+    {
+      "kind": "rounded_backset_rejected",
+      "motion": {
+        "tip_mm": [
+          -1e+16,
+          -1e+16,
+          0
+        ],
+        "axis": [
+          1,
+          0,
+          0
+        ],
+        "travel_mm": 2
+      },
+      "reason": "initial component backset disagrees with the declared relative displacement"
+    },
+    {
+      "kind": "rounded_backset_rejected",
+      "motion": {
+        "tip_mm": [
+          -1e+16,
+          -1e+16,
+          0
+        ],
+        "axis": [
+          0.6,
+          0.8,
+          0
+        ],
+        "travel_mm": 2
+      },
+      "reason": "initial component backset disagrees with the declared relative displacement"
+    },
+    {
+      "kind": "rounded_backset_rejected",
+      "motion": {
+        "tip_mm": [
+          1e+16,
+          1e+16,
+          0
+        ],
+        "axis": [
+          1,
+          0,
+          0
+        ],
+        "travel_mm": 2
+      },
+      "reason": "initial component backset disagrees with the declared relative displacement"
+    },
+    {
+      "kind": "rounded_backset_rejected",
+      "motion": {
+        "tip_mm": [
+          1e+16,
+          1e+16,
+          0
+        ],
+        "axis": [
+          0.6,
+          0.8,
+          0
+        ],
+        "travel_mm": 2
+      },
+      "reason": "initial component backset disagrees with the declared relative displacement"
+    },
+    {
+      "kind": "rotated_translated_bore",
+      "rotation_Y_deg": 37,
+      "translation_mm": [
+        8,
+        -3,
+        5
+      ],
+      "travel_mm": 2.5,
+      "component_order_reversed": false,
+      "expected": "model_clear",
+      "outcome": "model_clear",
+      "minimum_distance_mm": 0.49999999999782285,
+      "rear_overlap_mm3": 0.0,
+      "rear_overlap_oracle_mm3": 0
+    },
+    {
+      "kind": "rotated_translated_bore",
+      "rotation_Y_deg": 37,
+      "translation_mm": [
+        8,
+        -3,
+        5
+      ],
+      "travel_mm": 2.5,
+      "component_order_reversed": true,
+      "expected": "model_clear",
+      "outcome": "model_clear",
+      "minimum_distance_mm": 0.49999999999782285,
+      "rear_overlap_mm3": 0.0,
+      "rear_overlap_oracle_mm3": 0
+    },
+    {
+      "kind": "rotated_translated_bore",
+      "rotation_Y_deg": 37,
+      "translation_mm": [
+        8,
+        -3,
+        5
+      ],
+      "travel_mm": 3,
+      "component_order_reversed": false,
+      "expected": "indeterminate",
+      "outcome": "indeterminate",
+      "minimum_distance_mm": null,
+      "rear_overlap_mm3": 0.0,
+      "rear_overlap_oracle_mm3": 0
+    },
+    {
+      "kind": "rotated_translated_bore",
+      "rotation_Y_deg": 37,
+      "translation_mm": [
+        8,
+        -3,
+        5
+      ],
+      "travel_mm": 3,
+      "component_order_reversed": true,
+      "expected": "indeterminate",
+      "outcome": "indeterminate",
+      "minimum_distance_mm": null,
+      "rear_overlap_mm3": 0.0,
+      "rear_overlap_oracle_mm3": 0
+    },
+    {
+      "kind": "rotated_translated_bore",
+      "rotation_Y_deg": 37,
+      "translation_mm": [
+        8,
+        -3,
+        5
+      ],
+      "travel_mm": 4,
+      "component_order_reversed": false,
+      "expected": "interference",
+      "outcome": "interference",
+      "minimum_distance_mm": 0.0,
+      "rear_overlap_mm3": 8.639379797417899,
+      "rear_overlap_oracle_mm3": 8.63937979737193
+    },
+    {
+      "kind": "rotated_translated_bore",
+      "rotation_Y_deg": 37,
+      "translation_mm": [
+        8,
+        -3,
+        5
+      ],
+      "travel_mm": 4,
+      "component_order_reversed": true,
+      "expected": "interference",
+      "outcome": "interference",
+      "minimum_distance_mm": 0.0,
+      "rear_overlap_mm3": 8.639379797417899,
+      "rear_overlap_oracle_mm3": 8.63937979737193
+    },
+    {
+      "kind": "aggregation_mock",
+      "inputs": [
+        "model_clear",
+        "model_clear"
+      ],
+      "outcome": "model_clear"
+    },
+    {
+      "kind": "aggregation_mock",
+      "inputs": [
+        "model_clear",
+        "interference"
+      ],
+      "outcome": "interference"
+    },
+    {
+      "kind": "aggregation_mock",
+      "inputs": [
+        "model_clear",
+        "indeterminate"
+      ],
+      "outcome": "indeterminate"
+    },
+    {
+      "kind": "aggregation_mock",
+      "inputs": [
+        "interference",
+        "model_clear"
+      ],
+      "outcome": "interference"
+    },
+    {
+      "kind": "aggregation_mock",
+      "inputs": [
+        "interference",
+        "interference"
+      ],
+      "outcome": "interference"
+    },
+    {
+      "kind": "aggregation_mock",
+      "inputs": [
+        "interference",
+        "indeterminate"
+      ],
+      "outcome": "interference"
+    },
+    {
+      "kind": "aggregation_mock",
+      "inputs": [
+        "indeterminate",
+        "model_clear"
+      ],
+      "outcome": "indeterminate"
+    },
+    {
+      "kind": "aggregation_mock",
+      "inputs": [
+        "indeterminate",
+        "interference"
+      ],
+      "outcome": "interference"
+    },
+    {
+      "kind": "aggregation_mock",
+      "inputs": [
+        "indeterminate",
+        "indeterminate"
+      ],
+      "outcome": "indeterminate"
+    }
+  ],
+  "limits": "Synthetic nominal geometry and aggregation only; no physical force/removal validation."
+}
