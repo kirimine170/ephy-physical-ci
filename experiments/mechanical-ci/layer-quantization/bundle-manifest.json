@@ -1,0 +1,38 @@
+{
+  "README.md": {
+    "bytes": 4578,
+    "sha256": "0efef7714f4f0cfee78a77d53a988089afc1e66f3070d0ebef0e7f8225a3bcfb"
+  },
+  "REVIEW_HISTORY.md": {
+    "bytes": 1876,
+    "sha256": "3a39aaa95813ab370e2f3fdab63399c98eeebb7ba19cf8505a9ac5b4a17604ae"
+  },
+  "audit.py": {
+    "bytes": 7050,
+    "sha256": "389071c69460d81a354aade73e1b7ed8a584610b2e6467b1a35463a423f42eea"
+  },
+  "cases.json": {
+    "bytes": 323,
+    "sha256": "2e7519a7d181b8d114376097c73c750ccfcece7f7a5ce7052d20cb3c3dde13f9"
+  },
+  "data-manifest.json": {
+    "bytes": 6515,
+    "sha256": "a053e74683cc07291499472bc2690ca53651ebd9d62e5d06df4cbd2003aaba4d"
+  },
+  "evidence.zip": {
+    "bytes": 652260,
+    "sha256": "69d2e05e88e7548474c44952f5bebc470a7f2b9e90fa6ace27b8eaa2d286b6a7"
+  },
+  "preregistered-plan.json": {
+    "bytes": 897,
+    "sha256": "5e924cee1c1d0600239653105ce7888975ebeb7d90ce83053740a63c49447f3b"
+  },
+  "reproduce.py": {
+    "bytes": 3547,
+    "sha256": "751ef727d67b5ac5e62205963f2ded12efb811475c9c51945992c9dbc49926f9"
+  },
+  "summary.json": {
+    "bytes": 22836,
+    "sha256": "372ec469e446d5cfddf936a06a0111c244e733571c4968250db5487d6276aa29"
+  }
+}

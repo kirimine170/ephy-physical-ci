@@ -59,6 +59,22 @@
       "scope": "Nominal command-plane observations in one fixed window; not physical air gap or removal force",
       "physical_retention": "unknown",
       "material_calibration": "not_applicable_command_geometry"
+    },
+    {
+      "id": "layer-quantization",
+      "input_scope": "original_synthetic_fixture",
+      "input_source": "layer-quantization/reproduce.py",
+      "entrypoint": "layer-quantization/audit.py",
+      "records": [
+        "layer-quantization/summary.json",
+        "layer-quantization/data-manifest.json",
+        "layer-quantization/evidence.zip"
+      ],
+      "execution": "recorded_raw_audit_pass",
+      "scope": "Ten synthetic cuboids under one fixed A1 mini PLA 0.4 mm nozzle / 0.2 mm layer profile; command geometry only",
+      "physical_retention": "unknown",
+      "physical_dimensional_accuracy": "not_measured",
+      "material_calibration": "unknown"
     }
   ],
   "integration": {
@@ -68,16 +84,12 @@
   },
   "artifacts": [
     {
-      "path": "README.md",
-      "sha256": "7e8f0991f642575d542c9b7983ef259e5f1b4de563c662a4a222f48f8d36139b"
-    },
-    {
-      "path": "lessons.md",
-      "sha256": "3d10208470b9df9148946d0488cda52a74f5b639e1c5f71db1b1796e267b4593"
-    },
-    {
       "path": ".gitignore",
       "sha256": "5620d9359b40dd8946f577edc73533006fd7ebe6b289b85570dcfeb893ecb089"
+    },
+    {
+      "path": "README.md",
+      "sha256": "9586c765bf6c4041070c1e0208f07dcb704be1d3bc9cb218d69369941be91915"
     },
     {
       "path": "escape-search/README.md",
@@ -96,12 +108,12 @@
       "sha256": "304cae42fdd24ed11db9f8411f38157517bc0e0c69c3837626677b2306c5433a"
     },
     {
-      "path": "escape-search/results/open.json",
-      "sha256": "66c8dd72df2d9cf6b6f0c05c0fba43b8f228b1b2233825c6bde9742f58e9db39"
-    },
-    {
       "path": "escape-search/results/closed.json",
       "sha256": "4bab169c6e705f63ee8cb8c9fe6bd01e7275fd28cd5556db50e7e3cc6a2fdbe2"
+    },
+    {
+      "path": "escape-search/results/open.json",
+      "sha256": "66c8dd72df2d9cf6b6f0c05c0fba43b8f228b1b2233825c6bde9742f58e9db39"
     },
     {
       "path": "escape-search/tests/test_experiment.py",
@@ -132,8 +144,48 @@
       "sha256": "74d75ba646d4fce55bba3c8ee08f52cf2943284bd3ec9a1437f27dd26d916e3e"
     },
     {
-      "path": "tests/test_manifest.py",
-      "sha256": "8f05060f323b72ba7f5129cbf383f3f2ed05991f7f4c67b820de4215b36338cd"
+      "path": "layer-quantization/README.md",
+      "sha256": "0efef7714f4f0cfee78a77d53a988089afc1e66f3070d0ebef0e7f8225a3bcfb"
+    },
+    {
+      "path": "layer-quantization/REVIEW_HISTORY.md",
+      "sha256": "3a39aaa95813ab370e2f3fdab63399c98eeebb7ba19cf8505a9ac5b4a17604ae"
+    },
+    {
+      "path": "layer-quantization/audit.py",
+      "sha256": "389071c69460d81a354aade73e1b7ed8a584610b2e6467b1a35463a423f42eea"
+    },
+    {
+      "path": "layer-quantization/bundle-manifest.json",
+      "sha256": "b50859df9909349297fb86e537e44fc8a320aee1cee7767f0b09bd822ec27f94"
+    },
+    {
+      "path": "layer-quantization/cases.json",
+      "sha256": "2e7519a7d181b8d114376097c73c750ccfcece7f7a5ce7052d20cb3c3dde13f9"
+    },
+    {
+      "path": "layer-quantization/data-manifest.json",
+      "sha256": "a053e74683cc07291499472bc2690ca53651ebd9d62e5d06df4cbd2003aaba4d"
+    },
+    {
+      "path": "layer-quantization/evidence.zip",
+      "sha256": "69d2e05e88e7548474c44952f5bebc470a7f2b9e90fa6ace27b8eaa2d286b6a7"
+    },
+    {
+      "path": "layer-quantization/preregistered-plan.json",
+      "sha256": "5e924cee1c1d0600239653105ce7888975ebeb7d90ce83053740a63c49447f3b"
+    },
+    {
+      "path": "layer-quantization/reproduce.py",
+      "sha256": "751ef727d67b5ac5e62205963f2ded12efb811475c9c51945992c9dbc49926f9"
+    },
+    {
+      "path": "layer-quantization/summary.json",
+      "sha256": "372ec469e446d5cfddf936a06a0111c244e733571c4968250db5487d6276aa29"
+    },
+    {
+      "path": "lessons.md",
+      "sha256": "3d10208470b9df9148946d0488cda52a74f5b639e1c5f71db1b1796e267b4593"
     },
     {
       "path": "stepped-tool/README.md",
@@ -228,10 +280,6 @@
       "sha256": "790a8bf318f6a3c177a9448c868a3753e37034a552d7150c40ed69f0abcb0e05"
     },
     {
-      "path": "tests/test_stepped_tool.py",
-      "sha256": "2f3d2b75b88edc62cd72a0eb286f7f6c5da810bc00cc9e6f84fa771528e4c941"
-    },
-    {
       "path": "support-plane/README.md",
       "sha256": "c276be2196b33789226d4d7accfce6f1e2ab407b8f54f7b9f2f44deacb8ba502"
     },
@@ -312,24 +360,36 @@
       "sha256": "9f13c98d1db88c2ce2e4c2c0a60171f9c9777ea1afd2c0b3469db6842b32f030"
     },
     {
+      "path": "support-plane/parser-compatibility.json",
+      "sha256": "f90319bfdce5cca8478ac1f8ddf186949be11a46c46aab56ec5add868c698bd0"
+    },
+    {
       "path": "support-plane/reproduce.py",
       "sha256": "356b15c92d325301071bede0b96cbca04ededc31a7d443b810a7d19abd8a3155"
+    },
+    {
+      "path": "support-plane/slicer-compatibility.json",
+      "sha256": "f32d052bfc91c54f5e08c0c376c8dd9808ecbc76b853ecaaf48a34254ba1bf4d"
     },
     {
       "path": "support-plane/summary.json",
       "sha256": "0bf5c8861889f08907641c448e921fa20966a5bb4ca6387a6f7fac73945bce8e"
     },
     {
+      "path": "tests/test_layer_quantization.py",
+      "sha256": "970a043471b55351bde78597aac4f47a618bea40a9b8f698c3af14f7a1cc0141"
+    },
+    {
+      "path": "tests/test_manifest.py",
+      "sha256": "8f05060f323b72ba7f5129cbf383f3f2ed05991f7f4c67b820de4215b36338cd"
+    },
+    {
+      "path": "tests/test_stepped_tool.py",
+      "sha256": "2f3d2b75b88edc62cd72a0eb286f7f6c5da810bc00cc9e6f84fa771528e4c941"
+    },
+    {
       "path": "tests/test_support_plane.py",
       "sha256": "3fe61df27576037f68a16e872158d7949c25edd17076cf4940b451083ddb47a4"
-    },
-    {
-      "path": "support-plane/parser-compatibility.json",
-      "sha256": "f90319bfdce5cca8478ac1f8ddf186949be11a46c46aab56ec5add868c698bd0"
-    },
-    {
-      "path": "support-plane/slicer-compatibility.json",
-      "sha256": "f32d052bfc91c54f5e08c0c376c8dd9808ecbc76b853ecaaf48a34254ba1bf4d"
     }
   ]
 }
