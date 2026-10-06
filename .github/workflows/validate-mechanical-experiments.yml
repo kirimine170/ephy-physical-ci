@@ -34,7 +34,7 @@ jobs:
         run: >-
           python -m unittest discover
           -s experiments/mechanical-ci/frame-compliance/tests -v
-      - name: Verify recorded artifact hashes and scope
+      - name: Verify artifact hashes, layer raw replay, and scope
         run: >-
           python -m unittest discover
           -s experiments/mechanical-ci/tests -v
