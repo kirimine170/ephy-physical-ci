@@ -222,14 +222,15 @@ class LengthInspectionTests(unittest.TestCase):
 
     def test_nonregular_evidence_rejected_without_opening(self):
         original_stat = Path.stat
+        evidence = self.evidence.resolve()  # Windows temp paths may use an 8.3 alias.
         for mode in (stat.S_IFIFO, stat.S_IFCHR, stat.S_IFSOCK, stat.S_IFDIR):
             def evidence_stat(path, *args, **kwargs):
-                if path == self.evidence:
+                if path == evidence:
                     return SimpleNamespace(st_mode=mode)
                 return original_stat(path, *args, **kwargs)
             with self.subTest(mode=mode), patch.object(Path, "stat", evidence_stat), patch("physical_ci.inspection.os.open", wraps=os.open) as opened:
                 self.assert_input_error()
-                self.assertFalse(any(Path(call.args[0]) == self.evidence for call in opened.call_args_list))
+                self.assertFalse(any(Path(call.args[0]) == evidence for call in opened.call_args_list))
 
     def test_opened_descriptor_checked_and_closed_before_reading(self):
         self.save()
