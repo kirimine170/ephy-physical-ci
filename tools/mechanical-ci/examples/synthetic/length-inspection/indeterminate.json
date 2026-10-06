@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "sample_id": "synthetic-coupon-001",
+  "design_job_ref": "synthetic-design-001",
+  "manufacturing_job_ref": "synthetic-print-001",
+  "feature_id": "length-A",
+  "requirement_revision": "r1",
+  "unit": "mm",
+  "process_state": "after_support_removal",
+  "measurement_method": "caliper_length",
+  "value": 10,
+  "source_kind": "synthetic",
+  "uncertainty": {
+    "status": "unevaluated",
+    "reason": "Synthetic unknown uncertainty; no evaluation was performed"
+  },
+  "evidence_refs": [
+    {
+      "path": "synthetic-observation.txt",
+      "sha256": "be34b01563efe080b3454f77e61a149639f8efb1b1fdf4c559ffbe1b2ebea6ba"
+    }
+  ]
+}

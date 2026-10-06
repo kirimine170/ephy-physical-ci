@@ -8,6 +8,7 @@ from . import __version__
 from .errors import BackendError, InputError
 from .gcode import extract
 from .geometry import check_path
+from .inspection import error_report, inspect_length
 from .manifest import load_manifest, sha256
 from .slicer import run_slicer
 from .support import load_regions, screen_support
@@ -49,6 +50,11 @@ def parser():
     sub = command.add_subparsers(dest="command", required=True)
     validate = sub.add_parser("validate", help="validate manifest and artifact hashes")
     validate.add_argument("manifest")
+    inspection = sub.add_parser("inspect-length", help="judge one human-recorded length against independent requirements")
+    inspection.add_argument("subject", help="expected sample and design/manufacturing job bindings")
+    inspection.add_argument("--requirement", help="independent versioned length requirement JSON")
+    inspection.add_argument("--measurement", help="human measurement JSON with uncertainty and evidence refs")
+    inspection.add_argument("--output", required=True)
     path = sub.add_parser("check-path", help="sample one translation path against frozen STEP")
     path.add_argument("manifest")
     path.add_argument("--output", required=True)
@@ -74,6 +80,20 @@ def parser():
 def main(argv=None):
     args = parser().parse_args(argv)
     try:
+        if args.command == "inspect-length":
+            protected = [p for p in (args.subject, args.requirement, args.measurement) if p]
+            ensure_output(args.output, protected)
+            result, protected = inspect_length(args.subject, args.requirement, args.measurement)
+            write_json(args.output, result, protected)
+            print(json.dumps(result, allow_nan=False))
+            qualifier = "Synthetic fixture: " if result["synthetic"] else "Recorded length: "
+            print(f"{qualifier}{result['judgment']} ({result['reason']}); execution {result['execution_status']}.", file=sys.stderr)
+            if result["requirement"] and result["measurement"]:
+                requirement, measurement = result["requirement"], result["measurement"]
+                bounds = requirement["tolerance"]
+                print(f"Value {measurement['value']} {requirement['unit']}; closed bounds [{bounds['lower']}, {bounds['upper']}]; "
+                      f"policy {requirement['judgment_policy']['name']}; uncertainty {measurement['uncertainty']['status']}.", file=sys.stderr)
+            return 0
         if args.command == "screen-tool":
             ensure_output(args.output, [args.manifest])
             spec, source, digest = load_tool_spec(args.manifest)
@@ -145,11 +165,23 @@ def main(argv=None):
         print(json.dumps({"extrusion_segments": result["extrusion_segments"], "printer_ready": False}))
         return 0
     except InputError as error:
+        if args.command == "inspect-length":
+            print(json.dumps(error_report(getattr(error, "reason_code", "invalid_input"))))
         print(f"input error: {error}", file=sys.stderr)
         return 2
     except (BackendError, OSError, UnicodeError) as error:
+        if args.command == "inspect-length":
+            print(json.dumps(error_report("execution_error")))
         print(f"execution error: {error}", file=sys.stderr)
         return 1
+    except (ValueError, RuntimeError) as error:
+        if args.command != "inspect-length":
+            raise
+        # pathlib may raise these for embedded NULs or symlink loops, including
+        # in the existing output/input-alias preflight before input loading.
+        print(json.dumps(error_report("invalid_input")))
+        print("input error: invalid inspection filesystem path", file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":

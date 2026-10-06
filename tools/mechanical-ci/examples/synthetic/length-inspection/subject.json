@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "sample_id": "synthetic-coupon-001",
+  "design_job_ref": "synthetic-design-001",
+  "manufacturing_job_ref": "synthetic-print-001"
+}

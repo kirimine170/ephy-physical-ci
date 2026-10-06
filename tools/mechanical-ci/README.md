@@ -1,5 +1,12 @@
 # Mechanical CI CLI prototype
 
+`inspect-length` judges one human-recorded length against an independent,
+revision-bound requirement, explicit inclusive tolerance, and named uncertainty
+decision policy. It checks sample/job/feature/unit/process/method bindings and
+hash-bound evidence, separating execution status from physical judgment.
+See [Measured length inspection v1](docs/length-inspection-v1.md) for complete
+synthetic pass/fail/indeterminate examples, schemas, exit meanings, and limits.
+
 `screen-tool` screens a nominal flat-end cylinder's entire straight axial sweep
 against one frozen, hash-bound single-solid STEP obstacle. It reports
 `model_clear`, `interference`, or `indeterminate` from intersection volume and

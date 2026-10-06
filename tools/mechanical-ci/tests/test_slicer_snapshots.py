@@ -47,7 +47,7 @@ class InputSnapshotTests(unittest.TestCase):
         self.copied_paths = {"profile": Path(args[args.index("--load")+1]), "print_mesh": Path(args[-1])}
         self.backend_read = {k: p.read_bytes() for k, p in self.copied_paths.items()}
         self.generated = Path(args[args.index("--output")+1])
-        self.generated.write_text(GCODE)
+        self.generated.write_bytes(GCODE.encode("utf-8"))
         return subprocess.CompletedProcess(args, 0, "synthetic slice complete", "")
 
     def run_adapter(self, backend=None):
