@@ -150,7 +150,7 @@ class SpecAndSnapshotTests(unittest.TestCase):
         self.assertEqual(spec["sweep_from_mm"], [0, 0, -3])
         self.assertEqual(spec["sweep_to_mm"], [0, 0, 5])
         self.assertEqual(spec["sweep_length_mm"], 8)
-        self.assertEqual(source, self.step)
+        self.assertEqual(source, self.step.resolve())
         self.assertEqual(digest, sha256(self.manifest))
         self.data["tool"]["travel_mm"] = 0
         spec, _, _ = load_tool_spec(self.write())
