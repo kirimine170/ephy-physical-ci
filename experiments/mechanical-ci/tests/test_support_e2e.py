@@ -24,7 +24,7 @@ class SupportE2EEvidenceTests(unittest.TestCase):
             data = path.read_bytes()
             self.assertEqual(len(data), item["size_bytes"])
             self.assertEqual(hashlib.sha256(data).hexdigest(), item["sha256"], name)
-        self.assertEqual(seen, {str(p.relative_to(ROOT)) for p in ROOT.rglob("*")
+        self.assertEqual(seen, {p.relative_to(ROOT).as_posix() for p in ROOT.rglob("*")
                                if p.is_file() and p.name != "bundle-manifest.json"})
 
     def test_recorded_scope_and_preregistered_cases(self):

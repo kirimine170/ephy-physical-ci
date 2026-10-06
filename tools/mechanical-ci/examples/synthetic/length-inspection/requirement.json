@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "feature_id": "length-A",
+  "requirement_revision": "r1",
+  "unit": "mm",
+  "process_state": "after_support_removal",
+  "measurement_method": "caliper_length",
+  "tolerance": {
+    "lower": 9.9,
+    "upper": 10.1
+  },
+  "judgment_policy": {
+    "name": "interval_containment_v1",
+    "unevaluated_uncertainty": "indeterminate"
+  }
+}

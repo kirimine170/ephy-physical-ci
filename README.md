@@ -37,6 +37,10 @@ frozen-STEP translation checks and local slicing/toolpath extraction with
 synthetic regression fixtures．It does not validate physical strength or
 support removal．
 
+The CLI also supports [one measured-length inspection](tools/mechanical-ci/docs/length-inspection-v1.md)
+from a human JSON record against an independent, revision-bound requirement,
+with explicit uncertainty policy and separate execution/judgment results．
+
 ## Architecture
 
 Ansible declares the host baseline，accounts，directories，minimal USB access，
