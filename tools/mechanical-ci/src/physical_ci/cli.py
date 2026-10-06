@@ -174,6 +174,14 @@ def main(argv=None):
             print(json.dumps(error_report("execution_error")))
         print(f"execution error: {error}", file=sys.stderr)
         return 1
+    except (ValueError, RuntimeError) as error:
+        if args.command != "inspect-length":
+            raise
+        # pathlib may raise these for embedded NULs or symlink loops, including
+        # in the existing output/input-alias preflight before input loading.
+        print(json.dumps(error_report("invalid_input")))
+        print("input error: invalid inspection filesystem path", file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":

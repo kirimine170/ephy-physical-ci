@@ -5,6 +5,8 @@ Decimal JSON tokens are compared as exact rational numbers, without an epsilon.
 """
 import hashlib
 import json
+import os
+import stat
 from decimal import Decimal
 from fractions import Fraction
 from pathlib import Path, PurePosixPath
@@ -68,9 +70,37 @@ def reject_constant(token):
     raise InputError("nonfinite inspection JSON constant")
 
 
+def resolve_path(path, label):
+    try:
+        return Path(path).resolve()
+    except (ValueError, RuntimeError) as error:
+        raise InputError(f"invalid {label} path") from error
+
+
+def read_regular_bytes(path, limit, label):
+    """Reject devices/directories/FIFOs, including replacements before open.
+
+    POSIX nonblocking open prevents a replacement FIFO from blocking before
+    fstat can inspect the actual opened descriptor. Limits still bind reads.
+    """
+    source = resolve_path(path, label)
+    if not stat.S_ISREG(source.stat().st_mode):
+        raise InputError(f"{label} must be a regular file")
+    flags = os.O_RDONLY | getattr(os, "O_BINARY", 0) | getattr(os, "O_NONBLOCK", 0) | getattr(os, "O_NOFOLLOW", 0)
+    descriptor = os.open(source, flags)
+    try:
+        if not stat.S_ISREG(os.fstat(descriptor).st_mode):
+            raise InputError(f"{label} must be a regular file")
+        with os.fdopen(descriptor, "rb") as stream:
+            descriptor = None  # fdopen now owns and closes the descriptor.
+            return stream.read(limit + 1)
+    finally:
+        if descriptor is not None:
+            os.close(descriptor)
+
+
 def load_json(path):
-    with Path(path).open("rb") as stream:
-        raw = stream.read(MAX_JSON_BYTES + 1)
+    raw = read_regular_bytes(path, MAX_JSON_BYTES, "inspection JSON")
     if len(raw) > MAX_JSON_BYTES:
         raise InputError("inspection JSON exceeds 64 KiB")
     try:
@@ -145,7 +175,7 @@ def validate_measurement(data):
         keys(reference, ("path", "sha256"), label="evidence reference")
         name = text(reference["path"], "evidence path")
         relative = PurePosixPath(name)
-        if relative.is_absolute() or ".." in relative.parts or "\\" in name or ":" in name:
+        if relative.is_absolute() or ".." in relative.parts or "\\" in name or ":" in name or "\x00" in name:
             raise InputError("evidence path must be relative POSIX and stay in the measurement directory")
         digest = reference["sha256"]
         if not isinstance(digest, str) or len(digest) != 64 or any(c not in "0123456789abcdef" for c in digest):
@@ -154,17 +184,16 @@ def validate_measurement(data):
 
 def verify_evidence(measurement, measurement_path, protected):
     """Hash the bounded bytes read; a reference alone cannot establish evidence."""
-    root = Path(measurement_path).resolve().parent
+    root = resolve_path(measurement_path, "measurement JSON").parent
     digests = []
     missing = not measurement["evidence_refs"]
     for reference in measurement["evidence_refs"]:
-        source = (root / reference["path"]).resolve()
+        source = resolve_path(root / reference["path"], "evidence")
         if not source.is_relative_to(root):
             raise InputError("evidence path resolves outside the measurement directory")
         protected.append(source)
         try:
-            with source.open("rb") as stream:
-                raw = stream.read(MAX_EVIDENCE_BYTES + 1)
+            raw = read_regular_bytes(source, MAX_EVIDENCE_BYTES, "evidence")
         except FileNotFoundError:
             missing = True
             continue

@@ -86,9 +86,14 @@ exactly; no case folding or approximate identity match is performed. Job refs
 are identifiers, not an integration that fetches design/manufacturing systems.
 
 Every evidence ref contains `path` and lowercase `sha256` of an existing,
-nonempty local file. The path must be relative POSIX, stay inside the measurement
+nonempty regular local file. Directories, devices, sockets, and named pipes are
+rejected before reading. The opened descriptor is checked again; POSIX opens
+are nonblocking so a replacement FIFO cannot hang before that check. Inspection
+JSON inputs also require regular files. The path must be relative POSIX, stay inside the measurement
 directory after resolution, and contain no parent, backslash, drive, or stream
-syntax. Up to 16 refs and 64 MiB per file are supported. Evidence hashes are
+syntax. Up to 16 refs and 64 MiB per file are supported.
+Embedded NULs and symlink loops are structured input errors, including invalid
+JSON input/output filesystem paths. Evidence hashes are
 checked against the exact bounded bytes read; missing/empty evidence cannot
 pass. A wrong hash is an input error. No evidence is executed or transmitted.
 The operator must ensure the record and referenced bytes actually describe the
