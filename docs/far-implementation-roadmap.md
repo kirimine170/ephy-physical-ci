@@ -155,10 +155,11 @@ PrusaSlicer 2.9.2のsourceには，printが空またはvolume外の場合に `No
 | M3：監督付き印刷・後処理 | 一つのcouponのprint jobと試料ID，後処理記録 | 実機profileと送信G-code hashを照合．印刷終了と試料回収を確認．support除去前後を区別し，失敗と中断を保存 | 実機操作の許可，状態取得，bed冷却・取り外し手順 |
 | M4：実測feedbackの一往復 | 同じinterfaceの実測，要求比較，次候補parameter差分，再印刷の比較 | 独立要求を変更せず測定．変更parameterと根拠，旧新revision，同じmethod/process stateを対応付ける．改善しなかった結果も保存 | 計測器，校正/不確かさ，公差，実試料 |
 | M5：camera計測の追加 | 同一検査平面の一寸法に限定したOpenCV adapter | 独立既知長ゲージと人手値で視野内の誤差・bias・反復性・不確かさを確認．判定不能画像を拒否．ephy-cam観察bundleとは別出力 | camera/レンズ/焦点/解像度，距離，照明，治具，独立基準 |
-| M6：校正したFEM比較 | rack frame一荷重caseのmesh/solver deckと変位予測，現物比較 | mesh収束，荷重・反力/モーメント釣合い，支持/材料/接触感度を評価．実物との差を別に記録 | 実荷重・支持・締結，材料定数，配向，力–変位試験 |
+| M6a：frame試料の製造 | 共通interfaceの要求revisionを継承したframe CAD/STEP/STLと，M2/M3の検査・印刷・後処理手順で作った識別済みframe試料 | frameの幾何・feature/ROI・製造指令を改めて検査．frame試料IDへCAD/G-code hash，材料/lot，配向，profile，後処理を結合し，M4と同じ独立要求・methodでframe寸法を比較．couponの判定をframeへ転用しない | frame外形・printer envelope，公差・datum，実機製造の許可と条件，frame試料 |
+| M6b：校正したFEM比較 | M6aのframe revision・試料に対応する一荷重caseのmesh/solver deckと変位予測，同じ印刷条件の材料校正coupon，現物比較 | M6aの製造・寸法gateを満たした試料を使用．mesh収束，荷重・反力/モーメント釣合い，支持/材料/接触感度を評価．実物との差を別に記録 | 実荷重・支持・締結，材料定数，配向，力–変位試験 |
 | M7：robot/触覚による一操作 | 一coupon・一fixtureの保持→搬送→配置，後に取り外し/挿入 | 接触力/速度/可動範囲/停止を独立に制限し，落下・誤配置・過大接触・通信断を確認．失敗時は自動再開しない | robot/把持器/sensor，校正，作業域，力上限，停止系 |
 
-依存順はM0→M1/M2→M3→M4です．M5とM6はM4後の別枝として追加でき，FEMの導入を最初の寸法feedbackの必須条件にはしません．M7は機械・計測・停止の条件が揃ったときに限定操作から始めます．
+受入の依存順はM0→M1→M2→M3→M4です．M2の受入にはM1で確定したcouponとfeature ID・datum・revisionを使い，それらの変更後はM2のslice・ROI・toolpath結果を再生成・再検査します．M5とM6a→M6bはM4後の別枝として追加でき，FEMの導入を最初の寸法feedbackの必須条件にはしません．M6bのrack-frame比較はM6aのframe CADと製造履歴を持つ現物が揃うまでblockedとします．M7は機械・計測・停止の条件が揃ったときに限定操作から始めます．
 
 ### 最初の実測pilot
 
@@ -259,7 +260,7 @@ DIGIT論文は小物の実接触操作を報告していますが，ラックの
 | printerと材料 | M2/M3：型番/firmware/controller，build volume，ノズル径，材料/lot，bed，姿勢，実機profile，API可否 |
 | 計測 | M4：ノギス等の器具，校正/既知長，測定方法，実試料の識別，環境，不確かさ方針 |
 | camera/fixture | M5：実board・module・lens・ケーブルの型番/revision，焦点/解像度，検査距離，拡散照明，背景，平面治具，基準ゲージ |
-| 荷重・熱・電気 | M6/通電版：mass/重心，支持・ねじ締結，挿抜力，温度，放熱，電源・絶縁条件 |
+| frame製造・荷重・熱・電気 | M6a/M6b/通電版：要求に結合したframe CAD・製造条件・試料，mass/重心，支持・ねじ締結，挿抜力，温度，放熱，電源・絶縁条件 |
 | robotと触覚 | M7：robot/把持器，sensor，作業域，接触力・速度上限，停止・通信断・回収手順 |
 | integration | M0/M4以降：worker/runtimeのjob/result契約，private evidence保存先と保存方針，採用decisionのowner |
 
