@@ -38,6 +38,8 @@ ephy-camのbundleは常に `metrology_eligible=false`，`physical_validation=not
 
 既存XIAOの36 mm共通フットはadapter候補です．ラックの新しいrail規格や保持力の根拠には転用しません．フットの実測と，adapterの着座・脱落・熱条件を別に検証します．最初のCAD成果物は共通interfaceのcoupon，1U carrier，2U carrierの順とし，小さいcouponで公差を決めてからframe全体を印刷します．
 
+カメラadapterは実際のboard・camera module・lens・ケーブルの型番とrevisionを確認して設計します．[Seeedのofficial guide](https://wiki.seeedstudio.com/xiao_esp32s3_getting_started/)はOV2640から後続OV3660への変更とOV5640互換を説明しています．同じXIAO名やsoftware例の互換性から機械的な外形・lens位置・ケーブル条件の一致を推定しません．flexの曲げ半径や許容力はmanufacturer資料または現物試験を得てから決めます．
+
 ## 3．証拠を分けるarchitecture
 
 以下は将来の接続案です．現在のrepositoryにproduction scheduler，printer adapter，feedback writerはありません．
@@ -124,7 +126,7 @@ PrusaSlicer 2.9.2のsourceには，printが空またはvolume外の場合に `No
 
 初期判定は既存 `interval_containment_v1` を候補とします．供給された非負半幅 `u` に対し，`[x-u,x+u]` が独立公差 `[L,H]` 内ならpass，厳密に離れていればfail，境界と重なる場合や不確かさ未評価ならindeterminateです．これはprojectの数学的なdecision policyで，softwareがcoverage factorや確率を導いたものではありません．[NIST TN 1297](https://www.nist.gov/pml/nist-technical-note-1297/nist-tn-1297-6-expanded-uncertainty) の拡張不確かさを採用する場合は，評価方法・coverage factor・対象条件を別に明記します．
 
-画像計測は，校正に使っていない既知長ゲージを対象寸法範囲と複数の視野位置で測り，置き直し・照明変化への感度を評価してから使います．再投影誤差の小ささをmm精度と読み替えません．同一planeでない高さ差，遮蔽，輪郭不明，lens/焦点変更は再評価対象です．点群段階ではdatumから剛体姿勢を合わせ，scaleを自由にfitして寸法誤差を消さず，ROIごとの寸法・残差・欠測を報告します．
+画像計測の最初の構成は，固定した単一camera，拡散照明，寸法基準と対象が同一planeにある繰り返し設置可能なfixtureを提案します．校正に使っていない既知長ゲージを対象寸法範囲と複数の視野位置で測り，人手値と比較し，置き直し・照明変化への感度を評価してから使います．再投影誤差の小ささをmm精度と読み替えません．同一planeでない高さ差，遮蔽，輪郭不明，lens/焦点変更は再評価対象です．点群段階ではdatumから剛体姿勢を合わせ，scaleを自由にfitして寸法誤差を消さず，ROIごとの寸法・残差・欠測を報告します．
 
 ## 6．FEM・支持材・触覚を現物に接続する条件
 
@@ -160,7 +162,7 @@ DIGIT論文は小物の実接触操作を報告していますが，ラックの
 | 共通rack interface | M1：1U/2Uの高さ増分，幅/奥行き，rail/穴/締結，公差，datum，module交換の方法 |
 | printerと材料 | M2/M3：型番/firmware/controller，build volume，ノズル径，材料/lot，bed，姿勢，実機profile，API可否 |
 | 計測 | M4：ノギス等の器具，校正/既知長，測定方法，実試料の識別，環境，不確かさ方針 |
-| camera/fixture | M5：camera/レンズ/焦点/解像度，検査距離，照明，背景，平面治具，基準ゲージ |
+| camera/fixture | M5：実board・module・lens・ケーブルの型番/revision，焦点/解像度，検査距離，拡散照明，背景，平面治具，基準ゲージ |
 | 荷重・熱・電気 | M6/通電版：mass/重心，支持・ねじ締結，挿抜力，温度，放熱，電源・絶縁条件 |
 | robotと触覚 | M7：robot/把持器，sensor，作業域，接触力・速度上限，停止・通信断・回収手順 |
 | integration | M0/M4以降：worker/runtimeのjob/result契約，private evidence保存先と保存方針，採用decisionのowner |
