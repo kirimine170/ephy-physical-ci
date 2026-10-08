@@ -154,6 +154,10 @@ def main():
             'inputs':records,'samples':[]}
     if len(meshes)==2:
         result['samples']=[section_relation(*meshes,z,args.area_tolerance) for z in args.z]
-    args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n',encoding='utf-8')
+    payload = json.dumps(result,indent=2,allow_nan=False)+'\n'
+    # Exclusive creation is the final guard, including links raced into place
+    # after the earlier alias checks. Never truncate an existing destination.
+    with args.output.open('x', encoding='utf-8', newline='\n') as output:
+        output.write(payload)
 
 if __name__=='__main__':main()

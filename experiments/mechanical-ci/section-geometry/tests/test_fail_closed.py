@@ -13,7 +13,7 @@ import numpy as np
 import trimesh
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from section_geometry import load_mesh_bytes, mesh_audit, section_material, section_relation
+from section_geometry import load_mesh_bytes, main, mesh_audit, section_material, section_relation
 
 
 def ring(points):
@@ -163,6 +163,69 @@ class FailClosedTests(unittest.TestCase):
             self.assertEqual(report["inputs"][0]["sha256"], hashlib.sha256(raw).hexdigest())
             self.assertTrue(report["inputs"][0]["audit"]["edge_watertight"])
             self.assertIn("automatic cleanup disabled", report["mesh_processing"])
+
+    def test_existing_report_is_preserved(self):
+        raw = trimesh.creation.box().export(file_type="stl")
+        script = Path(__file__).resolve().parents[1] / "section_geometry.py"
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "box.stl"
+            output = Path(directory) / "report.json"
+            source.write_bytes(raw)
+            output.write_bytes(b"previous report")
+            result = subprocess.run(
+                [sys.executable, str(script), str(source), "--output", str(output)],
+                capture_output=True, text=True)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertEqual(output.read_bytes(), b"previous report")
+            self.assertEqual(source.read_bytes(), raw)
+
+    def test_raced_hardlink_and_concurrent_report_are_preserved(self):
+        import os
+        raw = trimesh.creation.box().export(file_type="stl")
+        for kind in ("hardlink", "report"):
+            with self.subTest(kind=kind), tempfile.TemporaryDirectory() as directory:
+                source = Path(directory) / "box.stl"
+                output = Path(directory) / "report.json"
+                source.write_bytes(raw)
+
+                def raced_loader(raw, file_type):
+                    mesh = load_mesh_bytes(raw, file_type)
+                    # The output did not exist during main's alias checks.
+                    if kind == "hardlink":
+                        os.link(source, output)
+                    else:
+                        output.write_bytes(b"concurrent report")
+                    return mesh
+
+                with patch.object(sys, "argv", ["section_geometry", str(source), "--output", str(output)]):
+                    with patch("section_geometry.load_mesh_bytes", side_effect=raced_loader):
+                        with self.assertRaises(FileExistsError):
+                            main()
+                self.assertEqual(source.read_bytes(), raw)
+                expected = raw if kind == "hardlink" else b"concurrent report"
+                self.assertEqual(output.read_bytes(), expected)
+
+    @unittest.skipIf(sys.platform == "win32", "Symlink privilege depends on Windows host policy")
+    def test_raced_symlink_to_source_is_preserved(self):
+        import os
+        raw = trimesh.creation.box().export(file_type="stl")
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "box.stl"
+            output = Path(directory) / "report.json"
+            source.write_bytes(raw)
+
+            def raced_loader(raw, file_type):
+                mesh = load_mesh_bytes(raw, file_type)
+                os.symlink(source, output)
+                return mesh
+
+            with patch.object(sys, "argv", ["section_geometry", str(source), "--output", str(output)]):
+                with patch("section_geometry.load_mesh_bytes", side_effect=raced_loader):
+                    with self.assertRaises(FileExistsError):
+                        main()
+            self.assertEqual(source.read_bytes(), raw)
+            self.assertTrue(output.is_symlink())
+            self.assertEqual(output.read_bytes(), raw)
 
 
 if __name__ == "__main__":

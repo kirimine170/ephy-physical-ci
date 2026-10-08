@@ -39,6 +39,8 @@ python section_geometry.py part_a.stl --second part_b.stl --z 2 --z 3 --output r
 
 出力は入力STLを上書きしない．組立変換は呼び出し側が事前に定義する．`separation=0`かつ`overlap_area=0`は接触を含み，正の隙間を保証しない．面積の許容値は数値検出の閾値であり，造形公差ではない．
 
+出力先は新規pathとし，JSONを完全に直列化してから排他的に作成する．既存ファイルやlink，入力alias確認後に別processが作成したlinkまたはreportも，上書きせず拒否する．raceの負例では確認後に入力へのhardlink・symlinkまたは別reportを置き，入力と競合出力が保持されることを確認する．
+
 各sampleは`area_tolerance`を入力単位の二乗で記録する．`overlap`は交差面積がこの閾値を超える状態であり，`at_or_below_area_tolerance_at_sample`は閾値以下の正の交差面積や接触を含み得る．状態名を無干渉判定に読み替えず，実測した交差面積と距離を一緒に確認する．
 
 ## リポジトリでの収録状態
