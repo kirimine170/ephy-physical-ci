@@ -1,4 +1,4 @@
-"""Read-only finite-section geometry helpers. No contact or dynamics solver.
+"""Read-only STL finite-section geometry helpers. No contact or dynamics solver.
 
 Requires numpy, scipy, trimesh, shapely and networkx. All units follow the input mesh.
 The caller owns assembly transforms; native STL coordinates are not assumed to
@@ -31,7 +31,9 @@ def load_mesh_bytes(raw, file_type):
     shared edges without moving coordinates or discarding faces. Trimesh's
     default cleanup is disabled so nonfinite input cannot silently disappear.
     """
-    mesh = trimesh.load(io.BytesIO(raw), file_type=file_type, force='mesh', process=False)
+    if not isinstance(file_type, str) or file_type.lower() != 'stl':
+        raise ValueError('Only STL input is supported; scene transforms are not interpreted')
+    mesh = trimesh.load(io.BytesIO(raw), file_type='stl', force='mesh', process=False)
     _validate_mesh(mesh)
     vertices, inverse = np.unique(mesh.vertices, axis=0, return_inverse=True)
     return trimesh.Trimesh(vertices=vertices, faces=inverse[mesh.faces], process=False)

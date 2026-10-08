@@ -94,11 +94,39 @@ class FailClosedTests(unittest.TestCase):
     def test_exact_welding_preserves_faces_and_coordinates(self):
         source = trimesh.creation.box()
         raw = source.export(file_type="stl")
-        mesh = load_mesh_bytes(raw, "stl")
-        self.assertEqual(len(mesh.faces), len(source.faces))
-        self.assertTrue(mesh.is_watertight)
-        np.testing.assert_array_equal(
-            np.unique(mesh.vertices, axis=0), np.unique(source.vertices, axis=0))
+        for file_type in ("stl", "STL"):
+            mesh = load_mesh_bytes(raw, file_type)
+            self.assertEqual(len(mesh.faces), len(source.faces))
+            self.assertTrue(mesh.is_watertight)
+            np.testing.assert_array_equal(
+                np.unique(mesh.vertices, axis=0), np.unique(source.vertices, axis=0))
+
+    def test_scene_and_other_formats_rejected_before_loading(self):
+        for file_type in ("glb", "gltf", "3mf", "obj", "ply", None):
+            with self.subTest(file_type=file_type):
+                with patch("section_geometry.trimesh.load") as loader:
+                    with self.assertRaisesRegex(ValueError, "Only STL input"):
+                        load_mesh_bytes(b"format must not be parsed", file_type)
+                    loader.assert_not_called()
+
+    def test_cli_rejects_transformed_scene_without_writing_report(self):
+        scene = trimesh.Scene(trimesh.creation.box())
+        transform = np.eye(4)
+        transform[:3, 3] = [4, 5, 6]
+        scene.apply_transform(transform)
+        raw = scene.export(file_type="glb")
+        script = Path(__file__).resolve().parents[1] / "section_geometry.py"
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "transformed.glb"
+            output = Path(directory) / "report.json"
+            source.write_bytes(raw)
+            result = subprocess.run(
+                [sys.executable, str(script), str(source), "--output", str(output)],
+                capture_output=True, text=True)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("Only STL input", result.stderr)
+            self.assertFalse(output.exists())
+            self.assertEqual(source.read_bytes(), raw)
 
     def test_cli_rejects_nonfinite_stl_instead_of_cleaning_it(self):
         valid = trimesh.creation.box().export(file_type="stl")

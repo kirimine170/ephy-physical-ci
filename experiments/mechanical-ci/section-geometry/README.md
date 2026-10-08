@@ -49,7 +49,9 @@ python -m unittest discover -s tests -v
 On Windows，activate `.venv/Scripts/Activate.ps1` instead．The tests require no
 external solver，slicer，printer，or network service．
 
-The audit command reads caller-owned mesh files and writes a JSON report:
+The audit command accepts caller-owned STL files and writes a JSON report．
+Other formats，including scene-bearing GLB/GLTF/3MF files，are rejected before
+mesh loading．Scene transforms and instance concatenation are not interpreted．
 
 ```sh
 python section_geometry.py part_a.stl --output audit.json
@@ -82,7 +84,8 @@ those inputs without judging a filled section．
 Regression coverage includes separated/overlapping/touching boxes，missing
 sections，invalid finite parameters，circle fits，collinear rejection，large
 translations，central-hole preservation，invalid/open mesh rejection，ambiguous
-rings，raw malformed STL bytes，exact-coordinate welding，and output protection．
+rings，raw malformed STL bytes，exact-coordinate welding，scene-format rejection，
+and output protection．
 Additional direct contour controls use a valid single-body mesh so rejection
 by the body-count guard cannot hide a missing ring check．CI explicitly
 discovers this experiment's nested
