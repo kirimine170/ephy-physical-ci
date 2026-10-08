@@ -41,6 +41,10 @@ The CLI also supports [one measured-length inspection](tools/mechanical-ci/docs/
 from a human JSON record against an independent, revision-bound requirement,
 with explicit uncertainty policy and separate execution/judgment results．
 
+The CLI adds [fabrication observations](docs/fabrication-observation-v1.md) bound
+to the existing sample/jobs and an independent part revision． Print conditions，
+support removal，and qualitative fit remain observations without a physical pass．
+
 ## Architecture
 
 Ansible declares the host baseline，accounts，directories，minimal USB access，

@@ -7,6 +7,7 @@ from pathlib import Path
 from . import __version__
 from .errors import BackendError, InputError
 from .gcode import extract
+from .fabrication import fabrication_error_report, record_fabrication
 from .geometry import check_path
 from .inspection import error_report, inspect_length
 from .manifest import load_manifest, sha256
@@ -55,6 +56,12 @@ def parser():
     inspection.add_argument("--requirement", help="independent versioned length requirement JSON")
     inspection.add_argument("--measurement", help="human measurement JSON with uncertainty and evidence refs")
     inspection.add_argument("--output", required=True)
+    fabrication = sub.add_parser("record-fabrication", allow_abbrev=False,
+                                 help="bind operator print, support-removal, and fit observations; no physical judgment")
+    fabrication.add_argument("subject", help="existing expected sample and job bindings")
+    fabrication.add_argument("--part", required=True, help="independent expected part/revision/artifact digest JSON")
+    fabrication.add_argument("--observation", required=True, help="versioned human or synthetic fabrication observation JSON")
+    fabrication.add_argument("--output", required=True)
     path = sub.add_parser("check-path", help="sample one translation path against frozen STEP")
     path.add_argument("manifest")
     path.add_argument("--output", required=True)
@@ -79,7 +86,18 @@ def parser():
 
 def main(argv=None):
     args = parser().parse_args(argv)
+    record_command = args.command in ("inspect-length", "record-fabrication")
+    report_error = fabrication_error_report if args.command == "record-fabrication" else error_report
     try:
+        if args.command == "record-fabrication":
+            protected = [args.subject, args.part, args.observation]
+            ensure_output(args.output, protected)
+            result, protected = record_fabrication(*protected)
+            write_json(args.output, result, protected)
+            print(json.dumps(result, allow_nan=False))
+            qualifier = "Synthetic fixture" if result["synthetic"] else "Declared operator observation"
+            print(f"{qualifier}: recorded; physical judgment not applicable.", file=sys.stderr)
+            return 0
         if args.command == "inspect-length":
             protected = [p for p in (args.subject, args.requirement, args.measurement) if p]
             ensure_output(args.output, protected)
@@ -165,21 +183,21 @@ def main(argv=None):
         print(json.dumps({"extrusion_segments": result["extrusion_segments"], "printer_ready": False}))
         return 0
     except InputError as error:
-        if args.command == "inspect-length":
-            print(json.dumps(error_report(getattr(error, "reason_code", "invalid_input"))))
+        if record_command:
+            print(json.dumps(report_error(getattr(error, "reason_code", "invalid_input"))))
         print(f"input error: {error}", file=sys.stderr)
         return 2
     except (BackendError, OSError, UnicodeError) as error:
-        if args.command == "inspect-length":
-            print(json.dumps(error_report("execution_error")))
+        if record_command:
+            print(json.dumps(report_error("execution_error")))
         print(f"execution error: {error}", file=sys.stderr)
         return 1
     except (ValueError, RuntimeError) as error:
-        if args.command != "inspect-length":
+        if not record_command:
             raise
         # pathlib may raise these for embedded NULs or symlink loops, including
         # in the existing output/input-alias preflight before input loading.
-        print(json.dumps(error_report("invalid_input")))
+        print(json.dumps(report_error("invalid_input")))
         print("input error: invalid inspection filesystem path", file=sys.stderr)
         return 2
 
