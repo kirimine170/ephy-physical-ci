@@ -76,11 +76,13 @@ separation together；the threshold-relative status is not a clearance judgment�
 
 ## Checks and limits
 
-Filled sections require one connected，edge-watertight，winding-consistent body
+Filled sections require one face-connected，edge-watertight，winding-consistent shell
 and valid closed rings．Open，degenerate，self-intersecting，crossing，touching，
 and duplicate rings are rejected rather than repaired into an ambiguous fill．
-Separate nested solids are rejected to avoid interpreting an independent solid
-as a cavity．Legitimate cavities represented by multiple disconnected shells
+Separate nested solids，including shells touching at only a vertex，are rejected
+to avoid interpreting an independent solid as a cavity．Connectivity uses shared
+edges between faces and includes every face without repair or filtering．
+Legitimate cavities represented by multiple disconnected shells
 are also outside this limited implementation．An edge audit can still report
 those inputs without judging a filled section．
 
@@ -90,7 +92,7 @@ translations，central-hole preservation，invalid/open mesh rejection，ambiguo
 rings，raw malformed STL bytes，exact-coordinate welding，scene-format rejection，
 and output protection against existing destinations and raced links/reports．
 Additional direct contour controls use a valid single-body mesh so rejection
-by the body-count guard cannot hide a missing ring check．CI explicitly
+by the face-connectivity guard cannot hide a missing ring check．CI explicitly
 discovers this experiment's nested
 test directory．Current test and CI outcomes must be assessed for the reviewed
 commit；the preserved authoring receipt does not establish them．

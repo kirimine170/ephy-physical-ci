@@ -58,8 +58,12 @@ def section_material(mesh, z):
     if not np.isfinite(z):
         raise ValueError('Finite section height required')
     _validate_mesh(mesh)
-    if mesh.body_count != 1:
-        raise ValueError('Section fill accepts one connected body only; split and qualify multiple solids explicitly')
+    # Vertex adjacency can join separate shells that touch at one vertex.
+    # Include every face, even isolated triangles, without split/repair filtering.
+    components = trimesh.graph.connected_components(
+        mesh.face_adjacency, nodes=np.arange(len(mesh.faces)), min_len=1)
+    if len(components) != 1:
+        raise ValueError('Section fill accepts one face-connected shell only; split and qualify multiple solids explicitly')
     if not mesh.is_watertight or not mesh.is_winding_consistent:
         raise ValueError('Section fill requires edge-watertight, winding-consistent input')
     section = mesh.section(plane_origin=[0, 0, float(z)], plane_normal=[0, 0, 1])

@@ -215,11 +215,11 @@
     },
     {
       "path": "section-geometry/ENGINEERING_FINDINGS.md",
-      "sha256": "eabc12dc65e39f5ac89e9649e1a7156f33d0fb5b547f0ef29f242e1e6a60e76a"
+      "sha256": "b44c3c9e16096cfe8de51830ea3a7bc1960fd9f2dfe01c601c763f0d05f7e9cf"
     },
     {
       "path": "section-geometry/README.md",
-      "sha256": "1a3c288d526f4b486f56c4c472716f2f57ba7965ab2b4de3391736fd6df9ad71"
+      "sha256": "8a2e675e09b25e69e9a4a50674dec2ab3e5a9c1b97fb6f1c188a75c6e01f17a5"
     },
     {
       "path": "section-geometry/requirements.txt",
@@ -227,7 +227,7 @@
     },
     {
       "path": "section-geometry/section_geometry.py",
-      "sha256": "cdfc57a54503294e5d456fc4c7e4f7f14812bffbdca43c606ca71fdc6638030d"
+      "sha256": "f84f900e61723a3a0163568459ba1925581f2fab0b897838ec5266d7271adc2e"
     },
     {
       "path": "section-geometry/test-results.txt",
@@ -235,7 +235,7 @@
     },
     {
       "path": "section-geometry/tests/test_fail_closed.py",
-      "sha256": "2035351aac4f9e495755d345ea7514e698a5f3eca4c83e2dd6857926e49e3734"
+      "sha256": "cac120ce266113f46cb6b07ffa6f20e9abcf8c9599b1b1aca6ee6588f32014be"
     },
     {
       "path": "section-geometry/tests/test_section_geometry.py",

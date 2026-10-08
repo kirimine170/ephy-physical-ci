@@ -23,7 +23,53 @@ def ring(points):
 SQUARE = ring([(0, 0), (2, 0), (2, 2), (0, 2), (0, 0)])
 
 
+def vertex_touching_nested_stl():
+    outer = trimesh.creation.box(extents=[4, 4, 4])
+    inner = trimesh.creation.box(extents=[2, 2, 2])
+    corner = np.all(inner.vertices == [1, 1, 1], axis=1)
+    inner.vertices[corner] = [2, 2, 2]
+    return trimesh.util.concatenate([outer, inner]).export(file_type="stl")
+
+
 class FailClosedTests(unittest.TestCase):
+    def test_vertex_touching_shells_are_rejected_despite_nested_sections(self):
+        from shapely.geometry import Polygon
+        mesh = load_mesh_bytes(vertex_touching_nested_stl(), "stl")
+        # Both shells remain closed and share a single welded vertex. The old
+        # vertex-connectivity guard accepted this as one body and inferred a hole.
+        self.assertEqual(mesh.body_count, 1)
+        self.assertTrue(mesh.is_watertight)
+        self.assertTrue(mesh.is_winding_consistent)
+        section = mesh.section(plane_origin=[0, 0, 0], plane_normal=[0, 0, 1])
+        self.assertTrue(section.is_closed)
+        polygons = [Polygon(points[:, :2]) for points in section.discrete]
+        self.assertEqual(len(polygons), 2)
+        self.assertTrue(all(polygon.is_valid and polygon.area > 0 for polygon in polygons))
+        outer, inner = sorted(polygons, key=lambda polygon: polygon.area, reverse=True)
+        self.assertTrue(outer.contains(inner))
+        self.assertFalse(outer.boundary.intersects(inner.boundary))
+        with self.assertRaisesRegex(ValueError, "one face-connected shell"):
+            section_material(mesh, 0)
+
+    def test_cli_rejects_vertex_touching_shells_without_a_report(self):
+        raw = vertex_touching_nested_stl()
+        probe = trimesh.creation.box(extents=[.25, .25, .25]).export(file_type="stl")
+        script = Path(__file__).resolve().parents[1] / "section_geometry.py"
+        with tempfile.TemporaryDirectory() as directory:
+            first = Path(directory) / "nested.stl"
+            second = Path(directory) / "probe.stl"
+            output = Path(directory) / "report.json"
+            first.write_bytes(raw)
+            second.write_bytes(probe)
+            result = subprocess.run(
+                [sys.executable, str(script), str(first), "--second", str(second),
+                 "--z", "0", "--output", str(output)], capture_output=True, text=True)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("one face-connected shell", result.stderr)
+            self.assertFalse(output.exists())
+            self.assertEqual(first.read_bytes(), raw)
+            self.assertEqual(second.read_bytes(), probe)
+
     def test_positive_overlap_below_or_at_tolerance_remains_explicit(self):
         first = trimesh.creation.box(extents=[2, 2, 2])
         second = first.copy()
@@ -57,7 +103,7 @@ class FailClosedTests(unittest.TestCase):
             self.material([ring([(0, 0), (2, 2), (0, 2), (2, 0), (0, 0)])])
 
     def test_crossing_touching_and_duplicate_rings_are_rejected(self):
-        # A valid single-body mesh reaches the contour checks; body_count
+        # A valid single-shell mesh reaches the contour checks; connectivity
         # cannot short-circuit these independent negative controls.
         for dx in (1, 2, 0):
             with self.subTest(dx=dx):
