@@ -13,7 +13,7 @@ import numpy as np
 import trimesh
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from section_geometry import load_mesh_bytes, mesh_audit, section_material
+from section_geometry import load_mesh_bytes, mesh_audit, section_material, section_relation
 
 
 def ring(points):
@@ -24,6 +24,18 @@ SQUARE = ring([(0, 0), (2, 0), (2, 2), (0, 2), (0, 0)])
 
 
 class FailClosedTests(unittest.TestCase):
+    def test_positive_overlap_below_or_at_tolerance_remains_explicit(self):
+        first = trimesh.creation.box(extents=[2, 2, 2])
+        second = first.copy()
+        second.apply_translation([1.75, 0, 0])
+        for tolerance in (1.0, 0.5):
+            with self.subTest(tolerance=tolerance):
+                result = section_relation(first, second, 0, tolerance)
+                self.assertAlmostEqual(result['overlap_area'], 0.5)
+                self.assertEqual(result['separation'], 0)
+                self.assertEqual(result['area_tolerance'], tolerance)
+                self.assertEqual(result['status'], 'at_or_below_area_tolerance_at_sample')
+
     def material(self, rings, closed=True):
         mesh = trimesh.creation.box()
         section = SimpleNamespace(is_closed=closed, discrete=rings)

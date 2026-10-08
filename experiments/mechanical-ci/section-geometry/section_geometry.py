@@ -98,10 +98,11 @@ def section_relation(a, b, z, area_tolerance=1e-8):
         raise ValueError('Finite z and nonnegative finite area tolerance required')
     pa, pb = section_material(a, z), section_material(b, z)
     if pa is None or pb is None:
-        return {'z': float(z), 'status': 'no_shared_section',
+        return {'z': float(z), 'area_tolerance': float(area_tolerance), 'status': 'no_shared_section',
                 'overlap_area': None, 'separation': None}
     overlap = float(pa.intersection(pb).area)
-    return {'z': float(z), 'status': 'overlap' if overlap > area_tolerance else 'no_positive_area_overlap_at_sample',
+    return {'z': float(z), 'area_tolerance': float(area_tolerance),
+            'status': 'overlap' if overlap > area_tolerance else 'at_or_below_area_tolerance_at_sample',
             'overlap_area': overlap, 'separation': float(pa.distance(pb))}
 
 

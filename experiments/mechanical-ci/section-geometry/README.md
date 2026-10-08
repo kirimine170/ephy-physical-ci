@@ -64,6 +64,10 @@ produces `no_shared_section` with null overlap and separation．It does not mean
 clearance or a passing result．Zero separation and zero overlap area can mean
 touching；a positive clearance requires a positive measured separation．The
 area tolerance is a numerical detection threshold，not a manufacturing tolerance．
+Each sample records `area_tolerance` in squared input units．`overlap` means
+the measured overlap exceeds that threshold；`at_or_below_area_tolerance_at_sample`
+can still include positive overlap and contact．Read the reported area and
+separation together；the threshold-relative status is not a clearance judgment．
 
 ## Checks and limits
 
