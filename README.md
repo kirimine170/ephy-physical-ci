@@ -105,6 +105,7 @@ raw training data，or model weights．See
 
 ## Documentation
 
+- [Full Automate Robotics implementation roadmap](docs/far-implementation-roadmap.md)
 - [Mechanical CLI prototype](tools/mechanical-ci/README.md)
 - [Mechanical research experiments](experiments/mechanical-ci/README.md)
 - [XIAO first-fit holders and tray](hardware/xiao-first-fit-v0.1/README.md)
