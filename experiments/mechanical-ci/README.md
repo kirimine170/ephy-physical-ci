@@ -9,6 +9,7 @@
 - [Stepped tool](stepped-tool/README.md): 同軸の先端と太い柄について，指定直進 sweep を同一STEPへ照合する合成実験
 - [Support plane](support-plane/README.md): 固定CAD下面と支持材の吐出指令Z面の名目距離について，contact設定を変えた実slice比較
 - [Layer quantization](layer-quantization/README.md): 固定BambuStudio profileでの合成10形状の層量子化とXY投影，保存raw証跡の再監査
+- [Finite-section geometry](section-geometry/README.md): 原著のmesh edge監査，有限高さの静的XY断面比較，円フィットと合成回帰test
 - [検証から得た知見](lessons.md): 何を調べても，どこから先は未確認のままか
 
 公開fixtureはこの実験用に作った単純形状です．製品CAD，写真，実機profile，実験時の私的path，製品固有の数値・raw dataを含みません．各実験の生成script，依存版，コマンド，合成結果と限界を一緒に置きます．
@@ -26,3 +27,5 @@
 各directoryのREADMEに実行方法があります．GitHub Actionsは合成STEP探索/再生とFEM deck/parser等の軽量testを実行します．Gmsh/CalculiXによる完全なFEM実行は外部実行ファイルを指定する別コマンドです．ローカルで実solverを使った結果と，CIで走るtestを混同しません．第三者binaryは同梱しません．
 
 Layer quantizationのCIは保存archiveの全memberの長さ・SHA-256と，隔離コピー上のraw audit/summary一致を検証します．BambuStudioの新規sliceや現物試験はCIに含みません．回帰testは公開証跡から新規作成したもので，失われた未公開testの復元ではありません．
+
+Finite-section geometryは独立したmoduleとして収録し，CIで専用の合成testを実行します．静的な断面の交差面積と距離を扱い，連続衝突，接触力，動力学，FEM，現物性能を判定しません．付属の`test-results.txt`は作成環境での15件の成功記録であり，リポジトリCIの成功を示す記録ではありません．公開可能な解析手順と未知入力は[方法・知見](section-geometry/ENGINEERING_FINDINGS.md)へまとめています．

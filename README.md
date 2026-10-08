@@ -41,6 +41,11 @@ The CLI also supports [one measured-length inspection](tools/mechanical-ci/docs/
 from a human JSON record against an independent, revision-bound requirement,
 with explicit uncertainty policy and separate execution/judgment results．
 
+A standalone [finite-section geometry experiment](experiments/mechanical-ci/section-geometry/README.md)
+adds mesh edge audits，static XY section comparisons，and circle fits with
+synthetic regressions．It does not establish continuous collision freedom or
+physical performance．
+
 ## Architecture
 
 Ansible declares the host baseline，accounts，directories，minimal USB access，
@@ -107,6 +112,7 @@ raw training data，or model weights．See
 
 - [Mechanical CLI prototype](tools/mechanical-ci/README.md)
 - [Mechanical research experiments](experiments/mechanical-ci/README.md)
+- [Finite-section geometry methods and findings](experiments/mechanical-ci/section-geometry/ENGINEERING_FINDINGS.md)
 - [XIAO first-fit holders and tray](hardware/xiao-first-fit-v0.1/README.md)
 - [Architecture](docs/architecture.md)
 - [Physical CI boundary](docs/physical-ci-boundary.md)

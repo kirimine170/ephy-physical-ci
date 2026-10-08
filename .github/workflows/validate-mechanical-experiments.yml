@@ -34,6 +34,14 @@ jobs:
         run: >-
           python -m unittest discover
           -s experiments/mechanical-ci/frame-compliance/tests -v
+      - name: Install finite-section experiment dependencies
+        run: >-
+          python -m pip install
+          -r experiments/mechanical-ci/section-geometry/requirements.txt
+      - name: Test finite static sections and invalid input rejection
+        run: >-
+          python -m unittest discover
+          -s experiments/mechanical-ci/section-geometry/tests -v
       - name: Verify artifact hashes, layer raw replay, and scope
         run: >-
           python -m unittest discover
