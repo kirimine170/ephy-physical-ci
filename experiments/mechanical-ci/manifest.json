@@ -75,6 +75,28 @@
       "physical_retention": "unknown",
       "physical_dimensional_accuracy": "not_measured",
       "material_calibration": "unknown"
+    },
+    {
+      "id": "section-geometry",
+      "input_scope": "original_synthetic_fixture",
+      "input_source": "section-geometry/tests/test_section_geometry.py",
+      "entrypoint": "section-geometry/section_geometry.py",
+      "records": [
+        "section-geometry/ENGINEERING_FINDINGS.md",
+        "section-geometry/candidate-manifest.json",
+        "section-geometry/test-results.txt"
+      ],
+      "execution": "see_current_commit_test_and_ci_results",
+      "scope": "Finite static XY section area/distance and vertex-circle fits; invalid/open/ambiguous input rejection",
+      "validation_scope": "finite_static_2d_geometry",
+      "continuous_collision": "not_proven",
+      "physical_validation": "not_performed",
+      "repository_cli_integration": "not_implemented",
+      "physical_retention": "unknown",
+      "material_calibration": "not_applicable_rigid_geometry",
+      "candidate_source_sha256": "0852e2777900b5a6d1d9d6d77e7d1d30e4f28a2c4e246f301dd3bfc35907a358",
+      "authoring_receipt": "section-geometry/test-results.txt",
+      "authoring_receipt_scope": "historical_authoring_environment_only"
     }
   ],
   "integration": {
@@ -88,20 +110,16 @@
       "sha256": "5620d9359b40dd8946f577edc73533006fd7ebe6b289b85570dcfeb893ecb089"
     },
     {
-      "path": "README.md",
-      "sha256": "9586c765bf6c4041070c1e0208f07dcb704be1d3bc9cb218d69369941be91915"
-    },
-    {
-      "path": "escape-search/README.md",
-      "sha256": "69dc7a2de84e0fe7a758b5f5f44a34178ea859e550e4f982ecd7ed0c194d5074"
-    },
-    {
       "path": "escape-search/build_fixtures.py",
       "sha256": "6139fc6c96cf0f1f438542a818af317b026a9fbf32333802184992cf390f620d"
     },
     {
       "path": "escape-search/experiment.py",
       "sha256": "02b25060dee01d946d30ec142a96a2415ebdc0b0bb916a1a2436014b097a925c"
+    },
+    {
+      "path": "escape-search/README.md",
+      "sha256": "69dc7a2de84e0fe7a758b5f5f44a34178ea859e550e4f982ecd7ed0c194d5074"
     },
     {
       "path": "escape-search/requirements.txt",
@@ -124,12 +142,12 @@
       "sha256": "18d3bc4f623aaf3cc8a774526ff29746d556c83cc38c774ca34f2b479c944175"
     },
     {
-      "path": "frame-compliance/README.md",
-      "sha256": "3f51552183787ad1c5c89e500caa73768ab6df2ed470226e432357813bf059c3"
-    },
-    {
       "path": "frame-compliance/compact_summary.json",
       "sha256": "93411f3bd2c81fcbff569eb213994a4329bb371f549dd1d2818c5911c903ee9d"
+    },
+    {
+      "path": "frame-compliance/README.md",
+      "sha256": "3f51552183787ad1c5c89e500caa73768ab6df2ed470226e432357813bf059c3"
     },
     {
       "path": "frame-compliance/requirements.txt",
@@ -142,14 +160,6 @@
     {
       "path": "frame-compliance/tests/test_experiment.py",
       "sha256": "74d75ba646d4fce55bba3c8ee08f52cf2943284bd3ec9a1437f27dd26d916e3e"
-    },
-    {
-      "path": "layer-quantization/README.md",
-      "sha256": "0efef7714f4f0cfee78a77d53a988089afc1e66f3070d0ebef0e7f8225a3bcfb"
-    },
-    {
-      "path": "layer-quantization/REVIEW_HISTORY.md",
-      "sha256": "3a39aaa95813ab370e2f3fdab63399c98eeebb7ba19cf8505a9ac5b4a17604ae"
     },
     {
       "path": "layer-quantization/audit.py",
@@ -176,8 +186,16 @@
       "sha256": "5e924cee1c1d0600239653105ce7888975ebeb7d90ce83053740a63c49447f3b"
     },
     {
+      "path": "layer-quantization/README.md",
+      "sha256": "0efef7714f4f0cfee78a77d53a988089afc1e66f3070d0ebef0e7f8225a3bcfb"
+    },
+    {
       "path": "layer-quantization/reproduce.py",
       "sha256": "751ef727d67b5ac5e62205963f2ded12efb811475c9c51945992c9dbc49926f9"
+    },
+    {
+      "path": "layer-quantization/REVIEW_HISTORY.md",
+      "sha256": "3a39aaa95813ab370e2f3fdab63399c98eeebb7ba19cf8505a9ac5b4a17604ae"
     },
     {
       "path": "layer-quantization/summary.json",
@@ -188,12 +206,44 @@
       "sha256": "3d10208470b9df9148946d0488cda52a74f5b639e1c5f71db1b1796e267b4593"
     },
     {
-      "path": "stepped-tool/README.md",
-      "sha256": "f1a9b5d7f8dfd617f0ee4b6d442dc9b276b6da1ccbd6c01866a56b8e3a55dbc8"
+      "path": "README.md",
+      "sha256": "de53f0ec4991bc4b26d730548deef9ed79fdf1f3bb6ea4aae557f3f3674d2259"
     },
     {
-      "path": "stepped-tool/REVIEW_HISTORY.md",
-      "sha256": "e0b46bac323c5a3566a9d35f68fa04df75d82d94d314e9b17687aa7f70e1c15b"
+      "path": "section-geometry/candidate-manifest.json",
+      "sha256": "9b4b5a4042293d938f7dfde1c9b80ae5be0a5b4fcd257f4efb18765d12a3a896"
+    },
+    {
+      "path": "section-geometry/ENGINEERING_FINDINGS.md",
+      "sha256": "b44c3c9e16096cfe8de51830ea3a7bc1960fd9f2dfe01c601c763f0d05f7e9cf"
+    },
+    {
+      "path": "section-geometry/README.md",
+      "sha256": "8a2e675e09b25e69e9a4a50674dec2ab3e5a9c1b97fb6f1c188a75c6e01f17a5"
+    },
+    {
+      "path": "section-geometry/requirements.txt",
+      "sha256": "9eac1b254a231d03ea90bcad7c8a7d14780cc097da5242f73c91a2c96d5dc57e"
+    },
+    {
+      "path": "section-geometry/section_geometry.py",
+      "sha256": "f84f900e61723a3a0163568459ba1925581f2fab0b897838ec5266d7271adc2e"
+    },
+    {
+      "path": "section-geometry/test-results.txt",
+      "sha256": "25427537407635058aa8f36f0c717ab5d99e0fb09b3993f390d9d7a14bd59b69"
+    },
+    {
+      "path": "section-geometry/tests/test_fail_closed.py",
+      "sha256": "cac120ce266113f46cb6b07ffa6f20e9abcf8c9599b1b1aca6ee6588f32014be"
+    },
+    {
+      "path": "section-geometry/tests/test_section_geometry.py",
+      "sha256": "c6a73425d111b4a48c0a164d068628cd83b23d1caa1f5ef02799cc10cc694862"
+    },
+    {
+      "path": "stepped-tool/README.md",
+      "sha256": "f1a9b5d7f8dfd617f0ee4b6d442dc9b276b6da1ccbd6c01866a56b8e3a55dbc8"
     },
     {
       "path": "stepped-tool/reproduce.py",
@@ -268,6 +318,10 @@
       "sha256": "ef58fb3c00656cc6485ed444617378b7f41f5e6b0ffe495b0ab62a55e5db26c8"
     },
     {
+      "path": "stepped-tool/REVIEW_HISTORY.md",
+      "sha256": "e0b46bac323c5a3566a9d35f68fa04df75d82d94d314e9b17687aa7f70e1c15b"
+    },
+    {
       "path": "stepped-tool/review/result.json",
       "sha256": "93a5449e97856b2638d561742d78ad29b134519300de11cad1b90fe7ed438311"
     },
@@ -278,14 +332,6 @@
     {
       "path": "stepped-tool/screen.py",
       "sha256": "790a8bf318f6a3c177a9448c868a3753e37034a552d7150c40ed69f0abcb0e05"
-    },
-    {
-      "path": "support-plane/README.md",
-      "sha256": "c276be2196b33789226d4d7accfce6f1e2ab407b8f54f7b9f2f44deacb8ba502"
-    },
-    {
-      "path": "support-plane/REVIEW_HISTORY.md",
-      "sha256": "a640cf1b1d7a26ca9a98f5aff8f28bb18666e9dce7b9a83f7d473b0a7287bc75"
     },
     {
       "path": "support-plane/audit.py",
@@ -364,8 +410,16 @@
       "sha256": "f90319bfdce5cca8478ac1f8ddf186949be11a46c46aab56ec5add868c698bd0"
     },
     {
+      "path": "support-plane/README.md",
+      "sha256": "c276be2196b33789226d4d7accfce6f1e2ab407b8f54f7b9f2f44deacb8ba502"
+    },
+    {
       "path": "support-plane/reproduce.py",
       "sha256": "356b15c92d325301071bede0b96cbca04ededc31a7d443b810a7d19abd8a3155"
+    },
+    {
+      "path": "support-plane/REVIEW_HISTORY.md",
+      "sha256": "a640cf1b1d7a26ca9a98f5aff8f28bb18666e9dce7b9a83f7d473b0a7287bc75"
     },
     {
       "path": "support-plane/slicer-compatibility.json",
@@ -381,7 +435,7 @@
     },
     {
       "path": "tests/test_manifest.py",
-      "sha256": "8f05060f323b72ba7f5129cbf383f3f2ed05991f7f4c67b820de4215b36338cd"
+      "sha256": "6ec01dd5dbc43d85d37a64feee40902d3e958b992575bd5719c2bba2409a7d25"
     },
     {
       "path": "tests/test_stepped_tool.py",

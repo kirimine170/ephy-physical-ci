@@ -1,0 +1,20 @@
+test_closed_mesh (test_section_geometry.GeometryTests.test_closed_mesh) ... ok
+test_fit_circle (test_section_geometry.GeometryTests.test_fit_circle) ... ok
+test_fit_translation (test_section_geometry.GeometryTests.test_fit_translation) ... ok
+test_hole_not_filled (test_section_geometry.GeometryTests.test_hole_not_filled) ... ok
+test_invalid_parameters (test_section_geometry.GeometryTests.test_invalid_parameters) ... ok
+test_missing_not_pass (test_section_geometry.GeometryTests.test_missing_not_pass) ... ok
+test_open_mesh (test_section_geometry.GeometryTests.test_open_mesh) ... ok
+test_output_hardlink_protected (test_section_geometry.GeometryTests.test_output_hardlink_protected) ... ok
+test_overlap (test_section_geometry.GeometryTests.test_overlap) ... ok
+test_reject_collinear (test_section_geometry.GeometryTests.test_reject_collinear) ... ok
+test_reject_crossing_rings (test_section_geometry.GeometryTests.test_reject_crossing_rings) ... ok
+test_reject_nested_separate_solids (test_section_geometry.GeometryTests.test_reject_nested_separate_solids) ... ok
+test_reject_partial_open_components (test_section_geometry.GeometryTests.test_reject_partial_open_components) ... ok
+test_separated (test_section_geometry.GeometryTests.test_separated) ... ok
+test_touch_is_not_gap (test_section_geometry.GeometryTests.test_touch_is_not_gap) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.734s
+
+OK

@@ -1,0 +1,29 @@
+{
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "0a2f8017c20be0247f01be57fe68f80b568e2df5bacb883992a7d523e778bd1a"
+    },
+    {
+      "path": "ENGINEERING_FINDINGS.md",
+      "sha256": "b5165cd462704eb483614b85d575a06add5aeb157620db1953442796f7e8b7e1"
+    },
+    {
+      "path": "section_geometry.py",
+      "sha256": "0852e2777900b5a6d1d9d6d77e7d1d30e4f28a2c4e246f301dd3bfc35907a358"
+    },
+    {
+      "path": "requirements.txt",
+      "sha256": "ed0243d7a4f5fa1d4abeb415286f847681b227bd105440cfa7354fa0568c3447"
+    },
+    {
+      "path": "tests/test_section_geometry.py",
+      "sha256": "51b879b0f3207a08bbd0e00d0ebe000ba97227cc8ed51ef768e3288ca60f4e1c"
+    },
+    {
+      "path": "test-results.txt",
+      "sha256": "25427537407635058aa8f36f0c717ab5d99e0fb09b3993f390d9d7a14bd59b69"
+    }
+  ],
+  "independent_review": "15 synthetic tests passed; prior findings addressed. Repository integration and repository CI are not completed."
+}
