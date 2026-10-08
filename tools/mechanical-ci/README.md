@@ -7,6 +7,11 @@ hash-bound evidence, separating execution status from physical judgment.
 See [Measured length inspection v1](docs/length-inspection-v1.md) for complete
 synthetic pass/fail/indeterminate examples, schemas, exit meanings, and limits.
 
+`record-fabrication` records declared print conditions，support-removal state，
+and qualitative fit against independent sample/job and part/revision bindings．
+It produces no physical judgment． See [Fabrication observation v1](../../docs/fabrication-observation-v1.md)
+for the strict schema and the one-way evidence link to `inspect-length`．
+
 `screen-tool` screens a nominal flat-end cylinder's entire straight axial sweep
 against one frozen, hash-bound single-solid STEP obstacle. It reports
 `model_clear`, `interference`, or `indeterminate` from intersection volume and
